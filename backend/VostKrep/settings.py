@@ -22,8 +22,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "order",
-    "products",
+    "apps.order",
+    "apps.products",
 ]
 
 MIDDLEWARE = [
@@ -107,3 +107,4 @@ REST_FRAMEWORK = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

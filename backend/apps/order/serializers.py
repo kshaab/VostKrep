@@ -8,6 +8,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = ("product_name", "quantity", "price",)
         read_only_fields = fields
 
+
 # Входной сериализатор для фронта
 class OrderItemCreateSerializer(serializers.Serializer):
     product_id = serializers.IntegerField()

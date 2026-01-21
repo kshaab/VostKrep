@@ -1,6 +1,6 @@
-from rest_framework import viewsets, generics
+from rest_framework import generics
 from .models import Order
-from .serializers import OrderSerializer
+from.serializers import OrderSerializer
 from rest_framework.throttling import AnonRateThrottle
 import logging
 
