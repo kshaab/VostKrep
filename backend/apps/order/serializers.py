@@ -36,7 +36,7 @@ class OrderSerializer(serializers.ModelSerializer):
     #
     #     order = Order.objects.create(**validated_data)
     #
-    #     from products.models import Product
+    #     from product.models import Product
     #
     #     for item in items_data:
     #         product = Product.objects.get(id=item["product_id"])

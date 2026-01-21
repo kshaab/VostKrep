@@ -3,6 +3,7 @@ from .models import Category, Product
 
 # Сериализатор продуктов
 class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.StringRelatedField()
     class Meta:
         model = Product
         fields = ["name", "sku", "category", "description", "price", "unit", "image", "is_active", "created_at"]
@@ -10,7 +11,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 # Сериализатор категорий
 class CategorySerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True, read_only=True)
     class Meta:
         model = Category
-        fields = ["name", "parent", "image", "is_active", "products"]
+        fields = ["name", "parent", "image", "is_active"]

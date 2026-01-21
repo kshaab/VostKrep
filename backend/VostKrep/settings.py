@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "apps.order",
-    "apps.products",
+    "apps.product",
 ]
 
 MIDDLEWARE = [
