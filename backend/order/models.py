@@ -1,0 +1,52 @@
+from django.db import models
+
+
+# Модель заявки
+class Order(models.Model):
+    name = models.CharField("Имя", max_length=255)
+    phone = models.CharField("Телефон", max_length=50)
+    email = models.EmailField("Email", blank=True)
+
+    address = models.TextField("Адрес доставки", blank=True)
+    comment = models.TextField("Комментарий", blank=True)
+
+    file = models.FileField(
+        upload_to="orders/files/",
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Заявка"
+        verbose_name_plural = "Заявки"
+
+    def __str__(self):
+        return f"Заявка {self.id}"
+
+
+# Модель товаров в заявке
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+
+    product_name = models.CharField("Товар", max_length=255)
+    product_sku = models.CharField("Артикул", max_length=100, blank=True) # артикул/id
+
+    quantity = models.PositiveIntegerField("Количество")
+
+    price = models.DecimalField(
+        "Цена",
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        verbose_name = "Товар в заявке"
+        verbose_name_plural = "Товары в заявке"
