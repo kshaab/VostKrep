@@ -33,19 +33,24 @@ class OrderSerializer(serializers.ModelSerializer):
     # Создание заказа
     # def create(self, validated_data):
     #     items_data = validated_data.pop("items")
-    #
     #     order = Order.objects.create(**validated_data)
-    #
-    #     from product.models import Product
-    #
     #     for item in items_data:
-    #         product = Product.objects.get(id=item["product_id"])
+    #         try:
+    #             variant = ProductOption.objects.get(
+    #                 id=item["option_id"],
+    #                 is_active=True
+    #             )
+    #         except ProductOption.DoesNotExist:
+    #             raise serializers.ValidationError(
+    #                 f"Размер не найден (id={item['option_id']})"
+    #             )
     #
     #         OrderItem.objects.create(
     #             order=order,
-    #             product_name=product.name,
+    #             product_name=variant.product.name,
+    #             variant_size=variant.size,
     #             quantity=item["quantity"],
-    #             price=product.price,
+    #             price=variant.price,
     #         )
     #
     #     return order

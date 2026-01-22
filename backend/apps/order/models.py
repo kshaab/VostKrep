@@ -35,6 +35,7 @@ class OrderItem(models.Model):
     )
 
     product_name = models.CharField("Товар", max_length=255)
+    option_size = models.CharField("Размер", max_length=50)
     product_sku = models.CharField("Артикул", max_length=100, blank=True) # артикул/id
 
     quantity = models.PositiveIntegerField("Количество")

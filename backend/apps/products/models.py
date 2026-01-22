@@ -35,7 +35,6 @@ class Product(models.Model):
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
     description = models.TextField(verbose_name="Описание товара")
-    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Цена")
     unit = models.CharField(max_length=150, verbose_name="Единица измерения")
     image = models.ImageField(upload_to="images/product/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -53,4 +52,21 @@ class Product(models.Model):
         if not self.slug:
             self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
+
+
+# Модель для выбора размера товара
+class ProductOption(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="options")
+    size = models.CharField(max_length=50, verbose_name="Размер")
+    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Цена")
+    sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Размер товара"
+        verbose_name_plural = "Размеры товара"
+
+    def __str__(self):
+        return f"{self.product.name} – {self.size}"
+
 
