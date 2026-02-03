@@ -34,7 +34,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, blank=True)
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
-    description = models.TextField(verbose_name="Описание товара")
+    description = models.TextField(verbose_name="Описание товара", null=True, blank=True)
     unit = models.CharField(max_length=150, verbose_name="Единица измерения")
     image = models.ImageField(upload_to="images/product/", null=True, blank=True)
     is_active = models.BooleanField(default=True)

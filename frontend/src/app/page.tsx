@@ -1,86 +1,63 @@
+import Image from "next/image";
+{/* MAIN */}
 export default function Home() {
   return (
-    <div className="min-h-screen bg-blue-900 text-white flex flex-col">
-
-      {/* HEADER */}
-      <header className="bg-white text-black py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6">
-
-          {/* ЛЕВАЯ ЧАСТЬ */}
-          <div className="flex items-center space-x-4 text-xs sm:text-sm md:text-base">
-            <div className="bg-blue-700 text-white px-3 py-2 font-bold whitespace-nowrap">
-              ВОСТКРЕП
-            </div>
-
-            <nav className="hidden sm:flex space-x-4 font-semibold">
-              <span>КАТАЛОГ</span>
-              <span>ДОСТАВКА</span>
-              <span>WHATSAPP</span>
-            </nav>
-          </div>
-
-          {/* ПРАВАЯ ЧАСТЬ */}
-          <div className="bg-orange-500 text-white px-4 sm:px-5 py-2 font-bold text-xs sm:text-sm md:text-base whitespace-nowrap">
-            КОРЗИНА
-          </div>
+    <div className="bg-[#003399] text-[#F2F3F4]">
+      <section className="bg-[#003399] py-10">
+        <div className="mx-auto px-6">
+          <h1 className=" font-heading text-5xl md:text-7xl leading-none tracking-[0.04em] font-bold mx-auto max-w-6xl">
+            ВОСТОЧНЫЙ КРЕПЕЖ
+          </h1>
         </div>
-      </header>
+      </section>
 
-      {/* MAIN */}
-      <main className="flex-1 flex justify-center py-10 sm:py-16 px-4">
-        <div className="
-          w-full max-w-6xl
-          bg-white text-black
-          p-6 sm:p-10
-          grid grid-cols-1 md:grid-cols-2
-          gap-6 sm:gap-10
-        ">
-
-          {/* ЛЕВЫЙ БЛОК */}
-          <div className="text-center md:text-left">
-            <h1 className="
-              text-2xl sm:text-3xl md:text-4xl
-              font-bold
-              leading-snug
-            ">
-              НЕ КЛАДЕМ БОЛТ <br /> НА НАШИХ КЛИЕНТОВ
-            </h1>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/bolt.png"
-              alt="bolt"
-              className="w-32 sm:w-40 md:w-48 mx-auto md:mx-0 mt-6"
+      {/* БЕЛЫЙ БЛОК */}
+      <section className="bg-[#F2F3F4] text-[#003399] py-12 relative h-[450px] overflow-visible mx-auto max-w-6xl">
+        <div className="max-w-8xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-10">
+          {/* ЛЕВАЯ ЧАСТЬ */}
+          <div className="grid place-items-center">
+            <Image
+              src="/homepic.png"
+              alt="logo_home"
+              width={600}
+              height={600}
+              className="absolute w-[700px] h-auto translate-y-[-40px] translate-x-[-100px]"
             />
           </div>
-
-          {/* ПРАВЫЙ БЛОК */}
-          <div className="text-sm sm:text-base md:text-lg leading-relaxed">
+          {/* ПРАВАЯ ЧАСТЬ */}
+          <div className="font-sans text-2xl leading-relaxed font-semibold translate-y-[40px] translate-x-[20px]">
             <p>
               Широкий ассортимент высококачественных крепёжных изделий
               по выгодным оптовым ценам.
             </p>
-
-            <p className="mt-4">
+            <p className="mt-12">
               Главные приоритеты — надёжность поставок, качество продукции
               и индивидуальный подход к каждому клиенту.
             </p>
           </div>
 
         </div>
-      </main>
-
-      {/* FOOTER */}
-      <div className="bg-blue-800 py-6 flex justify-center">
-        <button className="
-          bg-white text-blue-800
-          px-8 sm:px-10
-          py-3 sm:py-4
-          font-bold text-sm sm:text-lg
-        ">
-          ОСТАВИТЬ ЗАЯВКУ
-        </button>
-      </div>
+      </section>
+      {/* КНОПКА */}
+      <section className="bg-[#003399] py-14">
+        <div className="max-w-4xl mx-auto px-6 tracking-[0.04em]">
+          <button className="
+            w-full
+            bg-[#F2F3F4]
+            text-[#003399]
+            py-4
+            text-3xl
+            font-heading
+            font-semibold
+            hover:bg-[#F0660A]
+            hover:text-[#F2F3F4]
+            transition-colors
+          ">
+            ОСТАВИТЬ ЗАЯВКУ
+          </button>
+        </div>
+      </section>
 
     </div>
-  );
+  )
 }

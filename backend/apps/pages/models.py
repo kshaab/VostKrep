@@ -4,8 +4,7 @@ from django.db import models
 class DeliveryPage(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
-    # Описание доставки
-    content = models.TextField()
+    content = models.TextField() # Описание доставки
     seo_title = models.CharField(max_length=255, blank=True) # ?
     seo_description = models.TextField(blank=True) # ?
 
