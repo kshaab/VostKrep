@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Categories from "@/components/categories";
 {/* MAIN */}
 export default function Home() {
   return (
@@ -55,9 +56,10 @@ export default function Home() {
           ">
             ОСТАВИТЬ ЗАЯВКУ
           </button>
+
         </div>
       </section>
-
+      <Categories />3
     </div>
   )
 }
