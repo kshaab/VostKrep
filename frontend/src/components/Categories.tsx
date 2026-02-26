@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
+{/* CATEGORIES */}
 export default function Categories() {
 
   const categories = [
@@ -21,11 +22,20 @@ export default function Categories() {
 
   const [expanded, setExpanded] = useState(false);
 
+
+
   return (
+    // АНИМАЦИЯ
+    <motion.section
+        initial={{ opacity: 0, y: 100, scale: 0.95 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ amount: 0.3 }}
+        transition={{duration: 0.9, ease: [0.22, 1, 0.36, 1],}}
+    >
     <section className="font-sans bg-[#F2F3F4] text-[#003399] py-20">
       <div className="max-w-6xl mx-auto px-6 py-6">
 
-        {/*  ДЛЯ ГРАДИЕНТА */}
+        {/* ДЛЯ ГРАДИЕНТА */}
         <div className="relative">
 
           {/* КОНТЕЙНЕР С ОГРАНИЧЕНИЕМ (РАЗВЕРТЫВАНИЕ) */}
@@ -107,5 +117,6 @@ export default function Categories() {
 
       </div>
     </section>
+    </motion.section>
   );
 }

@@ -1,6 +1,8 @@
 import "./globals.css";
-import Header from "@/components/header"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
 import { Bebas_Neue, League_Spartan } from "next/font/google"
+import PageTransition from "@/components/PageTransition";
 // Пример использования шапки и подвала, должны быть тут!!!!!
 // import Header from "@/components/Header";
 // import Footer from "@/components/Footer";
@@ -28,6 +30,7 @@ const spartan = League_Spartan({
   variable: '--font-spartan',
 })
 
+
 export default function RootLayout({
   children,
 }: {
@@ -42,7 +45,12 @@ export default function RootLayout({
         `}
       >
         <Header />
-      {children}
+          <div className="relative min-h-screen">
+              <PageTransition>
+                {children}
+              </PageTransition>
+        </div>
+        <Footer />
       </body>
     </html>
   )
