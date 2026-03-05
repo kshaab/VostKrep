@@ -1,7 +1,7 @@
 from django.db import models
 
 
-# Модель заявки
+# Модель заявки (форма)
 class Order(models.Model):
     name = models.CharField("Имя", max_length=255)
     phone = models.CharField("Телефон", max_length=50)

@@ -1,8 +1,38 @@
+"use client";
 import Image from "next/image";
-{/* MAIN */}
+import { useModal } from "@/context/FormContext";
+
+{/* Главная страница */}
 export default function HomePage() {
+  const NutIcon = () => (
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 100 100"
+    fill="none"
+    className="mt-1 shrink-0"
+  >
+    <polygon
+      points="50,5 85,25 85,75 50,95 15,75 15,25"
+      stroke="currentColor"
+      strokeWidth="8"
+      fill="none"
+    />
+    <circle
+      cx="50"
+      cy="50"
+      r="18"
+      stroke="currentColor"
+      strokeWidth="8"
+      fill="none"
+    />
+  </svg>
+);
+
+  const { openModal } = useModal();
+
   return (
-    <div className="bg-[#003399] text-[#F2F3F4]">
+    <div className="bg-[#003399] text-[#F2F3F4] relative">
       <section className="bg-[#003399] py-10">
         <div className="mx-auto px-6">
           <h1 className=" font-heading text-5xl md:text-7xl leading-none tracking-[0.04em] font-bold mx-auto max-w-6xl">
@@ -11,10 +41,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* БЕЛЫЙ БЛОК */}
+      {/* Белый блок */}
       <section className="bg-[#F2F3F4] text-[#003399] py-12 relative h-[450px] overflow-visible mx-auto max-w-6xl">
         <div className="max-w-8xl mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* ЛЕВАЯ ЧАСТЬ */}
+          {/* Левая часть */}
           <div className="grid place-items-center">
             <Image
               src="/homepic.png"
@@ -24,38 +54,37 @@ export default function HomePage() {
               className="absolute w-[700px] h-auto translate-y-[-40px] translate-x-[-100px]"
             />
           </div>
-          {/* ПРАВАЯ ЧАСТЬ */}
-          <div className="font-sans text-2xl leading-relaxed font-semibold translate-y-[40px] translate-x-[20px]">
-            <p>
-              Широкий ассортимент высококачественных крепёжных изделий
-              по выгодным оптовым ценам.
-            </p>
-            <p className="mt-12">
-              Главные приоритеты — надёжность поставок, качество продукции
-              и индивидуальный подход к каждому клиенту.
-            </p>
-          </div>
+          {/* Правая часть */}
+          <ul className="font-sans text-2xl leading-relaxed font-semibold translate-y-[40px] translate-x-[20px]">
+          <li className="flex items-start gap-4">
+            <NutIcon />
+            <span>Широкий ассортимент высококачественных крепёжных изделий
+              по выгодным оптовым ценам.</span>
+          </li>
 
+          <li className="flex items-start gap-4">
+            <NutIcon />
+            <span>Главные приоритеты — надёжность поставок, качество продукции
+              и индивидуальный подход к каждому клиенту.</span>
+          </li>
+
+          </ul>
         </div>
       </section>
-      {/* КНОПКА */}
+      {/* Кнопка заявки */}
       <section className="bg-[#003399] py-14">
         <div className="max-w-4xl mx-auto px-6 tracking-[0.04em]">
-          <button className="
-            w-full
+          <button
+            onClick={openModal}
+            className="w-full
             bg-[#F2F3F4]
             text-[#003399]
-            py-4
-            text-3xl
-            font-heading
-            font-semibold
-            hover:bg-[#F0660A]
-            hover:text-[#F2F3F4]
-            transition-colors
-          ">
+            py-4 text-3xl font-heading font-semibold
+            hover:bg-[#F0660A] hover:text-[#F2F3F4]
+            transition-colors"
+          >
             ОСТАВИТЬ ЗАЯВКУ
           </button>
-
         </div>
       </section>
     </div>

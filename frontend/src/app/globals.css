@@ -7,11 +7,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+
+
 
 @font-face {
   font-family: "Bebas Neue";
@@ -29,3 +26,19 @@ body {
   box-sizing: border-box;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.scrollContainer {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.snapSection {
+  height: 100vh;
+  scroll-snap-align: start;
+}
