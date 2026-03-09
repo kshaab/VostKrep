@@ -1,55 +1,66 @@
 .wrapper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: #003399;
+  width: 100%;
 }
 
-.header {
+
+.hero {
+  background: #0c3d91;
   color: white;
-  padding: 40px 60px;
+  text-align: center;
+  padding: 60px 20px;
+  font-family: "Bebas Neue", sans-serif;
 }
 
-.header h1 {
-  font-size: 48px;
-  margin: 0;
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
 }
 
-.header p {
-  margin-top: 10px;
+.hero p {
   font-size: 18px;
 }
 
+
 .content {
-  flex: 1;
+  background: #f2f2f2;
+
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #efefef;
+  gap: 80px;
+
+  max-width: 1200px;
+  margin: auto;
+  padding: 80px 20px;
 }
 
 .column {
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #123a8d;
-  font-size: 18px;
+  font-size: 20px;
+  color: #123d8b;
+  line-height: 1.6;
 }
 
-.column:first-child {
-  border-right: 2px dashed #ccc;
+.column p {
+  margin-bottom: 30px;
 }
 
 .icons {
   display: flex;
-  gap: 30px;
-  align-items: center;
+  gap: 40px;
+  margin-top: 20px;
 }
 
-.icons img {
-  height: 60px;
+.boxIcon {
+  margin-top: 40px;
 }
 
-.boxIcon img {
-  width: 80px;
+
+@media (max-width: 900px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
 }

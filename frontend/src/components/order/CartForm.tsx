@@ -2,30 +2,62 @@
 
 import { createPortal } from "react-dom";
 import { useCart } from "@/context/CartContext";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { endpoints} from "@/lib/api"
 
 {/* Форма корзины  */}
 export default function CartForm() {
-  const { items, isOpen, closeCart, increase, decrease } = useCart();
+  const { items, isOpen, closeCart, increase, decrease, clearCart } = useCart();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
-
-  return () => {
-    document.body.style.overflow = "auto";
-  };
-}, [isOpen]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Заказ отправлен");
-  };
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
 
   if (!isOpen || typeof window === "undefined") return null;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (items.length === 0) {
+      alert("Корзина пуста");
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+
+    const orderData = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      address: formData.get("address"),
+      comment: formData.get("comment"),
+      items: items.map((item) => ({
+        option_id: item.option_id,
+        quantity: item.quantity,
+      })),
+    };
+
+    setLoading(true);
+
+    const res = await fetch(endpoints.orders, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    setLoading(false);
+
+    if (res.ok) {
+      alert("Заказ отправлен!");
+      clearCart();
+      closeCart();
+    } else {
+      alert("Ошибка отправки");
+    }
+  };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">

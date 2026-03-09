@@ -1,13 +1,18 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-    reactStrictMode: true,
-};
-
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
   images: {
-    domains: ["localhost"],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "8000",
+        pathname: "/media/**",
+      },
+    ],
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

@@ -1,4 +1,4 @@
-import FooterLight from "@/components/layout/FooterLight"
+import FooterDark from "@/components/layout/FooterDark"
 import Header from "@/components/layout/Header";
 
 export default function DeliveryLayout({
@@ -10,7 +10,7 @@ export default function DeliveryLayout({
     <>
       <Header />
       {children}
-      <FooterLight />
+      <FooterDark />
     </>
   )
 }

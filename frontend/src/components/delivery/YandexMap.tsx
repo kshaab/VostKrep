@@ -2,35 +2,52 @@
 
 import { useEffect, useRef } from "react";
 
-{/* Яндекс карта */}
 export default function YandexMap() {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<any>(null);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU";
-    script.async = true;
-
-    script.onload = () => {
+    const initMap = () => {
       // @ts-ignore
-      ymaps.ready(() => {
-        // @ts-ignore
-        const map = new ymaps.Map(mapRef.current, {
-          center: [55.751244, 37.618423],
-          zoom: 7,
-          controls: ["zoomControl"],
-        });
+      window.ymaps.ready(() => {
+        if (!mapInstance.current && mapRef.current) {
+          // @ts-ignore
+          mapInstance.current = new window.ymaps.Map(mapRef.current, {
+            center: [55.751244, 37.618423],
+            zoom: 7,
+            controls: ["zoomControl"],
+          });
 
-        // маркер
-        // @ts-ignore
-        const placemark = new ymaps.Placemark([55.751244, 37.618423]);
+          // @ts-ignore
+          const placemark = new window.ymaps.Placemark([55.751244, 37.618423]);
 
-        map.geoObjects.add(placemark);
+          mapInstance.current.geoObjects.add(placemark);
+        }
       });
     };
 
-    document.body.appendChild(script);
+    // @ts-ignore
+    if (window.ymaps) {
+      initMap();
+      return;
+    }
+
+    if (!document.querySelector("#yandex-maps-script")) {
+      const script = document.createElement("script");
+      script.id = "yandex-maps-script";
+      script.src = "https://api-maps.yandex.ru/2.1/?lang=ru_RU";
+      script.async = true;
+      script.onload = initMap;
+      document.body.appendChild(script);
+    }
+
+    return () => {
+      if (mapInstance.current) {
+        mapInstance.current.destroy();
+        mapInstance.current = null;
+      }
+    };
   }, []);
 
-  return <div ref={mapRef} style={{ width: "50%", height: "50%" }} />;
+  return <div ref={mapRef} style={{ width: "100%", height: "100%" }} />;
 }

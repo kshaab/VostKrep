@@ -12,25 +12,34 @@ interface Props {
 export default function OrderForm({ isOpen, onClose }: Props) {
   const [fileName, setFileName] = useState<string>("");
 
-  if (typeof window === "undefined") return null;
+  if (!isOpen || typeof window === "undefined") return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData(e.currentTarget);
 
-    const res = await fetch("http://127.0.0.1:8000/order/", {
-      method: "POST",
-      body: formData,
-    });
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/orders/`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
 
     if (res.ok) {
-      alert("Ваша заявка отправлена!");
+      alert(data.message || "Заявка отправлена!");
       onClose();
     } else {
-      alert("Ошибка отправки");
+      alert(data.message || "Ошибка отправки");
     }
-  };
+  } catch (error) {
+    alert("Ошибка сети");
+  }
+};
 
   if (!isOpen) return null;
 

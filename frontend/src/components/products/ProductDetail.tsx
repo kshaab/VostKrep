@@ -1,48 +1,64 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Image from "next/image"
-import styles from "./product.module.css"
 import { useCart } from "@/context/CartContext"
+import { Product } from "@/types/product"
+import { endpoints} from "@/lib/api"
 
-{/* Подробная карточка продукта */}
-export default function ProductDetail() {
-
-  const { addToCart } = useCart()
-
-  const handleAddToCart = () => {
-  if (!isValid) return
-
-  addToCart({
-    id: `${size}${length}`, // временный id
-    name: `Болт ${size} x ${length} мм`,
-    price: 0,
-    quantity: 1,
-  })
+type Option = {
+  id: number
+  size: string
+  price: number
+  sku: string
 }
 
-  const sizes = ["M6", "M8", "M10"]
-  const lengths = ["20", "30", "40", "50"]
+type Props = {
+  slug: string
+}
 
-  const validCombinations = [
-    { size: "M6", length: "20" },
-    { size: "M6", length: "30" },
-    { size: "M8", length: "30" },
-    { size: "M10", length: "40" },
-    { size: "M10", length: "50" },
-  ]
+export default function ProductDetail({ slug }: Props) {
+  const { addToCart } = useCart()
 
+  const [product, setProduct] = useState<Product | null>(null)
+  const [options, setOptions] = useState<Option[]>([])
   const [sizeIndex, setSizeIndex] = useState(0)
   const [lengthIndex, setLengthIndex] = useState(0)
+
+  useEffect(() => {
+    fetch(endpoints.productBySlug(slug))
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data)
+        setOptions(data.options || [])
+      })
+  }, [slug])
+
+  // Разбор параметров на длину и размер
+  const validCombinations = useMemo(() => {
+    return options.map((opt) => {
+      const [size, length] = opt.size.split("x")
+      return {
+        id: opt.id,
+        size,
+        length,
+        sku: opt.sku,
+        price: opt.price,
+      }
+    })
+  }, [options])
+
+  const sizes = [...new Set(validCombinations.map((i) => i.size))]
+  const lengths = [...new Set(validCombinations.map((i) => i.length))]
 
   const size = sizes[sizeIndex]
   const length = lengths[lengthIndex]
 
-  const isValid = useMemo(() => {
-    return validCombinations.some(
-      (item) => item.size === size && item.length === length
-    )
-  }, [size, length])
+  const currentOption = validCombinations.find(
+    (item) => item.size === size && item.length === length
+  )
+
+  const isValid = !!currentOption
 
   const changeValue = (type: "size" | "length", direction: number) => {
     if (type === "size") {
@@ -52,49 +68,43 @@ export default function ProductDetail() {
     }
   }
 
+  const handleAddToCart = () => {
+    if (!currentOption || !product) return
+
+    addToCart({
+      id: currentOption.sku,
+      option_id: currentOption.id,
+      name: `${product.name} ${size}x${length}`,
+      price: currentOption.price,
+      quantity: 1,
+    })
+  }
+
+  if (!product) return null
+
   return (
-    <section className={styles.product}>
-      <h1 className={styles.title}>НАЗВАНИЕ ТОВАРА</h1>
+    <section>
+      <h1>{product.name}</h1>
 
-      <div className={styles.card}>
-        <div className={styles.imageBlock}>
-          <Image
-            src="/products/bolt4.png"
-            alt="Болт"
-            width={550}
-            height={500}
-            className={styles.image}
-            priority
-          />
-        </div>
+      <Image
+        src={product.image}
+        alt={product.name}
+        width={500}
+        height={400}
+      />
 
-        <div className={styles.infoBlock}>
-          <div className={styles.selector}>
-            <div className={styles.label}>РАЗМЕР</div>
-            <div className={styles.control}>
-              <button onClick={() => changeValue("size", -1)}>❮</button>
-              <span>{size}</span>
-              <button onClick={() => changeValue("size", 1)}>❯</button>
-            </div>
-          </div>
+      <div>
+        <button onClick={() => changeValue("size", -1)}>❮</button>
+        <span>{size}</span>
+        <button onClick={() => changeValue("size", 1)}>❯</button>
 
-          <div className={styles.selector}>
-            <div className={styles.label}>ДЛИНА</div>
-            <div className={styles.control}>
-              <button onClick={() => changeValue("length", -1)}>❮</button>
-              <span>{length} мм</span>
-              <button onClick={() => changeValue("length", 1)}>❯</button>
-            </div>
-          </div>
+        <button onClick={() => changeValue("length", -1)}>❮</button>
+        <span>{length} мм</span>
+        <button onClick={() => changeValue("length", 1)}>❯</button>
 
-          <button
-            onClick={handleAddToCart}
-            className={`${styles.addBtn} ${isValid ? styles.active : ""}`}
-            disabled={!isValid}
-          >
-            В КОРЗИНУ
-          </button>
-        </div>
+        <button onClick={handleAddToCart} disabled={!isValid}>
+          В КОРЗИНУ
+        </button>
       </div>
     </section>
   )

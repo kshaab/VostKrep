@@ -1,13 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { products } from "@/data/products"
+import { Product } from "@/types/product"
 import ProductCard from "./ProductCard"
 
 {/* Страница продуктов  */}
 export default function ProductsSection() {
   const [expanded, setExpanded] = useState(false)
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/`)
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+  }, [])
+
 
   return (
     <motion.section

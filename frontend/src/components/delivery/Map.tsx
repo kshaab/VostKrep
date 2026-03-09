@@ -2,11 +2,25 @@
 
 import YandexMap from "./YandexMap";
 
-{/* Страница карты */}
-export default function MapSection() {
+export default function Map() {
   return (
-    <div style={{ width: "50%", height: "50%" }}>
-      <YandexMap />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
+        backgroundColor: "#F2F3F4"
+      }}
+    >
+      <div
+        style={{
+          width: "900px",
+          height: "500px",
+        }}
+      >
+        <YandexMap />
+      </div>
     </div>
   );
 }

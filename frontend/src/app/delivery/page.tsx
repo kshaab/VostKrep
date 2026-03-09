@@ -1,16 +1,16 @@
 import Delivery from "@/components/delivery/Delivery";
-import Map from "@/components/delivery/YandexMap";
+import Map from "@/components/delivery/Map";
 
 export default function Page() {
   return (
-    <main className="scrollContainer">
-      <section className="snapSection">
-        <Delivery />
-      </section>
 
-      <section className="snapSection">
-        <Map />
-      </section>
+ <>
+    <main>
+      <Delivery/>
+      <Map/>
     </main>
+    </>
+
+
   );
 }

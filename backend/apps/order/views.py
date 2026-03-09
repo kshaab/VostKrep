@@ -1,4 +1,6 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
+
 from .models import Order
 from.serializers import OrderSerializer
 from rest_framework.throttling import AnonRateThrottle
@@ -14,15 +16,18 @@ class OrderCreateAPIView(generics.CreateAPIView):
 
 
     # Кастомный ответ при отправке заявки для фронта
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #
-    #     return Response(
-    #         {"detail": "Заявка успешно отправлена"},
-    #         status=status.HTTP_201_CREATED
-    #     )
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {
+                "success": True,
+                "message": "Заявка успешно отправлена"
+            },
+            status=status.HTTP_201_CREATED
+        )
 
     # Отправка письма
     # def perform_create(self, serializer):

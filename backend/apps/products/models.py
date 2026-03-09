@@ -36,7 +36,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
     description = models.TextField(verbose_name="Описание товара", null=True, blank=True)
     unit = models.CharField(max_length=150, verbose_name="Единица измерения")
-    image = models.ImageField(upload_to="images/product/", null=True, blank=True)
+    image = models.ImageField(upload_to="images/products/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -58,7 +58,7 @@ class Product(models.Model):
 class ProductOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="options")
     size = models.CharField(max_length=50, verbose_name="Размер")
-    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Цена")
+    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Цена", null=True, blank=True)
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
     is_active = models.BooleanField(default=True)
 

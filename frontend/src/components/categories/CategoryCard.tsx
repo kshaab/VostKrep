@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Category } from "@/data/categories"
+import { Category } from "@/types/category"
 
 {/* Карточка категорий */}
 type Props = {
@@ -10,6 +10,11 @@ type Props = {
 }
 
 export default function CategoryCard({ category }: Props) {
+
+  const imageUrl = category.image.startsWith("http")
+  ? category.image
+  : `http://127.0.0.1:8000${category.image}`
+
   return (
     <Link
       href={`/catalog/${category.slug}`}
@@ -23,12 +28,13 @@ export default function CategoryCard({ category }: Props) {
         {category.name}
       </div>
 
-      <div className="relative h-[180px] w-full">
+      <div className="relative h-[250px] w-full">
         <Image
-          src={category.image}
+          src={imageUrl}
           alt={category.name}
           fill
           className="object-cover"
+          unoptimized //УБРАТЬ ДЛЯ ПРОДА
         />
       </div>
     </Link>

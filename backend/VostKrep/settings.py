@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "apps.order",
-    "apps.product",
+    "apps.products",
+    "apps.pages",
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,10 @@ TEMPLATES = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS")
+CORS_ALLOWED_ORIGINS = os.getenv(
+    "CORS_ALLOWED_ORIGINS",
+    ""
+).split(",")
 
 WSGI_APPLICATION = "VostKrep.wsgi.application"
 
