@@ -7,7 +7,7 @@ from ..products.models import ProductOption
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ("product_name", "quantity", "price",)
+        fields = ("product_name", "quantity",)
         read_only_fields = fields
 
 
@@ -19,7 +19,7 @@ class OrderItemCreateSerializer(serializers.Serializer):
 
 # Сериализатор заявки
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemCreateSerializer(many=True, write_only=True)
+    items = OrderItemCreateSerializer(many=True, write_only=True, required=False)
 
     class Meta:
         model = Order
@@ -32,34 +32,25 @@ class OrderSerializer(serializers.ModelSerializer):
             "items",
         )
 
-    # Создание заказа
+
     def create(self, validated_data):
-        items_data = validated_data.pop("items")
+        """Создает заказ"""
+        items_data = validated_data.pop("items", [])
         order = Order.objects.create(**validated_data)
         for item in items_data:
-            try:
-                variant = ProductOption.objects.get(
-                    id=item["option_id"],
-                    is_active=True
-                )
-            except ProductOption.DoesNotExist:
-                raise serializers.ValidationError(
-                    f"Размер не найден (id={item['option_id']})"
-                )
-
+            variant = ProductOption.objects.get(id=item["option_id"], is_active=True)
             OrderItem.objects.create(
                 order=order,
                 product_name=variant.product.name,
                 option_size=variant.size,
                 quantity=item["quantity"],
-                price=variant.price,
             )
-
         return order
 
 
-    # Валидация пустой корзины
+
     def validate_items(self, value):
+        """Валидирует пустую корзину"""
         if not value:
             raise serializers.ValidationError(
                 "Корзина пуста. Добавьте товары из каталога."

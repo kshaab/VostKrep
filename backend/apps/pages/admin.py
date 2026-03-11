@@ -12,8 +12,7 @@ class DeliveryItemInline(admin.TabularInline):
 
 @admin.register(DeliveryPage)
 class DeliveryPageAdmin(admin.ModelAdmin):
-    list_display = ("title", "slug")
-    prepopulated_fields = {"slug": ("title",)}
+    list_display = ("title",)
     inlines = [DeliveryItemInline]
 
 

@@ -6,7 +6,7 @@ from .models import Category, Product, ProductOption
 class ProductOptionInline(admin.TabularInline):
     model = ProductOption
     extra = 1
-    fields = ("size", "price", "sku", "is_active")
+    fields = ("size", "sku", "is_active")
     readonly_fields = ()
     show_change_link = True
 

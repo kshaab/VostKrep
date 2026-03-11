@@ -6,11 +6,9 @@ from unidecode import unidecode
 # Модель для категорий товаров
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name="Категория товара")
-    # Ссылка на подкатегории (болты - болты дин, болты гост и т.д)
     parent = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
-    # Название категории в пути
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to="images/categories/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -58,7 +56,6 @@ class Product(models.Model):
 class ProductOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="options")
     size = models.CharField(max_length=50, verbose_name="Размер")
-    price = models.DecimalField(decimal_places=2, max_digits=10, verbose_name="Цена", null=True, blank=True)
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
     is_active = models.BooleanField(default=True)
 

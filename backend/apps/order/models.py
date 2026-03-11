@@ -33,20 +33,11 @@ class OrderItem(models.Model):
         on_delete=models.CASCADE,
         related_name="items"
     )
-
     product_name = models.CharField("Товар", max_length=255)
     option_size = models.CharField("Размер", max_length=50)
     product_sku = models.CharField("Артикул", max_length=100, blank=True) # артикул/id
-
     quantity = models.PositiveIntegerField("Количество")
 
-    price = models.DecimalField(
-        "Цена",
-        max_digits=10,
-        decimal_places=2,
-        null=True,
-        blank=True
-    )
 
     class Meta:
         verbose_name = "Товар в заявке"

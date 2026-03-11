@@ -7,7 +7,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["name", "sku", "category", "description", "price", "unit", "image", "is_active", "created_at"]
+        fields = ["name", "sku", "category", "description", "unit", "image", "is_active", "created_at"]
 
     def get_image(self, obj):
         """Превращает путь картики из базы в URL для загрузки фронтендом"""
@@ -20,7 +20,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOption
-        fields = ["id", "size", "price", "sku"]
+        fields = ["id", "size", "sku"]
 
 # Сериализатор категорий
 class CategorySerializer(serializers.ModelSerializer):

@@ -3,16 +3,39 @@
 import { createPortal } from "react-dom";
 import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
-import { endpoints} from "@/lib/api"
+import { endpoints} from "@/lib/api";
+import InputMask from "react-input-mask";
 
 {/* Форма корзины  */}
 export default function CartForm() {
   const { items, isOpen, closeCart, increase, decrease, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+  name: "",
+  phone: "",
+  email: "",
+  address: "",
+});
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const saved = localStorage.getItem("orderForm");
+
+    if (saved) {
+      setForm(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  localStorage.setItem("orderForm", JSON.stringify(form));
+}, [form]);
 
   if (!isOpen || typeof window === "undefined") return null;
 
@@ -52,6 +75,8 @@ export default function CartForm() {
 
     if (res.ok) {
       alert("Заказ отправлен!");
+      const comment = e.currentTarget.elements.namedItem("comment") as HTMLTextAreaElement;
+      if (comment) comment.value = "";
       clearCart();
       closeCart();
     } else {
@@ -123,27 +148,43 @@ export default function CartForm() {
                 type="text"
                 placeholder="ФИО"
                 required
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
               />
 
-              <input
-                name="phone"
-                type="tel"
-                placeholder="Телефон"
-                required
-                className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
-              />
+              <InputMask
+                mask="+7 (999) 999-99-99"
+                maskChar=""
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              >
+                {(inputProps: any) => (
+                  <input
+                    {...inputProps}
+                    name="phone"
+                    type="tel"
+                    required
+                    placeholder="Телефон"
+                    className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+                  />
+                )}
+              </InputMask>
 
               <input
                 name="email"
                 type="email"
                 placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
               />
 
               <textarea
                 name="address"
                 placeholder="Адрес доставки"
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
                 className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
               />
 
@@ -155,12 +196,13 @@ export default function CartForm() {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-[#003399] text-[#F2F3F4]
                 py-3 rounded-lg font-semibold hover:bg-[#F0660A]
                 transition-colors font-heading tracking-[0.04em] text-2xl
-                hover:text-[#003399]"
+                hover:text-[#003399] disabled:opacity-50"
               >
-                Отправить
+                {loading ? "Отправка..." : "Отправить"}
               </button>
             </form>
           </>

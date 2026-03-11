@@ -1,8 +1,13 @@
-from rest_framework.generics import RetrieveAPIView
-from .models import DeliveryPage
+from rest_framework.viewsets import ViewSet
+from rest_framework.response import Response
 from .serializers import DeliveryPageSerializer
+from .services import CacheDeliveryPage
 
-class DeliveryPageView(RetrieveAPIView):
-    queryset = DeliveryPage.objects.all()
-    serializer_class = DeliveryPageSerializer
-    lookup_field = "slug"
+
+class DeliveryPageViewSet(ViewSet):
+
+    def list(self, request):
+        """Просмотр страницы доставки"""
+        page = CacheDeliveryPage.get_page()
+        serializer = DeliveryPageSerializer(page)
+        return Response(serializer.data)

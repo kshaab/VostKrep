@@ -14,7 +14,6 @@ class DeliveryPageSerializer(serializers.ModelSerializer):
         model = DeliveryPage
         fields = [
             "title",
-            "slug",
             "content",
             "seo_title",
             "seo_description",

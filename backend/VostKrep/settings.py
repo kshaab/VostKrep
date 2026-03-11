@@ -107,6 +107,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
+        "anon": "10/min",
         "orders": "5/min"
     }
 }
@@ -122,3 +123,19 @@ CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_TASK_TRACK_STARTED = True
 
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+TELEGRAM_URL = "https://api.telegram.org/bot"
+
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+CACHE_ENABLED = os.getenv("CACHE_ENABLED", False) == "True"
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("REDIS_CACHE_LOCATION"),
+        }
+    }
+

@@ -28,12 +28,13 @@ export default function CategoryCard({ category }: Props) {
         {category.name}
       </div>
 
-      <div className="relative h-[250px] w-full">
+      <div className="relative h-[200px] w-full">
         <Image
           src={imageUrl}
           alt={category.name}
-          fill
-          className="object-cover"
+          width={500}
+          height={500}
+          className="w-full h-[200px] object-contain"
           unoptimized //УБРАТЬ ДЛЯ ПРОДА
         />
       </div>

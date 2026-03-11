@@ -5,5 +5,5 @@ from .apps import OrderConfig
 app_name = OrderConfig.name
 
 urlpatterns = [
-    path("create/", OrderCreateAPIView.as_view(), name="order-create"),
+    path("", OrderCreateAPIView.as_view(), name="order-create"),
 ]

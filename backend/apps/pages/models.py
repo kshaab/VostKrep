@@ -3,7 +3,6 @@ from django.db import models
 # Модель страницы доставки
 class DeliveryPage(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
     content = models.TextField() # Описание доставки
     seo_title = models.CharField(max_length=255, blank=True)
     seo_description = models.TextField(blank=True)

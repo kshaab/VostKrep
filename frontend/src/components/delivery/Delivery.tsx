@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { DeliveryPage} from "@/types/delivery";
 import { useParams } from "next/navigation"
+import {endpoints} from "@/lib/api";
 
 
 export default function Delivery() {
@@ -13,7 +14,7 @@ export default function Delivery() {
   const slug = params.slug
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pages/delivery/${slug}/`)
+    fetch(endpoints.delivery)
       .then(res => res.json())
       .then(data => setDelivery(data));
   }, []);

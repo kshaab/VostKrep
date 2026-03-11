@@ -6,7 +6,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     can_delete = False
-    readonly_fields = ("product_name", "quantity", "price")
+    readonly_fields = ("product_name", "quantity")
 
 # Админка для просмотра полного заказа
 @admin.register(Order)

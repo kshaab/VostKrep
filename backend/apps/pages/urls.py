@@ -1,6 +1,7 @@
-from django.urls import path
-from .views import DeliveryPageView
+from rest_framework.routers import DefaultRouter
+from .views import DeliveryPageViewSet
 
-urlpatterns = [
-    path("delivery/<slug:slug>/", DeliveryPageView.as_view()),
-]
+router = DefaultRouter()
+router.register(r"delivery", DeliveryPageViewSet, basename="delivery-page")
+
+urlpatterns = router.urls
