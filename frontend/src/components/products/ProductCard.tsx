@@ -4,12 +4,16 @@ import Image from "next/image"
 import Link from "next/link"
 import { Product } from "@/types/product"
 
-{/* Карточка продукта на странице продуктов */}
 type Props = {
   product: Product
 }
 
 export default function ProductCard({ product }: Props) {
+
+  const imageUrl = product.image
+    ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
+    : "/placeholder.png"
+
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -25,7 +29,7 @@ export default function ProductCard({ product }: Props) {
 
       <div className="relative h-[180px] w-full">
         <Image
-          src={product.image}
+          src={imageUrl}
           alt={product.name}
           fill
           className="object-cover"

@@ -12,7 +12,6 @@ export type Product = {
   slug: string;
   sku: string;
   description: string;
-  price: string;
   unit: string;
   image: string | null;
   category: string;

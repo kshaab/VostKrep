@@ -113,7 +113,6 @@ export default function CartForm() {
                 >
                   <div>
                     <p className="font-semibold font-sans">{item.name}</p>
-                    <p>{item.price} ₽</p>
                   </div>
 
                   <div className="flex items-center gap-3">

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { DeliveryPage} from "@/types/delivery";
 import { useParams } from "next/navigation"
 import {endpoints} from "@/lib/api";
-
+import NutIcon from "@/components/icons/NutIcon";
 
 export default function Delivery() {
 
@@ -18,25 +18,6 @@ export default function Delivery() {
       .then(res => res.json())
       .then(data => setDelivery(data));
   }, []);
-
-  const NutIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 100 100" fill="none" className="mt-1 shrink-0">
-      <polygon
-        points="50,5 85,25 85,75 50,95 15,75 15,25"
-        stroke="currentColor"
-        strokeWidth="8"
-        fill="none"
-      />
-      <circle
-        cx="50"
-        cy="50"
-        r="18"
-        stroke="currentColor"
-        strokeWidth="8"
-        fill="none"
-      />
-    </svg>
-  );
 
   if (!delivery) {
     return (

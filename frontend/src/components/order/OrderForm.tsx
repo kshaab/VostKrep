@@ -3,7 +3,7 @@
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 import {endpoints} from "@/lib/api";
-import InputMask from "react-input-mask";
+import { IMaskInput } from "react-imask";
 
 {/* Форма заявки */}
 interface Props {
@@ -105,23 +105,15 @@ export default function OrderForm({ isOpen, onClose }: Props) {
             className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
           />
 
-          <InputMask
-            mask="+7 (999) 999-99-99"
-            maskChar=""
+
+          <IMaskInput
+            mask="+7 (000) 000-00-00"
             value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          >
-            {(inputProps: any) => (
-              <input
-                {...inputProps}
-                name="phone"
-                type="tel"
-                required
-                placeholder="Телефон"
-                className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
-              />
-            )}
-          </InputMask>
+            onAccept={(value: string) => setForm({ ...form, phone: value })}
+            overwrite
+            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            placeholder="+7 (999) 999-99-99"
+          />
 
           <input
             name="email"

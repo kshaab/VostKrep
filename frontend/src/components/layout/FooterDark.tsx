@@ -25,10 +25,10 @@ export default function FooterDark() {
 
             {/* Колонка 1 */}
             <div className="space-y-6">
-              <Link href="#" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/delivery" className="block hover:text-[#F0660A] transition-colors">
                 ДОСТАВКА
               </Link>
-              <Link href="#" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/payment" className="block hover:text-[#F0660A] transition-colors">
                 ОПЛАТА
               </Link>
               <Link href="#" className="block hover:text-[#F0660A] transition-colors">
@@ -38,10 +38,10 @@ export default function FooterDark() {
 
             {/* Колонка 2 */}
             <div className="space-y-6">
-              <Link href="#" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/privacy" className="block hover:text-[#F0660A] transition-colors">
                 ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
               </Link>
-              <Link href="#" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/personal_data" className="block hover:text-[#F0660A] transition-colors">
                 СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ
               </Link>
             </div>

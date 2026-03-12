@@ -1,0 +1,10 @@
+from django.apps import AppConfig
+
+
+
+class ProductsConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "project.apps.products"
+
+    def ready(self):
+        __import__(f"{self.name}.signals")

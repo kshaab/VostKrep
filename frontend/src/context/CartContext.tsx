@@ -6,7 +6,6 @@ export interface CartItem {
   id: string;
   option_id: number;
   name: string;
-  price: number;
   quantity: number;
 }
 

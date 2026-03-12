@@ -1,5 +1,6 @@
 export interface DeliveryItem {
   id: number
+  title: string
   text: string
 }
 

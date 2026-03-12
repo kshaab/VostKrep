@@ -1,80 +1,46 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Product } from "@/types/product"
+import { useEffect, useState } from "react"
 import ProductCard from "./ProductCard"
+import { Product } from "@/types/product"
+import { endpoints } from "@/lib/api"
 
-{/* Страница продуктов  */}
-export default function ProductsSection() {
-  const [expanded, setExpanded] = useState(false)
+type Props = {
+  categorySlug: string
+}
+
+export default function ProductsSection({ categorySlug }: Props) {
   const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-  }, [])
+    if (!categorySlug) return
 
+    const fetchProducts = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(endpoints.products(categorySlug), { cache: "no-store" })
+        const data = await res.json()
+        setProducts(Array.isArray(data) ? data : data.results ?? [])
+      } catch (e) {
+        console.error(e)
+        setProducts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [categorySlug])
+
+  if (loading) return <div>Загрузка продуктов...</div>
+  if (!products.length) return <div>Продукты не найдены</div>
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 100, scale: 0.95 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ amount: 0.3 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <section className="font-sans bg-[#003399] text-[#003399] py-20">
-        <div className="max-w-6xl mx-auto py-6">
-
-          <div className="relative">
-
-            <div
-              className={`
-                overflow-hidden
-                transition-all
-                duration-700
-                ${expanded ? "max-h-[2000px]" : "max-h-[700px]"}
-              `}
-            >
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-9">
-                {products.map((item) => (
-                  <ProductCard
-                    key={item.slug}
-                    product={item}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {!expanded && (
-              <div className="
-                absolute bottom-0 left-0 w-full h-32
-                bg-gradient-to-t
-                from-[#003399]
-                via-[#003399]/60
-                to-transparent
-                pointer-events-none
-              " />
-            )}
-          </div>
-
-          <div className="font-heading max-w-4xl mx-auto py-14 px-6 tracking-[0.04em]">
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="
-                w-full bg-[#F2F3F4] text-[#003399]
-                py-4 text-3xl font-semibold
-                hover:bg-[#F0660A] hover:text-[#F2F3F4]
-                transition-colors duration-300
-              "
-            >
-              {expanded ? "СВЕРНУТЬ" : "ПОКАЗАТЬ ЕЩЁ"}
-            </button>
-          </div>
-
-        </div>
-      </section>
-    </motion.section>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {products.map(product => (
+        <ProductCard key={product.slug} product={product} />
+      ))}
+    </div>
   )
 }

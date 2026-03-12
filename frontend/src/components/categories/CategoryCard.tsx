@@ -11,9 +11,11 @@ type Props = {
 
 export default function CategoryCard({ category }: Props) {
 
-  const imageUrl = category.image.startsWith("http")
-  ? category.image
-  : `http://127.0.0.1:8000${category.image}`
+  const imageUrl = category.image
+  ? category.image.startsWith("http")
+    ? category.image
+    : `http://127.0.0.1:8000${category.image}`
+  : "/placeholder.png"
 
   return (
     <Link
