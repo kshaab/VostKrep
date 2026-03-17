@@ -1,0 +1,16 @@
+[run]
+source = project
+branch = True
+omit =
+    */migrations/*
+    */__init__.py
+    */admin.py
+    */apps.py
+    */tests/*
+    */settings.py
+    */wsgi.py
+    */asgi.py
+    */manage.py
+    */urls.py
+    */serializers.py
+    */celery.py

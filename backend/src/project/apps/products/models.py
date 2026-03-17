@@ -17,10 +17,10 @@ class Category(models.Model):
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """Автоматическое создание slug по названию категории"""
         if not self.slug:
             self.slug = slugify(unidecode(str(self.name)))
@@ -42,10 +42,11 @@ class Product(models.Model):
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
-    def __str__(self):
+
+    def __str__(self) -> str:
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """Автоматическое создание slug по названию продукта"""
         if not self.slug:
             self.slug = slugify(unidecode(str(self.name)))
@@ -62,8 +63,9 @@ class ProductOption(models.Model):
     class Meta:
         verbose_name = "Размер товара"
         verbose_name_plural = "Размеры товара"
+        unique_together = ["product", "size"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.product.name} – {self.size}"
 
 

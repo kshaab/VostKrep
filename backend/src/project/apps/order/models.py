@@ -22,7 +22,7 @@ class Order(models.Model):
         verbose_name = "Заявка"
         verbose_name_plural = "Заявки"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Заявка {self.id}"
 
 

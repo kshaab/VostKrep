@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from .models import Order
 from.serializers import OrderSerializer
@@ -18,12 +19,13 @@ class OrderCreateAPIView(generics.CreateAPIView):
     throttle_classes = [AnonRateThrottle]
     parser_classes = [MultiPartParser, FormParser]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer: Serializer) -> None:
+        """Выполняет задачу"""
         order = serializer.save()
         send_order_to_telegram.delay(order.id)
 
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs) -> Response:
         """Создает кастомный ответ при успешной отправке заявки"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

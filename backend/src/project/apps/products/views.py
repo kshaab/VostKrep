@@ -1,25 +1,22 @@
 from rest_framework import viewsets
-from rest_framework.request import Request
 
-from .models import Category, Product
-from .serializers import ProductSerializer, CategorySerializer
-from .services import CacheProducts, CacheCategories
+from project.apps.products.models import Category
+from project.apps.products.pagination import ProductPagination, CategoryPagination
+from project.apps.products.serializers import ProductSerializer, CategorySerializer
+from project.apps.products.services import CacheProducts, CacheCategories
 
 
 # Вьюсет для продуктов, только чтение, поиск по slug
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Product.objects.filter(is_active=True)
+
     serializer_class = ProductSerializer
     lookup_field = "slug"
+    pagination_class = ProductPagination
 
     def get_queryset(self):
-        """Использует кеширование для списка продуктов с возможностью фильтрации по категории"""
-        request = self.request
 
-        if hasattr(request, "query_params"):
-            category_slug = request.query_params.get("category")
-        else:
-            category_slug = request.GET.get("category")
+        category_slug = self.request.query_params.get("category")
+
         if category_slug:
             return CacheProducts.get_product_list(category_slug)
 
@@ -31,6 +28,7 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.filter(is_active=True)
     serializer_class = CategorySerializer
     lookup_field = "slug"
+    pagination_class = CategoryPagination
 
     def get_queryset(self):
         """Использует кеширование для списка категорий"""

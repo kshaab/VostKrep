@@ -1,9 +1,14 @@
-// import ProductDetail from "@/components/products/ProductDetail"
-//
-// type Props = {
-//   params: { slug: string }
-// }
-//
-// export default function ProductPage() {
-//   return <ProductDetail productSlug={slug} />
-// }
+import ProductDetail from "@/components/products/ProductDetail"
+
+type Props = {
+  params: Promise<{
+    slug: string
+  }>
+}
+
+export default async function ProductPage({ params }: Props) {
+
+  const { slug } = await params
+
+  return <ProductDetail slug={slug} />
+}

@@ -41,7 +41,7 @@ class StaticPage(models.Model):
     def __str__(self):
         return self.title
 
-
+# Модель секций статичных страниц
 class StaticPageSection(models.Model):
     page = models.ForeignKey(
         StaticPage,
@@ -59,7 +59,7 @@ class StaticPageSection(models.Model):
     def __str__(self):
         return self.title
 
-
+# Модель элементов статичных страниц
 class StaticPageItem(models.Model):
     section = models.ForeignKey(
         StaticPageSection,

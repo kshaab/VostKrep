@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { endpoints} from "@/lib/api";
-import InputMask from "react-input-mask";
+import { IMaskInput } from "react-imask";
 
 {/* Форма корзины  */}
 export default function CartForm() {
@@ -152,23 +152,16 @@ export default function CartForm() {
                 className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
               />
 
-              <InputMask
-                mask="+7 (999) 999-99-99"
-                maskChar=""
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              >
-                {(inputProps: any) => (
-                  <input
-                    {...inputProps}
-                    name="phone"
-                    type="tel"
-                    required
-                    placeholder="Телефон"
-                    className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
-                  />
-                )}
-              </InputMask>
+
+            <IMaskInput
+            name="phone"
+            mask="+7 (000) 000-00-00"
+            value={form.phone}
+            onAccept={(value: string) => setForm({ ...form, phone: value })}
+            overwrite
+            className="w-full border p-3 rounded-lg bg-[#F2F3F4]"
+            placeholder="+7 (999) 999-99-99"
+          />
 
               <input
                 name="email"

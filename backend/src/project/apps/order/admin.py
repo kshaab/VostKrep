@@ -1,14 +1,15 @@
 from django.contrib import admin
 from .models import Order, OrderItem
 
-# Товары в админке в виде таблицы внутри заказа
+
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
     can_delete = False
     readonly_fields = ("product_name", "quantity")
 
-# Админка для просмотра полного заказа
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "phone", "email", "created_at")

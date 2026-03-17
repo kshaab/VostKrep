@@ -10,9 +10,12 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
 
-  const imageUrl = product.image
-    ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-    : "/placeholder.png"
+  const imageUrl =
+    product.image
+      ? product.image.startsWith("http")
+        ? product.image
+        : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
+      : "/placeholder.png"
 
   return (
     <Link
@@ -32,7 +35,9 @@ export default function ProductCard({ product }: Props) {
           src={imageUrl}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-contain"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          unoptimized
         />
       </div>
     </Link>

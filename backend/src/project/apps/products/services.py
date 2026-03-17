@@ -1,56 +1,82 @@
 from django.core.cache import cache
 from django.conf import settings
+from django.db.models import QuerySet
+
 from .models import Product, Category
 from django_redis import get_redis_connection
 
-#Кеширование страницы продуктов
-class CacheProducts:
-    @staticmethod
-    def get_product_list(category_name=None):
-        """Список продуктов по категориям с низкоуровневым кешированием"""
-        if not getattr(settings, "CACHE_ENABLED", False):
-            return Product.objects.all().order_by("id")
 
-        key = f"products_{category_name or 'all'}"
-        product_ids = cache.get(key)
-        if product_ids is None:
+class CacheProducts:
+    """Кеширование страницы продуктов"""
+
+    @staticmethod
+    def get_product_list(category_slug=None) -> QuerySet:
+        """Список продуктов по категории с кешированием"""
+
+        if not getattr(settings, "CACHE_ENABLED", False):
             qs = Product.objects.filter(is_active=True)
-            if category_name:
-                qs = qs.filter(category__name=category_name)
+
+            if category_slug:
+                qs = qs.filter(category__slug=category_slug)
+
+            return qs.order_by("id")
+
+        key = f"products_{category_slug or 'all'}"
+        product_ids = cache.get(key)
+
+        if product_ids is None:
+
+            qs = Product.objects.filter(is_active=True)
+
+            if category_slug:
+                qs = qs.filter(category__slug=category_slug)
+
             product_ids = list(qs.values_list("id", flat=True))
-            cache.set(key, product_ids, timeout=60*60)
+
+            cache.set(key, product_ids, timeout=60 * 60)
+
         return Product.objects.filter(id__in=product_ids).order_by("id")
 
     @staticmethod
-    def get_products_from_cache():
-        """Список всех активных продуктов с кешированием"""
+    def get_products_from_cache() -> QuerySet:
+        """Список всех продуктов"""
+
         if not getattr(settings, "CACHE_ENABLED", False):
             return Product.objects.filter(is_active=True)
 
         key = "product_list"
-        product_id = cache.get(key)
-        if product_id is not None:
-            return Product.objects.filter(id__in=product_id).order_by("id")
 
-        qs = Product.objects.filter(is_active=True)
-        product_ids = list(qs.values_list("id", flat=True))
-        cache.set(key, product_ids, timeout=60*60)
-        return qs
+        product_ids = cache.get(key)
+
+        if product_ids is None:
+            qs = Product.objects.filter(is_active=True)
+
+            product_ids = list(qs.values_list("id", flat=True))
+
+            cache.set(key, product_ids, timeout=60 * 60)
+
+            return qs
+
+        return Product.objects.filter(id__in=product_ids).order_by("id")
 
     @staticmethod
-    def clear_product_cache():
-        """Очищает кеш страницы продуктов"""
+    def clear_product_cache() -> None:
+        """Очистка кеша продуктов"""
+
         redis_conn = get_redis_connection("default")
+
         keys = redis_conn.keys("products_*")
         keys.append(b"product_list")
+
         if keys:
             redis_conn.delete(*keys)
 
 
-#Кеширование страницы категорий
+
 class CacheCategories:
+    """Кеширование страницы категорий"""
     @staticmethod
-    def get_category_list():
+    def get_category_list() -> QuerySet:
         """Список всех активных категорий с кешированием"""
         if not getattr(settings, "CACHE_ENABLED", False):
             return Category.objects.filter(is_active=True)

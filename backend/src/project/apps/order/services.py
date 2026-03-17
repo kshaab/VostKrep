@@ -1,8 +1,10 @@
 import requests
 from django.conf import settings
 
+from project.apps.order.models import Order
 
-def send_telegram_order(order):
+
+def send_telegram_order(order: Order) -> None:
     """Отправляет сообщение о новой заявке в Телеграм-чат"""
     message = (
         f"Новая заявка #{order.id}\n\n"

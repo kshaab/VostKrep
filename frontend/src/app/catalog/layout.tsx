@@ -1,5 +1,5 @@
-import FooterLight from "@/components/layout/FooterLight"
-import Header from "@/components/layout/Header";
+import FooterDark from "@/components/layout/FooterDark"
+import HeaderLight from "@/components/layout/HeaderLight";
 
 export default function CatalogLayout({
   children,
@@ -8,9 +8,9 @@ export default function CatalogLayout({
 }) {
   return (
     <>
-      <Header />
+      <HeaderLight />
       {children}
-      <FooterLight />
+      <FooterDark />
     </>
   )
 }

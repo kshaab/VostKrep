@@ -12,7 +12,7 @@ export default function HomePage() {
     <div className="bg-[#003399] text-[#F2F3F4] relative">
       <section className="bg-[#003399] py-10">
         <div className="mx-auto px-6">
-          <h1 className=" font-heading text-5xl md:text-7xl leading-none tracking-[0.04em] font-bold mx-auto max-w-6xl">
+          <h1 className=" font-heading text-5xl md:text-7xl  tracking-[0.04em] font-bold mx-auto max-w-6xl">
             ВОСТОЧНЫЙ КРЕПЕЖ
           </h1>
         </div>

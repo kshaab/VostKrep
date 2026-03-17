@@ -1,28 +1,24 @@
+from collections import defaultdict
+
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from unidecode import unidecode
 import pandas as pd
+
 from django.db.models.signals import post_save, post_delete
-from apps.products.models import Category, Product, ProductOption
-from apps.products.signals import clear_product_cache_signal,clear_category_cache
 
+from project.apps.products.models import Product, Category, ProductOption
+from project.apps.products.signals import clear_product_cache_signal, clear_category_cache
 
-
-post_save.disconnect(clear_product_cache_signal, sender=Product)
-post_delete.disconnect(clear_product_cache_signal, sender=Product)
-
-post_save.disconnect(clear_category_cache, sender=Category)
-post_delete.disconnect(clear_category_cache, sender=Category)
 
 def safe_str(value):
-    """Приводит любое значение к строке"""
     if value is None:
         return ""
     return str(value).strip()
 
 
 class Command(BaseCommand):
-    help = "Импорт товаров из Excel"
+    help = "Импорт товаров из Excel (с синхронизацией)"
 
     def add_arguments(self, parser):
         parser.add_argument("file_path", type=str)
@@ -30,7 +26,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         file_path = kwargs["file_path"]
 
-        # отключаем сигналы на время импорта
+        # отключаем сигналы
         post_save.disconnect(clear_product_cache_signal, sender=Product)
         post_delete.disconnect(clear_product_cache_signal, sender=Product)
         post_save.disconnect(clear_category_cache, sender=Category)
@@ -38,51 +34,59 @@ class Command(BaseCommand):
 
         df = pd.read_excel(file_path)
 
-        for _, row in df.iterrows():
-            # --- Категория ---
-            category_name = safe_str(row.get("Категория"))
-            base_slug_cat = slugify(unidecode(category_name))[:150]
-            slug_cat = base_slug_cat
-            counter = 1
-            while Category.objects.filter(slug=slug_cat).exists():
-                suffix = f"-{counter}"
-                slug_cat = f"{base_slug_cat[:150-len(suffix)]}{suffix}"
-                counter += 1
+        product_sizes_map = defaultdict(set)
 
-            category, _ = Category.objects.get_or_create(
+        for _, row in df.iterrows():
+            category_name = safe_str(row.get("Категория"))
+            product_name = safe_str(row.get("Наименование"))
+            sku = safe_str(row.get("Артикул"))
+            size = safe_str(row.get("Размер"))[:150]
+
+            # -------- CATEGORY --------
+            category, created = Category.objects.get_or_create(
                 name=category_name,
-                defaults={"slug": slug_cat}
+                defaults={
+                    "slug": slugify(unidecode(category_name))[:150]
+                }
             )
 
-            # --- Продукт ---
-            product_name = safe_str(row.get("Наименование"))
-            base_slug_prod = slugify(unidecode(product_name))[:150]
-            slug_prod = base_slug_prod
-            counter = 1
-            while Product.objects.filter(slug=slug_prod).exists():
-                suffix = f"-{counter}"
-                slug_prod = f"{base_slug_prod[:150-len(suffix)]}{suffix}"
-                counter += 1
-
-            product, _ = Product.objects.update_or_create(
-                sku=safe_str(row.get("Артикул")),
+            # -------- PRODUCT --------
+            product, created = Product.objects.update_or_create(
+                sku=sku,
                 defaults={
                     "name": product_name,
-                    "slug": slug_prod,
                     "category": category,
                     "description": safe_str(row.get("Описание")),
                     "unit": safe_str(row.get("Единица измерения")),
                 }
             )
 
-            # --- Опция продукта ---
-            size = safe_str(row.get("Размер"))[:150]
-            sku_option = f"{safe_str(row.get('Артикул'))}-{size}"[:150]
+            # slug только при создании
+            if created and not product.slug:
+                product.slug = slugify(unidecode(product_name))[:150]
+                product.save()
 
-            ProductOption.objects.update_or_create(
-                product=product,
-                size=size,
-                defaults={"sku": sku_option}
-            )
+            # -------- OPTIONS --------
+            if size:
+                sku_option = f"{sku}-{size}"[:150]
+
+                ProductOption.objects.update_or_create(
+                    product=product,
+                    size=size,
+                    defaults={"sku": sku_option}
+                )
+
+                product_sizes_map[sku].add(size)
+
+        # -------- УДАЛЕНИЕ ЛИШНИХ РАЗМЕРОВ --------
+        for sku, sizes in product_sizes_map.items():
+            try:
+                product = Product.objects.get(sku=sku)
+            except Product.DoesNotExist:
+                continue
+
+            ProductOption.objects.filter(product=product)\
+                .exclude(size__in=sizes)\
+                .delete()
 
         self.stdout.write(self.style.SUCCESS("Импорт завершён"))

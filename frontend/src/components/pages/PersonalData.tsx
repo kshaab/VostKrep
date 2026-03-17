@@ -78,7 +78,7 @@ export default function PersonalData() {
 
   return (
     <div className="min-h-screen bg-[#F2F3F4] text-[#003399] px-6 py-12 md:px-20 lg:px-40 overflow-y-auto font-sans">
-      <h1 className="font-heading text-5xl md:text-6xl leading-none tracking-[0.04em] mb-10">
+      <h1 className="font-heading text-5xl md:text-6xl leading-none tracking-[0.04em] mb-10 font-bold">
         {page.title}
       </h1>
 

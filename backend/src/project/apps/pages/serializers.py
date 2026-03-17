@@ -1,11 +1,21 @@
 from rest_framework import serializers
 from .models import DeliveryPage, DeliveryItem, StaticPage, StaticPageItem, StaticPageSection
+from .validators import PageValidator
 
 
 class DeliveryItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryItem
-        fields = ["id", "text", "order"]
+        fields = ["id", "title", "text", "order"]
+
+    def validate(self, data):
+        PageValidator.validate_item(
+            title=data.get("title", ""),
+            text=data.get("text", ""),
+            order=data.get("order", 0)
+        )
+        return data
+
 
 
 class DeliveryPageSerializer(serializers.ModelSerializer):
@@ -13,25 +23,48 @@ class DeliveryPageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DeliveryPage
-        fields = [
-            "title",
-            "content",
-            "seo_title",
-            "seo_description",
-            "items",
-        ]
+        fields = ["title", "content", "seo_title", "seo_description", "items"]
+
+    def validate(self, data):
+        PageValidator.validate_page(
+            title=data.get("title", ""),
+            content=data.get("content", ""),
+            seo_title=data.get("seo_title", ""),
+            seo_description=data.get("seo_description", "")
+        )
+        return data
+
+
 
 class StaticPageItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaticPageItem
-        fields = ["title", "text"]
+        fields = ["title", "text", "order"]
+
+    def validate(self, data):
+        PageValidator.validate_item(
+            title=data.get("title", ""),
+            text=data.get("text", ""),
+            order=data.get("order", 0)
+        )
+        return data
+
 
 class StaticPageSectionSerializer(serializers.ModelSerializer):
     items = StaticPageItemSerializer(many=True)
 
     class Meta:
         model = StaticPageSection
-        fields = ["title", "subtitle", "items"]
+        fields = ["title", "subtitle", "order", "items"]
+
+    def validate(self, data):
+        PageValidator.validate_item(
+            title=data.get("title", ""),
+            text=data.get("subtitle", ""),
+            order=data.get("order", 0)
+        )
+        return data
+
 
 class StaticPageSerializer(serializers.ModelSerializer):
     sections = StaticPageSectionSerializer(many=True)
@@ -39,5 +72,14 @@ class StaticPageSerializer(serializers.ModelSerializer):
     class Meta:
         model = StaticPage
         fields = ["slug", "title", "content", "seo_title", "seo_description", "sections"]
+
+    def validate(self, data):
+        PageValidator.validate_page(
+            title=data.get("title", ""),
+            content=data.get("content", ""),
+            seo_title=data.get("seo_title", ""),
+            seo_description=data.get("seo_description", "")
+        )
+        return data
 
 

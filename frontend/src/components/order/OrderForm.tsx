@@ -107,11 +107,12 @@ export default function OrderForm({ isOpen, onClose }: Props) {
 
 
           <IMaskInput
+            name="phone"
             mask="+7 (000) 000-00-00"
             value={form.phone}
             onAccept={(value: string) => setForm({ ...form, phone: value })}
             overwrite
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            className="w-full border p-3 rounded-lg bg-[#F2F3F4] font-sans text-[#003399]"
             placeholder="+7 (999) 999-99-99"
           />
 

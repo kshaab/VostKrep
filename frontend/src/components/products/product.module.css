@@ -7,12 +7,14 @@
 }
 
 .title {
-  font-size: 70px;
+  font-size: 65px;
   font-family: "Bebas Neue", sans-serif;
   color: #003399;
   margin-left: 15px;
+  margin-top: 30px;
+  margin-bottom: 30px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
 }
 
 .card {
@@ -24,7 +26,7 @@
   padding: 60px 100px 60px 140px;
   margin-left: 230px;
   margin-right: 20px;
-  margin-bottom: 25px;
+  margin-bottom: 50px;
   overflow: visible;
 }
 
@@ -41,7 +43,7 @@
 
 .infoBlock {
   margin-left: auto;
-  color: white;
+  color: #f2f2f2;
   width: 350px;
 }
 
@@ -69,7 +71,7 @@
 .control button {
   background: transparent;
   border: none;
-  color: white;
+  color: #f2f2f2;
   font-size: 28px;
   cursor: pointer;
 }
@@ -84,17 +86,17 @@
   height: 80px;
   padding: 18px;
   font-size: 30px;
-  border: 2px solid white;
+  border: 2px solid #f2f2f2;
   background: transparent;
-  color: white;
+  color: #f2f2f2;
   cursor: not-allowed;
   transition: 0.3s ease;
   font-family: "Bebas Neue", sans-serif;
   margin-top: 10px;
 }
 
-.addBtn.active {
+.addBtn:hover {
   background: #F0660A;
-  border-color: #F0660A;
-  cursor: pointer;
+  border: none;
+  color: white;
 }
