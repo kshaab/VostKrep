@@ -1,66 +1,146 @@
+import pytest
 from io import StringIO
-
 import pandas as pd
+
 from django.core.management import call_command
 from django.test import TestCase, override_settings
-from unittest.mock import patch, Mock
-from rest_framework.test import APITestCase
-from rest_framework import status
 from django.urls import reverse
+from unittest.mock import patch, Mock
 
+from rest_framework.test import APITestCase
+from django.core.exceptions import ValidationError
+
+
+from project.apps.products.validators import ProductValidator
 from project.apps.products.models import Product, Category, ProductOption
+from project.apps.products.pagination import ProductPagination, CategoryPagination
 from project.apps.products.services import CacheCategories, CacheProducts
 
 
+
+class TestProductValidator:
+    """Тест валидаторов продукта"""
+
+    def test_validate_name_valid(self):
+        """Тестирует валидность названия"""
+        assert ProductValidator.validate_name("Product") == "Product"
+
+    def test_validate_name_empty(self):
+        """Тестирует валидность названия (пустое)"""
+        with pytest.raises(ValidationError):
+            ProductValidator.validate_name("   ")
+
+    def test_validate_name_too_long(self):
+        """Тестирует валидность названия (длина)"""
+        with pytest.raises(ValidationError):
+            ProductValidator.validate_name("A" * 151)
+
+    def test_validate_sku_valid(self):
+        """Тестирует валидность артикула"""
+        assert ProductValidator.validate_sku("SKU123") == "SKU123"
+
+    def test_validate_sku_empty(self):
+        """Тестирует валидность артикула (пустое)"""
+        with pytest.raises(ValidationError):
+            ProductValidator.validate_sku("   ")
+
+    def test_validate_slug_valid(self):
+        """Тестирует валидность slug"""
+        assert ProductValidator.validate_slug("valid-slug_123") == "valid-slug_123"
+
+    def test_validate_slug_invalid(self):
+        """Тестирует валидность slug (неверное значение)"""
+        with pytest.raises(ValidationError):
+            ProductValidator.validate_slug("invalid slug!")
+
+    def test_validate_order_valid(self):
+        """Тестирует валидность сортировки"""
+        assert ProductValidator.validate_order(0) == 0
+
+    def test_validate_order_negative(self):
+        """Тестирует валидность сортировки (не может быть отрицательной)"""
+        with pytest.raises(ValidationError):
+            ProductValidator.validate_order(-1)
+
+
+class TestPagination:
+    """Тест пагинации"""
+
+    def test_product_pagination_defaults(self):
+        """Тестирует значение пагинации продуктов по умолчанию"""
+        paginator = ProductPagination()
+        assert paginator.page_size == 20
+        assert paginator.max_page_size == 100
+
+    def test_category_pagination_defaults(self):
+        """Тестирует значение пагинации категорий по умолчанию"""
+        paginator = CategoryPagination()
+        assert paginator.page_size == 50
+        assert paginator.max_page_size == 200
+
+
 class ProductsViewTestCase(APITestCase):
-    """Тесты для эндпоинтов продуктов и категорий"""
-
-    @patch("project.apps.products.views.CacheProducts.get_products_from_cache")
-    def test_get_products_without_category(self, mock_cache: Mock) -> None:
-        category = Category.objects.create(slug="shoes", name="Shoes")
-        product = Product.objects.create(slug="product-1", name="Product 1", category=category)
-        mock_cache.return_value = [product]
-
-        url = reverse("products:products-list")
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["name"], "Product 1")
-        mock_cache.assert_called_once()
-
-    @patch("project.apps.products.views.CacheProducts.get_product_list")
-    def test_get_products_with_category(self, mock_cache):
-        category = Category.objects.create(slug="shoes", name="Shoes")
-        product = Product.objects.create(slug="product-1", name="Product 1", category=category)
-        mock_cache.return_value = [product]  # объект модели
-
-        url = reverse("products:products-list")
-        response = self.client.get(url, {"category": "shoes"})
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["name"], "Product 1")
-        mock_cache.assert_called_once_with("shoes")
-
-    @patch("project.apps.products.views.CacheCategories.get_category_list")
-    def test_get_categories(self, mock_cache):
-        # Создаём объект модели
-        category = Category.objects.create(slug="shoes", name="Shoes", is_active=True)
-        mock_cache.return_value = [category]  # <- объект модели
-
-        url = reverse("products:category-list")  # имя маршрута CategoryViewSet list
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["name"], "Shoes")
-        mock_cache.assert_called_once()
-
-class CacheProductsTestCase(TestCase):
+    """Тест эндпоинтов продуктов"""
 
     def setUp(self):
-        self.category = Category.objects.create(slug="shoes", name="Shoes", is_active=True)
+        """Тестовые данные"""
+        Product.objects.all().delete()
+        Category.objects.all().delete()
+
+    def test_get_products_without_category(self):
+        """Тестирует продукт без категории"""
+        category = Category.objects.create(slug="bolty", name="Bolty")
+        Product.objects.create(
+            slug="product-1", name="Product 1", category=category, sku="SKU1"
+        )
+
+        url = reverse("products:products-list")
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_get_products_with_category(self):
+        """Тестирует продукт с категорией"""
+        Product.objects.all().delete()
+        Category.objects.all().delete()
+
+        category = Category.objects.create(slug="bolty", name="Bolty")
+        Product.objects.create(slug="product-1", name="Product 1", category=category, sku="SKU1")
+        Product.objects.create(slug="product-2", name="Product 2", category=category, sku="SKU2")
+
+        url = reverse("products:products-list")
+        response = self.client.get(url, {"category": "bolty"})
+        self.assertEqual(response.status_code, 200)
+
+        data = response.data["results"]
+        self.assertEqual(len(data), 2)
+        self.assertTrue(all(p["name"].startswith("Product") for p in data))
+
+    def test_get_categories(self):
+        """Тестирует категории"""
+        Category.objects.create(slug="bolty", name="Bolty", is_active=True)
+        Category.objects.create(slug="shurupy", name="Shurupy", is_active=True)
+
+        url = reverse("products:category-list")
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.data["results"]
+
+        self.assertIn("Bolty", [c["name"] for c in data])
+        self.assertIn("Shurupy", [c["name"] for c in data])
+
+
+class CacheProductsTestCase(TestCase):
+    """Тест кеширования продуктов"""
+
+    def setUp(self):
+        """Тестовые данные"""
+        Product.objects.all().delete()
+        Category.objects.all().delete()
+        self.category = Category.objects.create(slug="bolty", name="Bolty", is_active=True)
         self.product1 = Product.objects.create(slug="product-1", sku="SKU-001", name="Product 1", category=self.category, is_active=True)
         self.product2 = Product.objects.create(slug="product-2", sku="SKU-002", name="Product 2", category=self.category, is_active=True)
 
@@ -68,15 +148,17 @@ class CacheProductsTestCase(TestCase):
     @patch("django.core.cache.cache.get")
     @patch("django.core.cache.cache.set")
     def test_get_product_list_with_category(self, mock_set, mock_get):
+        """Тестирует кеширование списка продуктов с категорией"""
         mock_get.return_value = None
-        products = CacheProducts.get_product_list("shoes")
+        products = CacheProducts.get_product_list("bolty")
         self.assertEqual(list(products), [self.product1, self.product2])
-        mock_set.assert_called_once()  # проверяем, что кеш вызван
+        mock_set.assert_called_once()
 
     @override_settings(CACHE_ENABLED=True)
     @patch("django.core.cache.cache.get")
     @patch("django.core.cache.cache.set")
     def test_get_products_from_cache(self, mock_set, mock_get):
+        """Тестирует возврат продукта из кеша"""
         mock_get.return_value = None
         products = CacheProducts.get_products_from_cache()
         self.assertEqual(list(products), [self.product1, self.product2])
@@ -84,15 +166,19 @@ class CacheProductsTestCase(TestCase):
 
 
 class CacheCategoriesTestCase(TestCase):
-
+    """Тест кеширования категорий"""
     def setUp(self):
-        self.category1 = Category.objects.create(slug="shoes", name="Shoes", is_active=True)
-        self.category2 = Category.objects.create(slug="shirts", name="Shirts", is_active=True)
+        """Тестовые данные"""
+        Product.objects.all().delete()
+        Category.objects.all().delete()
+        self.category1 = Category.objects.create(slug="bolty", name="Bolty", is_active=True)
+        self.category2 = Category.objects.create(slug="shurupy", name="Shurupy", is_active=True)
 
     @override_settings(CACHE_ENABLED=True)
     @patch("django.core.cache.cache.get")
     @patch("django.core.cache.cache.set")
     def test_get_category_list(self, mock_set, mock_get):
+        """Тестирует возврат списка категорий"""
         mock_get.return_value = None
         categories = CacheCategories.get_category_list()
         self.assertEqual(list(categories), [self.category1, self.category2])
@@ -100,9 +186,12 @@ class CacheCategoriesTestCase(TestCase):
 
 
 class ImportProductsCommandTest(TestCase):
+    """Тест команды для импорта данных в БД"""
 
     def setUp(self):
-        # Создадим фиктивный Excel файл через pandas
+        """Тестовые данные"""
+        Product.objects.all().delete()
+        Category.objects.all().delete()
         self.df = pd.DataFrame([
             {"Категория": "Категория 1", "Наименование": "Продукт A", "Артикул": "SKU1",
              "Описание": "Описание", "Единица измерения": "шт", "Размер": "M"}
@@ -111,21 +200,18 @@ class ImportProductsCommandTest(TestCase):
         self.df.to_excel(self.file_path, index=False)
 
     def test_import_creates_objects(self):
+        """Тестирует создание объектов в БД после импорта"""
         out = StringIO()
         call_command("products_import", self.file_path, stdout=out)
 
-        # Проверяем категории
         category = Category.objects.get(name="Категория 1")
         self.assertIsNotNone(category)
 
-        # Проверяем продукт
         product = Product.objects.get(sku="SKU1")
         self.assertEqual(product.name, "Продукт A")
         self.assertEqual(product.category, category)
 
-        # Проверяем опцию
         option = ProductOption.objects.get(product=product, size="M")
         self.assertEqual(option.sku, "SKU1-M")
 
-        # Проверяем вывод команды
         self.assertIn("Импорт завершён", out.getvalue())

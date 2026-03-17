@@ -1,10 +1,15 @@
 from unittest.mock import patch, Mock
+
+import pytest
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from project.apps.pages.models import StaticPage, DeliveryPage
 from project.apps.pages.services import CacheDeliveryPage, CacheStaticPage
 from django.test import TestCase, override_settings
+
+from project.apps.pages.validators import PageValidator
 
 
 class PagesViewTestCase(APITestCase):
@@ -66,3 +71,48 @@ class CachePagesTestCase(TestCase):
         page = CacheStaticPage.get_page("about")
         self.assertEqual(page, self.static)
         mock_set.assert_called_once_with("page:about", self.static, timeout=60*60)
+
+
+class TestPageValidator:
+    """Тест валидаторов страниц"""
+
+    def test_validate_title_valid(self):
+        """Тестирует валидность заголовка"""
+        assert PageValidator.validate_title("My Page") == "My Page"
+
+    def test_validate_title_empty(self):
+        """Тестирует валидность заголовка (пустой)"""
+        with pytest.raises(ValidationError):
+            PageValidator.validate_title("   ")
+
+    def test_validate_title_too_long(self):
+        """Тестирует длину заголовка"""
+        with pytest.raises(ValidationError):
+            PageValidator.validate_title("A" * 256)
+
+    def test_validate_text_valid(self):
+        """Тестирует валидность контента страницы"""
+        assert PageValidator.validate_text("Some content") == "Some content"
+
+    def test_validate_text_empty(self):
+        """Тестирует валидность контента страницы (пустой)"""
+        with pytest.raises(ValidationError):
+            PageValidator.validate_text("   ")
+
+    def test_validate_seo_title_valid(self):
+        """Тестирует валидность seo_title"""
+        assert PageValidator.validate_seo_title("SEO Title") == "SEO Title"
+
+    def test_validate_seo_title_too_long(self):
+        """Тестирует длину seo_title"""
+        with pytest.raises(ValidationError):
+            PageValidator.validate_seo_title("A" * 256)
+
+    def test_validate_order_valid(self):
+        """Тестирует валидность очередности"""
+        assert PageValidator.validate_order(5) == 5
+
+    def test_validate_order_negative(self):
+        """Тестирует валидность очередности (не может быть отрицательной)"""
+        with pytest.raises(ValidationError):
+            PageValidator.validate_order(-1)

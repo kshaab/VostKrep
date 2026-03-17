@@ -40,49 +40,50 @@ export default function CartForm() {
   if (!isOpen || typeof window === "undefined") return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (items.length === 0) {
-      alert("Корзина пуста");
-      return;
-    }
+  if (items.length === 0) {
+    alert("Корзина пуста");
+    return;
+  }
 
-    const formData = new FormData(e.currentTarget);
+  const formData = new FormData();
 
-    const orderData = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      address: formData.get("address"),
-      comment: formData.get("comment"),
-      items: items.map((item) => ({
+  formData.append("name", form.name);
+  formData.append("phone", form.phone);
+  formData.append("email", form.email);
+  formData.append("address", form.address);
+
+  const comment = (e.currentTarget.elements.namedItem("comment") as HTMLTextAreaElement)?.value || "";
+  formData.append("comment", comment);
+
+  formData.append(
+    "items",
+    JSON.stringify(
+      items.map((item) => ({
         option_id: item.option_id,
         quantity: item.quantity,
-      })),
-    };
+      }))
+    )
+  );
 
-    setLoading(true);
+  setLoading(true);
 
-    const res = await fetch(endpoints.orders, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderData),
-    });
+  const res = await fetch(endpoints.orders, {
+    method: "POST",
+    body: formData,
+  });
 
-    setLoading(false);
+  setLoading(false);
 
-    if (res.ok) {
-      alert("Заказ отправлен!");
-      const comment = e.currentTarget.elements.namedItem("comment") as HTMLTextAreaElement;
-      if (comment) comment.value = "";
-      clearCart();
-      closeCart();
-    } else {
-      alert("Ошибка отправки");
-    }
-  };
+  if (res.ok) {
+    alert("Заказ отправлен!");
+    clearCart();
+    closeCart();
+  } else {
+    alert("Ошибка отправки");
+  }
+};
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">

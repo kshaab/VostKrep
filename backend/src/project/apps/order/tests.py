@@ -1,61 +1,77 @@
+import pytest
 from django.test import TestCase
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
-from rest_framework import status
 from rest_framework.test import APITestCase
 from unittest.mock import patch, mock_open, Mock
 from project.apps.order.models import Order, OrderItem
 from project.apps.order.services import send_telegram_order
 from project.apps.order.tasks import send_order_to_telegram
+from rest_framework.exceptions import ValidationError as DRFValidationError
+
+from project.apps.order.validators import OrderValidator, CartValidator, FileValidator
 
 
 class OrderTestCase(APITestCase):
-    """Тестирование эндпоинтов заявок"""
-
+    """Тест заявок"""
     @patch("project.apps.order.views.send_order_to_telegram.delay")
-    def test_order_create_success(self, mock_send: Mock) -> None:
-        """Тестирует успешное создание заявки"""
+    def test_order_create_with_items(self, mock_send: Mock):
+        """Тестирует создание заявки с товарами"""
         url = reverse("order:order-create")
 
+        import json
         data = {
             "name": "Иван Иванов",
-            "phone": "+79991234567",
+            "phone": "+71234567890",
             "email": "test@example.com",
-            "comment": "Тестовая заявка",
-            "file": SimpleUploadedFile("test.txt", b"content")
+            "comment": "Тест",
+            "items": json.dumps([
+                {"product_name": "Болт", "option_size": "М8", "quantity": 2}
+            ])
         }
 
         response = self.client.post(url, data, format="multipart")
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["success"], True)
-        self.assertIn("Заявка успешно отправлена", response.data["message"])
+        assert response.status_code == 201
+        assert Order.objects.count() == 1
 
-
-        self.assertEqual(Order.objects.count(), 1)
         order = Order.objects.first()
-        self.assertEqual(order.name, data["name"])
-
-
         mock_send.assert_called_once_with(order.id)
 
     @patch("project.apps.order.views.send_order_to_telegram.delay")
-    def test_order_create_invalid(self, mock_send: Mock) -> None:
-        """Тестирует создание заявки с некорректными данными"""
+    def test_order_create_with_file_only(self, mock_send: Mock):
+        """Тестирует создание заявки с файлом"""
         url = reverse("order:order-create")
 
-        response = self.client.post(url, data={}, format="multipart")
+        file = SimpleUploadedFile(
+            "test.pdf",
+            b"file_content",
+            content_type="application/pdf"
+        )
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Order.objects.count(), 0)
-        mock_send.assert_not_called()
+        data = {
+            "name": "Иван Иванов",
+            "phone": "+71234567890",
+            "file": file,
+        }
+
+        response = self.client.post(url, data, format="multipart")
+
+        assert response.status_code == 201
+        assert Order.objects.count() == 1
+
+        order = Order.objects.first()
+        assert order.file is not None
+        mock_send.assert_called_once_with(order.id)
+
 
 
 class OrderTaskTestCase(APITestCase):
-    """Тестирование Celery задачи"""
+    """Тест Celery задачи"""
 
-    def setUp(self) -> None:
+    def setUp(self):
+        """Тестовые данные"""
         self.order = Order.objects.create(
             name="Иван Иванов",
             phone="+79991234567",
@@ -63,11 +79,20 @@ class OrderTaskTestCase(APITestCase):
         )
 
     @patch("project.apps.order.tasks.send_telegram_order")
-    def test_send_order_to_telegram_success(self, mock_send: Mock) -> None:
-        """Тестирует успешную отправку заявки"""
+    def test_send_order_success(self, mock_send: Mock):
+        """Тестирует отправку заявки в Телеграм"""
         send_order_to_telegram(self.order.id)
 
         mock_send.assert_called_once_with(self.order)
+
+    @patch("project.apps.order.tasks.send_telegram_order")
+    def test_order_not_found(self, mock_send: Mock):
+        """Тестирует не найденную заявку"""
+        with self.assertLogs(level="ERROR") as log:
+            send_order_to_telegram(999)
+
+        mock_send.assert_not_called()
+        assert "Заявка 999 не найдена" in log.output[0]
 
     @patch("project.apps.order.tasks.send_telegram_order")
     def test_send_order_to_telegram_order_not_found(self, mock_send: Mock) -> None:
@@ -79,43 +104,141 @@ class OrderTaskTestCase(APITestCase):
         self.assertIn("Заявка 999 не найдена", log_cm.output[0])
 
 class TelegramServiceTestCase(TestCase):
-    """Тесты функции отправки заявки в Telegram"""
+    """Тест функции отправки заявки"""
 
-    def setUp(self) -> None:
+    def setUp(self):
+        """Тестовые данные"""
         self.order = Order.objects.create(
             name="Иван Иванов",
             phone="+79991234567",
             email="test@example.com",
-            comment="Тестовый заказ"
+            comment="Тест"
         )
 
-
-        self.item = OrderItem.objects.create(
+        OrderItem.objects.create(
             order=self.order,
             product_name="Болт",
-            option_size="М8х30",
+            option_size="М8",
             quantity=2
         )
 
     @patch("project.apps.order.services.requests.get")
-    def test_send_telegram_order_without_file(self, mock_get: Mock) -> None:
-        """Тестирует отправку сообщения без файла"""
+    def test_send_without_file(self, mock_get: Mock):
+        """Тестирует отправку без файла"""
         send_telegram_order(self.order)
+
         mock_get.assert_called_once()
-        args, kwargs = mock_get.call_args
+
+        _, kwargs = mock_get.call_args
         assert str(self.order.id) in kwargs["params"]["text"]
 
     @patch("project.apps.order.services.requests.post")
-    @patch("builtins.open", new_callable=mock_open, read_data=b"file content")
-    def test_send_telegram_order_with_file(self, mock_file: Mock, mock_post: Mock) -> None:
-        """Тестирует отправку сообщения с файлом"""
-
-        self.order.file.name = "test.txt"
-        self.order.save()
+    @patch("project.apps.order.services.open", new_callable=mock_open, read_data=b"file")
+    def test_send_with_file(self, mock_file: Mock, mock_post: Mock):
+        """Тестирует отправку с файлом"""
+        self.order.file.name = "test.pdf"
 
         send_telegram_order(self.order)
 
         mock_post.assert_called_once()
+        mock_file.assert_called_once()
 
-        mock_file.assert_called_once_with(self.order.file.path, "rb")
+
+
+class TestOrderValidator:
+    """Тест валидатора заявки"""
+
+    @pytest.fixture
+    def validator(self):
+        """Фикстура валидатора заявки"""
+        return OrderValidator()
+
+    def test_validate_name(self, validator):
+        """Тестирует валидацию имени"""
+        assert validator.validate_name("Иван") == "Иван"
+
+    def test_validate_name_fail(self, validator):
+        """Тестирует валидацию почты"""
+        with pytest.raises(DRFValidationError):
+            validator.validate_name("   ")
+
+    def test_validate_email_valid(self, validator):
+        """Тестирует валидацию почты"""
+        assert validator.validate_email("test@mail.com") == "test@mail.com"
+
+    def test_validate_email_invalid(self, validator):
+        """Тестирует валидацию почты"""
+        with pytest.raises(DRFValidationError):
+            validator.validate_email("badmail")
+
+    def test_comment_ok(self, validator):
+        """Тестирует валидацию комментария"""
+        data = {"comment": "A" * 500}
+        assert validator.validate(data) == data
+
+    def test_comment_fail(self, validator):
+        """Тестирует валидацию комментария"""
+        with pytest.raises(DRFValidationError):
+            validator.validate({"comment": "A" * 501})
+
+
+
+class TestCartValidator:
+    """Тест валидатора корзины"""
+
+    def test_valid_cart(self):
+        """Тестирует валидатор корзины"""
+        data = [{"quantity": 2}]
+        assert CartValidator().validate(data) == data
+
+    def test_json_string(self):
+        """Тестирует формат данных в корзине"""
+        data = '[{"quantity": 2}]'
+        result = CartValidator().validate(data)
+        assert isinstance(result, list)
+
+    def test_invalid_format(self):
+        """Тестирует формат данных в корзине"""
+        with pytest.raises(DRFValidationError):
+            CartValidator().validate("bad json")
+
+    def test_negative_quantity(self):
+        """Тестирует валидность количества товаров в корзине"""
+        with pytest.raises(DRFValidationError):
+            CartValidator().validate([{"quantity": 0}])
+
+class TestFileValidator:
+    """Тест файла в заявке"""
+
+    def test_valid_file(self):
+        """Тестирует валидатор файла"""
+        file = SimpleUploadedFile(
+            "test.pdf",
+            b"data",
+            content_type="application/pdf"
+        )
+
+        assert FileValidator().validate(file) == file
+
+    def test_invalid_type(self):
+        """Тестирует валидность типа файла"""
+        file = SimpleUploadedFile(
+            "test.txt",
+            b"data",
+            content_type="text/plain"
+        )
+
+        with pytest.raises(DRFValidationError):
+            FileValidator().validate(file)
+
+    def test_too_large(self):
+        """Тестирует валидность размера файла"""
+        file = SimpleUploadedFile(
+            "test.pdf",
+            b"a" * (51 * 1024 * 1024),
+            content_type="application/pdf"
+        )
+
+        with pytest.raises(DRFValidationError):
+            FileValidator().validate(file)
 

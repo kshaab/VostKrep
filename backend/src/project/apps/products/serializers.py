@@ -10,6 +10,7 @@ class ProductOptionSerializer(serializers.ModelSerializer):
         fields = ["id", "size", "sku"]
 
     def validate(self, data):
+        """Валидирует sku"""
         ProductValidator.validate_name(data.get("size"), "size")
         ProductValidator.validate_sku(data.get("sku"))
         return data
@@ -32,6 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
         return None
 
     def validate(self, data):
+        """Валидирует sku"""
         ProductValidator.validate_name(data.get("size"), "size")
         ProductValidator.validate_sku(data.get("sku"))
         return data
@@ -52,6 +54,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
     def validate(self, data):
+        """Валидирует sku"""
         ProductValidator.validate_name(data.get("name"))
         ProductValidator.validate_sku(data.get("sku"))
         if data.get("slug"):

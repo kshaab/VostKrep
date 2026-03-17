@@ -2,8 +2,8 @@ from typing import Any, List
 
 from rest_framework import serializers
 from .models import Order, OrderItem
-from .validators import OrderValidator
-from ..products.models import ProductOption
+from .validators import OrderValidator, FileValidator, CartValidator
+
 
 
 # Сериализатор товаров
@@ -22,7 +22,8 @@ class OrderItemCreateSerializer(serializers.Serializer):
 
 # Сериализатор заявки
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemCreateSerializer(many=True, write_only=True)
+    items = serializers.JSONField(write_only=True, required=False)
+    file = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = Order
@@ -36,66 +37,42 @@ class OrderSerializer(serializers.ModelSerializer):
             "file",
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-        self.validator = OrderValidator()
+    def validate_file(self, value):
+        """Валидирует файл в заявке"""
+        return FileValidator().validate(value)
+
+    def validate_items(self, value):
+        """Валидирует товары в корзине"""
+        return CartValidator().validate(value)
 
     def validate_name(self, value):
-        return self.validator.validate_name(value)
-
-    def validate_phone(self, value):
-        return self.validator.validate_phone(value)
+        """Валидирует имя"""
+        return OrderValidator().validate_name(value)
 
     def validate_email(self, value):
-        return self.validator.validate_email(value)
+        """Валидирует почту"""
+        return OrderValidator().validate_email(value)
 
-    def validate_items(self, value: Any) -> List[dict]:
-        if not value:
-            raise serializers.ValidationError(
-                "Корзина пуста. Добавьте товары."
-            )
-        return value
 
-    def validate(self, data):
-        data = self.validator.validate(data)
-        return data
 
-    def create(self, validated_data: Any) -> Order:
-        items_data = validated_data.pop("items")
+    def create(self, validated_data):
+        """Создает заказ и товары в заказе"""
+        items_data = validated_data.pop("items", [])
 
         order = Order.objects.create(**validated_data)
 
-        option_ids = [item["option_id"] for item in items_data]
-
-        options = {
-            opt.id: opt
-            for opt in ProductOption.objects.filter(
-                id__in=option_ids,
-                is_active=True
-            ).select_related("product")
-        }
-
-        order_items = []
-
-        for item in items_data:
-            variant = options.get(item["option_id"])
-
-            if not variant:
-                raise serializers.ValidationError({
-                    "items": f"Товар с id={item['option_id']} не найден или неактивен"
-                })
-
-            order_items.append(
-                OrderItem(
-                    order=order,
-                    product_name=variant.product.name,
-                    option_size=variant.size,
-                    product_sku=str(variant.id),
-                    quantity=item["quantity"],
-                )
+        order_items = [
+            OrderItem(
+                order=order,
+                product_name=item.get("product_name", "Товар"),
+                option_size=item.get("option_size", ""),
+                quantity=item.get("quantity", 1),
             )
+            for item in items_data
+        ]
 
-        OrderItem.objects.bulk_create(order_items)
+        if order_items:
+            OrderItem.objects.bulk_create(order_items)
 
         return order

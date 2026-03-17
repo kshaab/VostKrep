@@ -43,6 +43,8 @@ export default function OrderForm({ isOpen, onClose }: Props) {
 
   const formData = new FormData(e.currentTarget);
 
+  formData.append("items", "[]");
+
   setLoading(true);
 
   try {

@@ -14,7 +14,7 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = ProductPagination
 
     def get_queryset(self):
-
+        """Использует кеширование для списка продуктов"""
         category_slug = self.request.query_params.get("category")
 
         if category_slug:
