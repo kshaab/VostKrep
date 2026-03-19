@@ -1,6 +1,8 @@
 services:
   web:
-    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     entrypoint: [ "/project/entrypoint.sh" ]
     env_file:
