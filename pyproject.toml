@@ -6,7 +6,7 @@ authors = [
     {name = "Ксения",email = "kssshaab@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13,<4.0"
+requires-python = "^3.12"
 dependencies = [
     "django (>=4.2,<6.0)",
     "django-cors-headers (>=4.9.0,<5.0.0)",
