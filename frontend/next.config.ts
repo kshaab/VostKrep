@@ -1,16 +1,12 @@
-import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig = {
   reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "127.0.0.1",
-        port: "8000",
-        pathname: "/media/**",
-      },
-    ],
+  webpack: (config: { resolve: { alias: { [x: string]: string; }; }; }) => {
+    config.resolve.alias["@"] = path.resolve(__dirname, "src");
+    return config;
   },
 };
+
+export default nextConfig;
 

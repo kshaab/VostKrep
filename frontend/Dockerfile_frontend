@@ -11,6 +11,8 @@ RUN npm ci
 
 COPY . .
 
+RUN ls -R src/lib
+
 RUN npm run build
 
 
