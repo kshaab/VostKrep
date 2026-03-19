@@ -10,10 +10,9 @@ COPY tsconfig.json ./
 
 COPY src ./src
 
+COPY lib ./lib
+
 RUN npm ci
-
-
-
 
 RUN npm run build
 
