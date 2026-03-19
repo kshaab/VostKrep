@@ -22,7 +22,9 @@ services:
       - app_network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend/Dockerfile_frontend
     restart: always
     command: npm run start
     env_file:
