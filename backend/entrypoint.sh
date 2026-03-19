@@ -1,10 +1,11 @@
+#!/bin/sh
 set -e
 
-# Применяем миграции
-python manage.py migrate
+echo "Применяем миграции..."
+python /project/backend/manage.py migrate
 
-# Собираем статические файлы
-python manage.py collectstatic --noinput
+echo "Собираем статические файлы..."
+python /project/backend/manage.py collectstatic --noinput
 
-# Запускаем gunicorn
-exec gunicorn project.wsgi:application --bind 0.0.0.0:8000 --workers 3
+echo "Запускаем Gunicorn..."
+exec gunicorn src.project.wsgi:application --bind 0.0.0.0:8000 --workers 3
