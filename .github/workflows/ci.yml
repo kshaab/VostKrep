@@ -76,10 +76,15 @@ jobs:
       - name: Login Docker Hub
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
 
-      - name: Build & Push
+      - name: Build & Push Frontend
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep:latest -f frontend/Dockerfile_frontend ./frontend
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep:latest
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep-frontend:latest -f frontend/Dockerfile_frontend ./frontend
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep-frontend:latest
+
+      - name: Build & Push Backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep-backend:latest -f Dockerfile ./ 
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep-backend:latest
 
   deploy:
     needs: build
