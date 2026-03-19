@@ -11,10 +11,10 @@ COPY postcss.config.js tailwind.config.js tsconfig.json ./
 COPY public ./public
 COPY src ./src
 
-RUN npm run build -- --webpack
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build -- --webpack
 
 # Stage 2: Production
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
