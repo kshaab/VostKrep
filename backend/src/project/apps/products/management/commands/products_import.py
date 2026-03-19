@@ -60,7 +60,6 @@ class Command(BaseCommand):
                 },
             )
 
-
             # -------- OPTIONS --------
             if size:
                 sku_option = f"{sku}-{size}"[:150]
