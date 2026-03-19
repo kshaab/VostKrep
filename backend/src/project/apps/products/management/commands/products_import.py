@@ -1,14 +1,12 @@
 from collections import defaultdict
 
-from django.core.management.base import BaseCommand
-from django.utils.text import slugify
-from unidecode import unidecode
 import pandas as pd
-
-from django.db.models.signals import post_save, post_delete
-
-from project.apps.products.models import Product, Category, ProductOption
-from project.apps.products.signals import clear_product_cache_signal, clear_category_cache
+from django.core.management.base import BaseCommand
+from django.db.models.signals import post_delete, post_save
+from django.utils.text import slugify
+from project.apps.products.models import Category, Product, ProductOption
+from project.apps.products.signals import clear_category_cache, clear_product_cache_signal
+from unidecode import unidecode
 
 
 def safe_str(value):
@@ -44,10 +42,7 @@ class Command(BaseCommand):
 
             # -------- CATEGORY --------
             category, created = Category.objects.get_or_create(
-                name=category_name,
-                defaults={
-                    "slug": slugify(unidecode(category_name))[:150]
-                }
+                name=category_name, defaults={"slug": slugify(unidecode(category_name))[:150]}
             )
 
             # -------- PRODUCT --------
@@ -58,7 +53,7 @@ class Command(BaseCommand):
                     "category": category,
                     "description": safe_str(row.get("Описание")),
                     "unit": safe_str(row.get("Единица измерения")),
-                }
+                },
             )
 
             # slug только при создании
@@ -70,11 +65,7 @@ class Command(BaseCommand):
             if size:
                 sku_option = f"{sku}-{size}"[:150]
 
-                ProductOption.objects.update_or_create(
-                    product=product,
-                    size=size,
-                    defaults={"sku": sku_option}
-                )
+                ProductOption.objects.update_or_create(product=product, size=size, defaults={"sku": sku_option})
 
                 product_sizes_map[sku].add(size)
 
@@ -85,8 +76,6 @@ class Command(BaseCommand):
             except Product.DoesNotExist:
                 continue
 
-            ProductOption.objects.filter(product=product)\
-                .exclude(size__in=sizes)\
-                .delete()
+            ProductOption.objects.filter(product=product).exclude(size__in=sizes).delete()
 
         self.stdout.write(self.style.SUCCESS("Импорт завершён"))

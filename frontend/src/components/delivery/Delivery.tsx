@@ -27,13 +27,13 @@ export default function Delivery() {
     );
   }
 
-  const leftItems = delivery.items.slice(0, 2);
-  const rightItems = delivery.items.slice(2);
+  const leftItems = delivery.items.slice(0, 3);
+  const rightItems = delivery.items.slice(3);
 
   return (
     <div className="bg-[#003399] text-[#F2F3F4] min-h-screen flex flex-col gap-12">
 
-      <div className="mx-auto max-w-6xl w-full px-8">
+      <div className="mx-auto max-w-6xl w-full">
 
         {/* Заголовок */}
         <section className="pt-10">
@@ -54,7 +54,7 @@ export default function Delivery() {
             {/* Левая колонка */}
             <div className="flex flex-col gap-5">
 
-              <ul className="font-sans text-2xl leading-relaxed font-semibold space-y-6">
+              <ul className="font-sans text-xl leading-relaxed font-semibold space-y-6">
                 {leftItems.map(item => (
                   <li key={item.id} className="flex items-start gap-2">
                     <NutIcon />
@@ -65,18 +65,18 @@ export default function Delivery() {
 
               <div className="grid grid-cols-2 gap-6">
                 <Image
-                  src="/delivery_icons/delovie-linii.png"
+                  src="/delivery_icons/ya-del.png"
                   alt="delovie-linii"
                   width={300}
                   height={200}
-                  className="h-auto rounded-lg translate-y-[45px] w-40"
+                  className="h-auto rounded-lg translate-y-[-40px] w-60 translate-x-[70px]"
                 />
                 <Image
-                  src="/delivery_icons/baikal.png"
+                  src="/delivery_icons/del-lin.png"
                   alt="baikal"
                   width={300}
                   height={200}
-                  className="h-auto rounded-lg translate-y-[40px] w-40"
+                  className="h-auto rounded-lg translate-y-[-40px] w-60 translate-x-[40px]"
                 />
               </div>
 
@@ -85,7 +85,7 @@ export default function Delivery() {
             {/* Правая колонка */}
             <div className="flex flex-col gap-8">
 
-              <ul className="font-sans text-2xl leading-relaxed font-semibold space-y-6">
+              <ul className="font-sans text-xl leading-relaxed font-semibold space-y-6">
                 {rightItems.map(item => (
                   <li key={item.id} className="flex items-start gap-2">
                     <NutIcon />
@@ -96,18 +96,18 @@ export default function Delivery() {
 
               <div className="grid grid-cols-2 gap-6">
                 <Image
-                  src="/delivery_icons/zinger-log.png"
+                  src="/delivery_icons/zing-log.png"
                   alt="zinger"
                   width={300}
                   height={150}
-                  className="h-auto rounded-lg translate-y-[-10px] w-40"
+                  className="h-auto rounded-lg translate-y-[-20px] translate-x-[-40px] w-60"
                 />
                 <Image
-                  src="/delivery_icons/yandex-delivery.png"
+                  src="/delivery_icons/baikal-serv.png"
                   alt="yandex-delivery"
                   width={300}
                   height={150}
-                  className="h-auto rounded-lg translate-y-[-10px] w-40"
+                  className="h-auto rounded-lg translate-y-[-20px] translate-x-[-70px] w-60"
                 />
               </div>
 

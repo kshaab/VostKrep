@@ -1,22 +1,20 @@
 from django.db import models
 
+
 # Модель страницы доставки
 class DeliveryPage(models.Model):
     title = models.CharField(max_length=255)
-    content = models.TextField() # Описание доставки
+    content = models.TextField()  # Описание доставки
     seo_title = models.CharField(max_length=255, blank=True)
     seo_description = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
 
+
 # Модель контента страницы доставки
 class DeliveryItem(models.Model):
-    page = models.ForeignKey(
-        DeliveryPage,
-        on_delete=models.CASCADE,
-        related_name="items"
-    )
+    page = models.ForeignKey(DeliveryPage, on_delete=models.CASCADE, related_name="items")
 
     title = models.CharField(max_length=255)
     text = models.CharField(max_length=500)
@@ -41,13 +39,10 @@ class StaticPage(models.Model):
     def __str__(self):
         return self.title
 
+
 # Модель секций статичных страниц
 class StaticPageSection(models.Model):
-    page = models.ForeignKey(
-        StaticPage,
-        on_delete=models.CASCADE,
-        related_name="sections"
-    )
+    page = models.ForeignKey(StaticPage, on_delete=models.CASCADE, related_name="sections")
 
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True)
@@ -59,13 +54,10 @@ class StaticPageSection(models.Model):
     def __str__(self):
         return self.title
 
+
 # Модель элементов статичных страниц
 class StaticPageItem(models.Model):
-    section = models.ForeignKey(
-        StaticPageSection,
-        on_delete=models.CASCADE,
-        related_name="items"
-    )
+    section = models.ForeignKey(StaticPageSection, on_delete=models.CASCADE, related_name="items")
 
     title = models.CharField(max_length=255)
     text = models.TextField()

@@ -6,9 +6,7 @@ from unidecode import unidecode
 # Модель для категорий товаров
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name="Категория товара")
-    parent = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
-    )
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="children")
     slug = models.SlugField(unique=True, blank=True)
     image = models.ImageField(upload_to="images/categories/", null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -26,6 +24,7 @@ class Category(models.Model):
             self.slug = slugify(unidecode(str(self.name)))
         super().save(*args, **kwargs)
 
+
 # Модель для товаров
 class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название товара")
@@ -42,7 +41,6 @@ class Product(models.Model):
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
 
-
     def __str__(self) -> str:
         return self.name
 
@@ -58,6 +56,7 @@ class ProductOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="options")
     size = models.CharField(max_length=150, verbose_name="Размер")
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
+    unit = models.CharField(max_length=150, verbose_name="Единица измерения", default="шт")
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -67,5 +66,3 @@ class ProductOption(models.Model):
 
     def __str__(self) -> str:
         return f"{self.product.name} – {self.size}"
-
-

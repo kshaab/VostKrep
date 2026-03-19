@@ -1,16 +1,17 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.serializers import Serializer
-
-from .models import Order
-from.serializers import OrderSerializer
-from rest_framework.throttling import AnonRateThrottle
-from rest_framework.parsers import MultiPartParser, FormParser
 import logging
 
+from rest_framework import generics, status
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.serializers import Serializer
+from rest_framework.throttling import AnonRateThrottle
+
+from .models import Order
+from .serializers import OrderSerializer
 from .tasks import send_order_to_telegram
 
 logger = logging.getLogger(__name__)
+
 
 # Вьюсет для создания заявки
 class OrderCreateAPIView(generics.CreateAPIView):
@@ -24,16 +25,9 @@ class OrderCreateAPIView(generics.CreateAPIView):
         order = serializer.save()
         send_order_to_telegram.delay(order.id)
 
-
     def create(self, request, *args, **kwargs) -> Response:
         """Создает кастомный ответ при успешной отправке заявки"""
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(
-            {"success": True, "message": "Заявка успешно отправлена"},
-            status=status.HTTP_201_CREATED
-        )
-
-
-
+        return Response({"success": True, "message": "Заявка успешно отправлена"}, status=status.HTTP_201_CREATED)

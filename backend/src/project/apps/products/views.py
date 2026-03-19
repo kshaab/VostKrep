@@ -1,9 +1,8 @@
-from rest_framework import viewsets
-
 from project.apps.products.models import Category
-from project.apps.products.pagination import ProductPagination, CategoryPagination
-from project.apps.products.serializers import ProductSerializer, CategorySerializer
-from project.apps.products.services import CacheProducts, CacheCategories
+from project.apps.products.pagination import CategoryPagination, ProductPagination
+from project.apps.products.serializers import CategorySerializer, ProductSerializer
+from project.apps.products.services import CacheCategories, CacheProducts
+from rest_framework import viewsets
 
 
 # Вьюсет для продуктов, только чтение, поиск по slug

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
-import Image from "next/image"
 import { useCart } from "@/context/CartContext"
 import { Product } from "@/types/product"
 import { endpoints } from "@/lib/api"
@@ -13,6 +12,7 @@ type Option = {
   size: string
   length: string
   sku: string
+  unit: string
 }
 
 type Props = {
@@ -48,7 +48,8 @@ export default function ProductDetail({ slug }: Props) {
     id: opt.id,
     size: sizePart,
     length: lengthPart,
-    sku: opt.sku
+    sku: opt.sku,
+    unit: data.unit || "шт",
   }
 })
 
@@ -90,16 +91,21 @@ export default function ProductDetail({ slug }: Props) {
     addToCart({
       id: currentOption.sku,
       option_id: currentOption.id,
-      name: `${product.name} ${size}x${length}`,
-      quantity: 1
+      name: `${product.name} – ${size}x${length}`,
+      quantity: 1,
+      option: `${size}x${length}`,
+      unit: currentOption.unit || product.unit || "шт",
     })
   }
 
   if (!product) return <div>Loading...</div>
 
-  const imageUrl = product.image
-    ? `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-    : "/placeholder.png"
+  const imageUrl =
+    product.image
+      ? product.image.startsWith("http")
+        ? product.image
+        : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
+      : "/placeholder.png"
 
   return (
     <section className={styles.product}>
@@ -111,7 +117,7 @@ export default function ProductDetail({ slug }: Props) {
 
       <div className={styles.card}>
         <div className={styles.imageBlock}>
-          <Image src={imageUrl} alt={product.name} width={500} height={400} />
+          <img src={imageUrl} alt={product.name} width={500} />
         </div>
 
         <div className={styles.infoBlock}>

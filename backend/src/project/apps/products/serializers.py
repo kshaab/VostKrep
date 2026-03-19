@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import Category, Product, ProductOption
 from .validators import ProductValidator
 
@@ -7,7 +8,7 @@ from .validators import ProductValidator
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOption
-        fields = ["id", "size", "sku"]
+        fields = ["id", "size", "sku", "unit"]
 
     def validate(self, data):
         """Валидирует sku"""
@@ -23,7 +24,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["name", "sku", "category", "description", "unit", "image", "is_active", "created_at", "slug", "options"]
+        fields = [
+            "name",
+            "sku",
+            "category",
+            "description",
+            "unit",
+            "image",
+            "is_active",
+            "created_at",
+            "slug",
+            "options",
+        ]
 
     def get_image(self, obj) -> None:
         """Превращает путь картики из базы в URL для загрузки фронтендом"""
@@ -51,7 +63,6 @@ class CategorySerializer(serializers.ModelSerializer):
         if obj.image:
             return request.build_absolute_uri(obj.image.url)
         return None
-
 
     def validate(self, data):
         """Валидирует sku"""

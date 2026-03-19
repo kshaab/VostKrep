@@ -7,6 +7,8 @@ export interface CartItem {
   option_id: number;
   name: string;
   quantity: number;
+  option: string;
+  unit: string
 }
 
 export interface CartContextType {
@@ -33,20 +35,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Добавление товара
   const addToCart = (item: CartItem) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
+  setItems((prev) => {
+    const existing = prev.find(
+      (i) => i.id === item.id && i.option === item.option
+    );
 
-      if (existing) {
-        return prev.map((i) =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        );
-      }
+    if (existing) {
+      return prev.map((i) =>
+        i.id === item.id && i.option === item.option
+          ? { ...i, quantity: i.quantity + 1 }
+          : i
+      );
+    }
 
-      return [...prev, item];
-    });
-  };
+    return [...prev, item];
+  });
+};
 
   // Увеличение количества
   const increase = (id: string) => {

@@ -3,7 +3,6 @@ import json
 from rest_framework import serializers
 
 
-
 class OrderValidator:
     """Валидатор заявки"""
 
@@ -23,9 +22,7 @@ class OrderValidator:
         """Валидирует комментарий"""
         comment = data.get("comment", "")
         if len(comment) > 500:
-            raise serializers.ValidationError({
-                "comment": "Комментарий слишком длинный"
-            })
+            raise serializers.ValidationError({"comment": "Комментарий слишком длинный"})
         return data
 
 
@@ -49,9 +46,7 @@ class FileValidator:
             return file
 
         if file.content_type not in ALLOWED_FILE_TYPES:
-            raise serializers.ValidationError(
-                "Только PDF, DOC, DOCX, XLS, XLSX"
-            )
+            raise serializers.ValidationError("Только PDF, DOC, DOCX, XLS, XLSX")
 
         if file.size > MAX_FILE_SIZE:
             raise serializers.ValidationError("Максимум 50MB")
@@ -63,7 +58,7 @@ class CartValidator:
     """Валидатор корзины"""
 
     def validate(self, items):
-        """Валидирует формат спсика товаров и их количества"""
+        """Валидирует формат списка товаров и их количества"""
         if not items:
             return []
 

@@ -1,11 +1,11 @@
 from django.db.models import QuerySet
 from rest_framework import viewsets
-from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 
+from .models import StaticPage
 from .serializers import DeliveryPageSerializer, StaticPageSerializer
 from .services import CacheDeliveryPage, CacheStaticPage
-from .models import StaticPage
 
 
 class DeliveryPageViewSet(ViewSet):
@@ -15,7 +15,6 @@ class DeliveryPageViewSet(ViewSet):
         page = CacheDeliveryPage.get_page()
         serializer = DeliveryPageSerializer(page)
         return Response(serializer.data)
-
 
 
 class StaticPageViewSet(viewsets.ReadOnlyModelViewSet):

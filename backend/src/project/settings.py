@@ -3,7 +3,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-
 load_dotenv(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +14,7 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "project.apps.order",
     "project.apps.products",
     "project.apps.pages",
+    "axes",
 ]
 
 MIDDLEWARE = [
@@ -37,6 +38,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "axes.middleware.AxesMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -44,8 +46,7 @@ ROOT_URLCONF = "project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / ""]
-        ,
+        "DIRS": [BASE_DIR / ""],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -58,10 +59,13 @@ TEMPLATES = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = os.getenv(
-    "CORS_ALLOWED_ORIGINS",
-    ""
-).split(",")
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    os.getenv("CSRF_TRUSTED_ORIGINS"),
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 WSGI_APPLICATION = "project.wsgi.application"
 
@@ -106,12 +110,7 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = BASE_DIR / "media"
 
-REST_FRAMEWORK = {
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "10/min",
-        "orders": "5/min"
-    }
-}
+REST_FRAMEWORK = {"DEFAULT_THROTTLE_RATES": {"anon": "10/min", "orders": "5/min"}}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -137,7 +136,46 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 
+JAZZMIN_SETTINGS = {
+    "site_title": "Администратор",
+    "site_header": "Управление каталогом",
+    "site_brand": "VostKrep",
+    "welcome_sign": "Добро пожаловать, менеджер",
+    "icons": {
+        "app.Product": "fas fa-box",
+        "auth.user": "fas fa-user",
+    },
+    "topmenu_links": [
+        {"name": "Каталог", "url": "http://localhost:3000", "new_window": True},
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+}
+
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = 1
+
+LOGGING = {
+    "version": 1,
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "logs/admin.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "INFO",
+        },
+    },
+}

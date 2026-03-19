@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
 import { endpoints} from "@/lib/api";
 import { IMaskInput } from "react-imask";
+import { getCSRFToken } from "@/lib/csrf"
 
 {/* Форма корзины  */}
 export default function CartForm() {
@@ -48,7 +49,6 @@ export default function CartForm() {
   }
 
   const formData = new FormData();
-
   formData.append("name", form.name);
   formData.append("phone", form.phone);
   formData.append("email", form.email);
@@ -61,17 +61,26 @@ export default function CartForm() {
     "items",
     JSON.stringify(
       items.map((item) => ({
+        name: item.name,
         option_id: item.option_id,
+        option: item.option || "",
         quantity: item.quantity,
+        unit: item.unit || "",
       }))
     )
   );
 
   setLoading(true);
 
+  const csrfToken = getCSRFToken();
+
   const res = await fetch(endpoints.orders, {
     method: "POST",
     body: formData,
+    headers: {
+      "X-CSRFToken": csrfToken || "",
+    },
+    credentials: "include",
   });
 
   setLoading(false);
@@ -91,7 +100,7 @@ export default function CartForm() {
 
         <button
           onClick={closeCart}
-          className="absolute top-4 right-4 text-2xl text-[#003399]"
+          className="absolute top-4 right-4 text-2xl text-[#F0660A]"
         >
           ✕
         </button>
@@ -106,39 +115,6 @@ export default function CartForm() {
           </p>
         ) : (
           <>
-            <div className="space-y-4 mb-6 text-[#003399] font-sans">
-              {items.map(item => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-center border p-3 rounded-lg font-sans"
-                >
-                  <div>
-                    <p className="font-semibold font-sans">{item.name}</p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => decrease(item.id)}
-                      className="px-3 py-1 bg-gray-200 rounded font-sans"
-                    >
-                      −
-                    </button>
-
-                    <span>{item.quantity}</span>
-
-                    <button
-                      type="button"
-                      onClick={() => increase(item.id)}
-                      className="px-3 py-1 bg-gray-200 rounded font-sans"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             <form
               onSubmit={handleSubmit}
               className="space-y-4"
@@ -146,7 +122,7 @@ export default function CartForm() {
               <input
                 name="name"
                 type="text"
-                placeholder="ФИО"
+                placeholder="Имя"
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -160,7 +136,7 @@ export default function CartForm() {
             value={form.phone}
             onAccept={(value: string) => setForm({ ...form, phone: value })}
             overwrite
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4]"
+            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
             placeholder="+7 (999) 999-99-99"
           />
 
@@ -198,6 +174,47 @@ export default function CartForm() {
                 {loading ? "Отправка..." : "Отправить"}
               </button>
             </form>
+            <div className="space-y-4 mb-6 mt-6 text-[#003399] font-sans">
+              {items.map(item => (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-[1fr_160px] items-start border p-3 rounded-lg gap-4"
+                >
+                  <div className="min-w-0">
+                  <p className="font-semibold break-words leading-snug">
+                    {item.name}
+                  </p>
+                </div>
+
+                 <div className="w-full flex justify-end items-start">
+                  <div className="grid grid-cols-[32px_22px_32px_auto] items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => decrease(item.id)}
+                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded"
+                  >
+                    −
+                  </button>
+
+                  <span className="w-6 text-center">{item.quantity}</span>
+
+                  <button
+                    type="button"
+                    onClick={() => increase(item.id)}
+                    className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded"
+                  >
+                    +
+                  </button>
+
+                  <span className="whitespace-nowrap text-left">
+                  {item.unit}
+                </span>
+                </div>
+                </div>
+               </div>
+
+              ))}
+            </div>
           </>
         )}
       </div>

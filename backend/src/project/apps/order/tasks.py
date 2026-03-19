@@ -1,10 +1,12 @@
-from celery import shared_task
-from .services import send_telegram_order
-from .models import Order
 import logging
 
+from celery import shared_task
+
+from .models import Order
+from .services import send_telegram_order
 
 logger = logging.getLogger(__name__)
+
 
 @shared_task
 def send_order_to_telegram(order_id: int) -> None:

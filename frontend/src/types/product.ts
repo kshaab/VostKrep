@@ -2,6 +2,7 @@ export type ProductOption = {
   id: number
   size: string
   sku: string
+  unit: string
 }
 
 export type Product = {

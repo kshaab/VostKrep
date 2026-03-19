@@ -1,6 +1,5 @@
 import requests
 from django.conf import settings
-
 from project.apps.order.models import Order
 
 
@@ -19,29 +18,20 @@ def send_telegram_order(order: Order) -> None:
     if items.exists():
         message += "Товары:\n"
         for item in items:
-            message += f"- {item.product_name} (Размер: {item.option_size}) x {item.quantity}\n"
+            message += f"- {item.product_name} x {item.quantity} {item.unit}\n"
 
     if order.file:
         with open(order.file.path, "rb") as f:
             requests.post(
                 f"{settings.TELEGRAM_URL}{settings.TELEGRAM_TOKEN}/sendDocument",
-                data={
-                    "chat_id": settings.TELEGRAM_CHAT_ID,
-                    "caption": message
-                },
-                files={
-                    "document": f
-                },
-                timeout=10
+                data={"chat_id": settings.TELEGRAM_CHAT_ID, "caption": message},
+                files={"document": f},
+                timeout=10,
             )
 
     else:
         requests.get(
             f"{settings.TELEGRAM_URL}{settings.TELEGRAM_TOKEN}/sendMessage",
-            params={
-                "chat_id": settings.TELEGRAM_CHAT_ID,
-                "text": message
-            },
-            timeout=10
+            params={"chat_id": settings.TELEGRAM_CHAT_ID, "text": message},
+            timeout=10,
         )
-

@@ -1,9 +1,9 @@
-from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
 from django.db.models import QuerySet
-
-from .models import Product, Category
 from django_redis import get_redis_connection
+
+from .models import Category, Product
 
 
 class CacheProducts:
@@ -72,9 +72,9 @@ class CacheProducts:
             redis_conn.delete(*keys)
 
 
-
 class CacheCategories:
     """Кеширование страницы категорий"""
+
     @staticmethod
     def get_category_list() -> QuerySet:
         """Список всех активных категорий с кешированием"""
@@ -88,6 +88,5 @@ class CacheCategories:
 
         qs = Category.objects.filter(is_active=True)
         category_ids = list(qs.values_list("id", flat=True))
-        cache.set(key, category_ids, timeout=60*60)
+        cache.set(key, category_ids, timeout=60 * 60)
         return qs
-

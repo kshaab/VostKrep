@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, ProductOption
 
+from .models import Category, Product, ProductOption
 
 
 class ProductOptionInline(admin.TabularInline):
@@ -28,4 +28,3 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     inlines = [ProductOptionInline]
     ordering = ("category", "name")
-

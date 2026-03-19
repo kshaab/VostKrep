@@ -1,34 +1,33 @@
-import pytest
-from django.test import TestCase
+from unittest.mock import Mock, mock_open, patch
 
+import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 from django.urls import reverse
-from rest_framework.test import APITestCase
-from unittest.mock import patch, mock_open, Mock
 from project.apps.order.models import Order, OrderItem
 from project.apps.order.services import send_telegram_order
 from project.apps.order.tasks import send_order_to_telegram
+from project.apps.order.validators import CartValidator, FileValidator, OrderValidator
 from rest_framework.exceptions import ValidationError as DRFValidationError
-
-from project.apps.order.validators import OrderValidator, CartValidator, FileValidator
+from rest_framework.test import APITestCase
 
 
 class OrderTestCase(APITestCase):
     """Тест заявок"""
+
     @patch("project.apps.order.views.send_order_to_telegram.delay")
     def test_order_create_with_items(self, mock_send: Mock):
         """Тестирует создание заявки с товарами"""
         url = reverse("order:order-create")
 
         import json
+
         data = {
             "name": "Иван Иванов",
             "phone": "+71234567890",
             "email": "test@example.com",
             "comment": "Тест",
-            "items": json.dumps([
-                {"product_name": "Болт", "option_size": "М8", "quantity": 2}
-            ])
+            "items": json.dumps([{"product_name": "Болт", "option_size": "М8", "quantity": 2}]),
         }
 
         response = self.client.post(url, data, format="multipart")
@@ -44,11 +43,7 @@ class OrderTestCase(APITestCase):
         """Тестирует создание заявки с файлом"""
         url = reverse("order:order-create")
 
-        file = SimpleUploadedFile(
-            "test.pdf",
-            b"file_content",
-            content_type="application/pdf"
-        )
+        file = SimpleUploadedFile("test.pdf", b"file_content", content_type="application/pdf")
 
         data = {
             "name": "Иван Иванов",
@@ -66,17 +61,12 @@ class OrderTestCase(APITestCase):
         mock_send.assert_called_once_with(order.id)
 
 
-
 class OrderTaskTestCase(APITestCase):
     """Тест Celery задачи"""
 
     def setUp(self):
         """Тестовые данные"""
-        self.order = Order.objects.create(
-            name="Иван Иванов",
-            phone="+79991234567",
-            email="test@example.com"
-        )
+        self.order = Order.objects.create(name="Иван Иванов", phone="+79991234567", email="test@example.com")
 
     @patch("project.apps.order.tasks.send_telegram_order")
     def test_send_order_success(self, mock_send: Mock):
@@ -97,11 +87,12 @@ class OrderTaskTestCase(APITestCase):
     @patch("project.apps.order.tasks.send_telegram_order")
     def test_send_order_to_telegram_order_not_found(self, mock_send: Mock) -> None:
         """Тестирует поиск несуществующей заявки"""
-        with self.assertLogs(level='ERROR') as log_cm:
+        with self.assertLogs(level="ERROR") as log_cm:
             send_order_to_telegram(999)
 
         mock_send.assert_not_called()
         self.assertIn("Заявка 999 не найдена", log_cm.output[0])
+
 
 class TelegramServiceTestCase(TestCase):
     """Тест функции отправки заявки"""
@@ -109,18 +100,10 @@ class TelegramServiceTestCase(TestCase):
     def setUp(self):
         """Тестовые данные"""
         self.order = Order.objects.create(
-            name="Иван Иванов",
-            phone="+79991234567",
-            email="test@example.com",
-            comment="Тест"
+            name="Иван Иванов", phone="+79991234567", email="test@example.com", comment="Тест"
         )
 
-        OrderItem.objects.create(
-            order=self.order,
-            product_name="Болт",
-            option_size="М8",
-            quantity=2
-        )
+        OrderItem.objects.create(order=self.order, product_name="Болт", option_size="М8", quantity=2)
 
     @patch("project.apps.order.services.requests.get")
     def test_send_without_file(self, mock_get: Mock):
@@ -142,7 +125,6 @@ class TelegramServiceTestCase(TestCase):
 
         mock_post.assert_called_once()
         mock_file.assert_called_once()
-
 
 
 class TestOrderValidator:
@@ -182,7 +164,6 @@ class TestOrderValidator:
             validator.validate({"comment": "A" * 501})
 
 
-
 class TestCartValidator:
     """Тест валидатора корзины"""
 
@@ -207,38 +188,26 @@ class TestCartValidator:
         with pytest.raises(DRFValidationError):
             CartValidator().validate([{"quantity": 0}])
 
+
 class TestFileValidator:
     """Тест файла в заявке"""
 
     def test_valid_file(self):
         """Тестирует валидатор файла"""
-        file = SimpleUploadedFile(
-            "test.pdf",
-            b"data",
-            content_type="application/pdf"
-        )
+        file = SimpleUploadedFile("test.pdf", b"data", content_type="application/pdf")
 
         assert FileValidator().validate(file) == file
 
     def test_invalid_type(self):
         """Тестирует валидность типа файла"""
-        file = SimpleUploadedFile(
-            "test.txt",
-            b"data",
-            content_type="text/plain"
-        )
+        file = SimpleUploadedFile("test.txt", b"data", content_type="text/plain")
 
         with pytest.raises(DRFValidationError):
             FileValidator().validate(file)
 
     def test_too_large(self):
         """Тестирует валидность размера файла"""
-        file = SimpleUploadedFile(
-            "test.pdf",
-            b"a" * (51 * 1024 * 1024),
-            content_type="application/pdf"
-        )
+        file = SimpleUploadedFile("test.pdf", b"a" * (51 * 1024 * 1024), content_type="application/pdf")
 
         with pytest.raises(DRFValidationError):
             FileValidator().validate(file)
-

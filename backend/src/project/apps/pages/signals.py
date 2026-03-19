@@ -1,7 +1,7 @@
-from .models import DeliveryPage, StaticPage, DeliveryItem, StaticPageItem, StaticPageSection
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
 
+from .models import DeliveryItem, DeliveryPage, StaticPage, StaticPageItem, StaticPageSection
 from .services import CacheDeliveryPage, CacheStaticPage
 
 

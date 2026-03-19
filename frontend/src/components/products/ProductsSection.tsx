@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Product } from "@/types/product"
 import ProductCard from "./ProductCard"
+import {endpoints} from "@/lib/api";
 
 type Props = {
   categorySlug?: string
@@ -17,8 +18,8 @@ export default function ProductsSection({ categorySlug }: Props) {
   let isMounted = true
   const fetchAllProducts = async () => {
     let url = categorySlug
-      ? `${process.env.NEXT_PUBLIC_API_URL}/api/products/products/?category=${categorySlug}`
-      : `${process.env.NEXT_PUBLIC_API_URL}/api/products/products/`
+      ? endpoints.productsByCategory(categorySlug)
+      : endpoints.products
 
     let allProducts: Product[] = []
 

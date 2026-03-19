@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 
+
 class PageValidator:
     """Валидация страниц, секций и элементов"""
 

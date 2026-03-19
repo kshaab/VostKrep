@@ -4,6 +4,9 @@ import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 import {endpoints} from "@/lib/api";
 import { IMaskInput } from "react-imask";
+import { getCSRFToken } from "@/lib/csrf"
+import { useRef } from "react";
+
 
 {/* Форма заявки */}
 interface Props {
@@ -14,6 +17,7 @@ interface Props {
 export default function OrderForm({ isOpen, onClose }: Props) {
   const [fileName, setFileName] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [form, setForm] = useState({
   name: "",
   phone: "",
@@ -42,36 +46,60 @@ export default function OrderForm({ isOpen, onClose }: Props) {
   e.preventDefault();
 
   const formData = new FormData(e.currentTarget);
-
   formData.append("items", "[]");
 
   setLoading(true);
 
+  type ApiResponse = {
+    success?: boolean;
+    message?: string;
+  };
+
   try {
-    const res = await fetch(
-      endpoints.orders,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const csrfToken = getCSRFToken();
 
-    setLoading(false);
+    const res = await fetch(endpoints.orders, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-CSRFToken": csrfToken || "",
+      },
+      credentials: "include",
+    });
 
-    const data = await res.json();
+    let data: ApiResponse | null = null;
 
-    if (res.ok) {
-      alert(data.message || "Заявка отправлена!");
-      const comment = e.currentTarget.elements.namedItem("comment") as HTMLTextAreaElement;
-      if (comment) comment.value = "";
-      setFileName("");
-      onClose();
-    } else {
-      alert(data.message || "Ошибка отправки");
+    try {
+      data = await res.json();
+    } catch {
+      data = null;
     }
+
+   if (res.ok) {
+  alert(data?.message ?? "Заявка отправлена!");
+  setFileName("");
+  if (fileInputRef.current) {
+    fileInputRef.current.value = "";
+  }
+  onClose();
+} else {
+
+  if (data && typeof data === "object") {
+    const errors = Object.values(data)
+      .flat()
+      .join("\n");
+
+    alert(errors || "Ошибка отправки");
+  } else {
+    alert("Ошибка отправки");
+  }
+}
+
   } catch (error) {
-      setLoading(false);
-    alert("Ошибка сети");
+    console.error(error);
+    alert("Проблема с соединением");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -83,7 +111,7 @@ export default function OrderForm({ isOpen, onClose }: Props) {
         {/* Кнопка закрытия */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-2xl text-[#003399]"
+          className="absolute top-4 right-4 text-2xl text-[#F0660A]"
         >
           ✕
         </button>
@@ -100,7 +128,7 @@ export default function OrderForm({ isOpen, onClose }: Props) {
           <input
             name="name"
             type="text"
-            placeholder="ФИО"
+            placeholder="Имя"
             required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -144,6 +172,7 @@ export default function OrderForm({ isOpen, onClose }: Props) {
           <div className="flex items-center gap-3">
               {/* Скрытый input */}
               <input
+                ref={fileInputRef}
                 id="file"
                 name="file"
                 type="file"
@@ -165,8 +194,25 @@ export default function OrderForm({ isOpen, onClose }: Props) {
               </label>
 
               {/* Поле с названием */}
-              <div className="flex-1 bg-[#F2F3F4] px-3 py-2 rounded-lg text-sm truncate font-sans">
-                {fileName || "Файл не выбран"}
+              <div className="flex-1 flex items-center justify-between bg-[#F2F3F4] px-3 py-2 rounded-lg text-sm font-sans">
+                <span className="truncate">
+                  {fileName || "Файл не выбран"}
+                </span>
+
+                {fileName && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                      }
+                      setFileName("");
+                    }}
+                    className="ml-2 text-[#F0660A] hover:scale-110 transition"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
             </div>
 

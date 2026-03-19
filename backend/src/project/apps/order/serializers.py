@@ -1,16 +1,14 @@
-from typing import Any, List
-
 from rest_framework import serializers
-from .models import Order, OrderItem
-from .validators import OrderValidator, FileValidator, CartValidator
 
+from .models import Order, OrderItem
+from .validators import CartValidator, FileValidator, OrderValidator
 
 
 # Сериализатор товаров
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ("product_name", "quantity",)
+        fields = ("product_name", "quantity", "unit")
         read_only_fields = fields
 
 
@@ -37,7 +35,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "file",
         )
 
-
     def validate_file(self, value):
         """Валидирует файл в заявке"""
         return FileValidator().validate(value)
@@ -54,8 +51,6 @@ class OrderSerializer(serializers.ModelSerializer):
         """Валидирует почту"""
         return OrderValidator().validate_email(value)
 
-
-
     def create(self, validated_data):
         """Создает заказ и товары в заказе"""
         items_data = validated_data.pop("items", [])
@@ -65,9 +60,10 @@ class OrderSerializer(serializers.ModelSerializer):
         order_items = [
             OrderItem(
                 order=order,
-                product_name=item.get("product_name", "Товар"),
-                option_size=item.get("option_size", ""),
+                product_name=item.get("name", "Товар"),
+                option_size=item.get("option", ""),
                 quantity=item.get("quantity", 1),
+                unit=item.get("unit", ""),
             )
             for item in items_data
         ]

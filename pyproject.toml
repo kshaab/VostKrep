@@ -23,7 +23,11 @@ dependencies = [
     "django-redis (>=6.0.0,<7.0.0)",
     "openpyxl (>=3.1.5,<4.0.0)",
     "pytest (>=9.0.2,<10.0.0)",
-    "coverage (>=7.13.4,<8.0.0)"
+    "coverage (>=7.13.4,<8.0.0)",
+    "gunicorn (>=25.1.0,<26.0.0)",
+    "django-jazzmin (>=3.0.4,<4.0.0)",
+    "django-axes (>=8.3.1,<9.0.0)",
+    "django-simple-history (>=3.11.0,<4.0.0)"
 ]
 
 

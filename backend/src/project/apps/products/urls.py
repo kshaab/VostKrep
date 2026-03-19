@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
-from .views import ProductViewSet, CategoryViewSet
-from .apps import ProductsConfig
+
+from .views import CategoryViewSet, ProductViewSet
 
 app_name = "products"
 

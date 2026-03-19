@@ -1,21 +1,17 @@
-import pytest
 from io import StringIO
-import pandas as pd
+from unittest.mock import patch
 
+import pandas as pd
+import pytest
+from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from unittest.mock import patch, Mock
-
-from rest_framework.test import APITestCase
-from django.core.exceptions import ValidationError
-
-
-from project.apps.products.validators import ProductValidator
-from project.apps.products.models import Product, Category, ProductOption
-from project.apps.products.pagination import ProductPagination, CategoryPagination
+from project.apps.products.models import Category, Product, ProductOption
+from project.apps.products.pagination import CategoryPagination, ProductPagination
 from project.apps.products.services import CacheCategories, CacheProducts
-
+from project.apps.products.validators import ProductValidator
+from rest_framework.test import APITestCase
 
 
 class TestProductValidator:
@@ -90,15 +86,12 @@ class ProductsViewTestCase(APITestCase):
     def test_get_products_without_category(self):
         """Тестирует продукт без категории"""
         category = Category.objects.create(slug="bolty", name="Bolty")
-        Product.objects.create(
-            slug="product-1", name="Product 1", category=category, sku="SKU1"
-        )
+        Product.objects.create(slug="product-1", name="Product 1", category=category, sku="SKU1")
 
         url = reverse("products:products-list")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
-
 
     def test_get_products_with_category(self):
         """Тестирует продукт с категорией"""
@@ -141,8 +134,12 @@ class CacheProductsTestCase(TestCase):
         Product.objects.all().delete()
         Category.objects.all().delete()
         self.category = Category.objects.create(slug="bolty", name="Bolty", is_active=True)
-        self.product1 = Product.objects.create(slug="product-1", sku="SKU-001", name="Product 1", category=self.category, is_active=True)
-        self.product2 = Product.objects.create(slug="product-2", sku="SKU-002", name="Product 2", category=self.category, is_active=True)
+        self.product1 = Product.objects.create(
+            slug="product-1", sku="SKU-001", name="Product 1", category=self.category, is_active=True
+        )
+        self.product2 = Product.objects.create(
+            slug="product-2", sku="SKU-002", name="Product 2", category=self.category, is_active=True
+        )
 
     @override_settings(CACHE_ENABLED=True)
     @patch("django.core.cache.cache.get")
@@ -167,6 +164,7 @@ class CacheProductsTestCase(TestCase):
 
 class CacheCategoriesTestCase(TestCase):
     """Тест кеширования категорий"""
+
     def setUp(self):
         """Тестовые данные"""
         Product.objects.all().delete()
@@ -192,10 +190,18 @@ class ImportProductsCommandTest(TestCase):
         """Тестовые данные"""
         Product.objects.all().delete()
         Category.objects.all().delete()
-        self.df = pd.DataFrame([
-            {"Категория": "Категория 1", "Наименование": "Продукт A", "Артикул": "SKU1",
-             "Описание": "Описание", "Единица измерения": "шт", "Размер": "M"}
-        ])
+        self.df = pd.DataFrame(
+            [
+                {
+                    "Категория": "Категория 1",
+                    "Наименование": "Продукт A",
+                    "Артикул": "SKU1",
+                    "Описание": "Описание",
+                    "Единица измерения": "шт",
+                    "Размер": "M",
+                }
+            ]
+        )
         self.file_path = "test_products.xlsx"
         self.df.to_excel(self.file_path, index=False)
 

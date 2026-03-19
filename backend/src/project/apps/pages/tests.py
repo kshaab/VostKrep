@@ -1,15 +1,14 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 import pytest
+from django.test import TestCase, override_settings
+from django.urls import reverse
+from project.apps.pages.models import DeliveryPage, StaticPage
+from project.apps.pages.services import CacheDeliveryPage, CacheStaticPage
+from project.apps.pages.validators import PageValidator
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
-from rest_framework import status
-from django.urls import reverse
-from project.apps.pages.models import StaticPage, DeliveryPage
-from project.apps.pages.services import CacheDeliveryPage, CacheStaticPage
-from django.test import TestCase, override_settings
-
-from project.apps.pages.validators import PageValidator
 
 
 class PagesViewTestCase(APITestCase):
@@ -60,7 +59,7 @@ class CachePagesTestCase(TestCase):
         mock_get.return_value = None
         page = CacheDeliveryPage.get_page()
         self.assertEqual(page, self.delivery)
-        mock_set.assert_called_once_with("delivery_page", self.delivery, timeout=60*60)
+        mock_set.assert_called_once_with("delivery_page", self.delivery, timeout=60 * 60)
 
     @override_settings(CACHE_ENABLED=True)
     @patch("django.core.cache.cache.get")
@@ -70,7 +69,7 @@ class CachePagesTestCase(TestCase):
         mock_get.return_value = None
         page = CacheStaticPage.get_page("about")
         self.assertEqual(page, self.static)
-        mock_set.assert_called_once_with("page:about", self.static, timeout=60*60)
+        mock_set.assert_called_once_with("page:about", self.static, timeout=60 * 60)
 
 
 class TestPageValidator:

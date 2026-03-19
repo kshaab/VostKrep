@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import DeliveryPage, DeliveryItem, StaticPage, StaticPageItem, StaticPageSection
+
+from .models import DeliveryItem, DeliveryPage, StaticPage, StaticPageItem, StaticPageSection
 from .validators import PageValidator
 
 
@@ -9,13 +10,8 @@ class DeliveryItemSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "text", "order"]
 
     def validate(self, data):
-        PageValidator.validate_item(
-            title=data.get("title", ""),
-            text=data.get("text", ""),
-            order=data.get("order", 0)
-        )
+        PageValidator.validate_item(title=data.get("title", ""), text=data.get("text", ""), order=data.get("order", 0))
         return data
-
 
 
 class DeliveryPageSerializer(serializers.ModelSerializer):
@@ -30,10 +26,9 @@ class DeliveryPageSerializer(serializers.ModelSerializer):
             title=data.get("title", ""),
             content=data.get("content", ""),
             seo_title=data.get("seo_title", ""),
-            seo_description=data.get("seo_description", "")
+            seo_description=data.get("seo_description", ""),
         )
         return data
-
 
 
 class StaticPageItemSerializer(serializers.ModelSerializer):
@@ -42,11 +37,7 @@ class StaticPageItemSerializer(serializers.ModelSerializer):
         fields = ["title", "text", "order"]
 
     def validate(self, data):
-        PageValidator.validate_item(
-            title=data.get("title", ""),
-            text=data.get("text", ""),
-            order=data.get("order", 0)
-        )
+        PageValidator.validate_item(title=data.get("title", ""), text=data.get("text", ""), order=data.get("order", 0))
         return data
 
 
@@ -59,9 +50,7 @@ class StaticPageSectionSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         PageValidator.validate_item(
-            title=data.get("title", ""),
-            text=data.get("subtitle", ""),
-            order=data.get("order", 0)
+            title=data.get("title", ""), text=data.get("subtitle", ""), order=data.get("order", 0)
         )
         return data
 
@@ -78,8 +67,6 @@ class StaticPageSerializer(serializers.ModelSerializer):
             title=data.get("title", ""),
             content=data.get("content", ""),
             seo_title=data.get("seo_title", ""),
-            seo_description=data.get("seo_description", "")
+            seo_description=data.get("seo_description", ""),
         )
         return data
-
-
