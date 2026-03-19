@@ -78,7 +78,7 @@ jobs:
 
       - name: Build & Push
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep:latest .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep:latest -f frontend/Dockerfile_frontend ./frontend
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/vostkrep:latest
 
   deploy:
