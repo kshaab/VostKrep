@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --upgrade pip poetry
 RUN poetry config virtualenvs.create false
 
-COPY backend/pyproject.toml backend/poetry.lock ./
+COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY backend/ .
