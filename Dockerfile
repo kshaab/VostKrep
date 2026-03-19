@@ -23,3 +23,8 @@ RUN mkdir -p /project/static /project/media
 EXPOSE 8000
 
 CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+COPY backend/entrypoint.sh /project/entrypoint.sh
+RUN chmod +x /project/entrypoint.sh
+
+ENTRYPOINT ["/project/entrypoint.sh"]
