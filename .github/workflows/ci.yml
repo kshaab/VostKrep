@@ -56,7 +56,7 @@ jobs:
       - run: |
           pip install poetry
           poetry config virtualenvs.create false
-          poetry install
+          poetry install --no-root
 
       - run: |
           until pg_isready -h localhost -p 5432; do sleep 1; done
