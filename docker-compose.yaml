@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: ${DOCKER_HUB_USERNAME}/vostkrep:latest
+    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
     restart: always
     command: >
       bash -c "
@@ -58,7 +58,7 @@ services:
       - app_network
 
   celery:
-    image: ${DOCKER_HUB_USERNAME}/vostkrep:latest
+    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
     restart: always
     command: celery -A project worker -l INFO
     env_file:
@@ -70,7 +70,7 @@ services:
       - app_network
 
   celery_beat:
-    image: ${DOCKER_HUB_USERNAME}/vostkrep:latest
+    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
     restart: always
     command: celery -A project beat -l INFO
     env_file:
