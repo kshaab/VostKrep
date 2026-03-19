@@ -1,3 +1,6 @@
+backend/data/
+backend/logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -183,3 +186,7 @@ cython_debug/
 .cursorindexingignore
 user_settings.json
 .DS_Store
+
+frontend/node_modules
+frontend/.next
+frontend/.env.local

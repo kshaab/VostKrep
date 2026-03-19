@@ -11,13 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --upgrade pip poetry
 RUN poetry config virtualenvs.create false
 
-COPY pyproject.toml poetry.lock ./
-
+COPY backend/pyproject.toml backend/poetry.lock ./
 RUN poetry install --no-interaction --no-ansi --no-root
 
-COPY . .
+COPY backend/ .
 
-RUN mkdir -p /project/media
+ENV PYTHONPATH=/project/src
+
+RUN mkdir -p /project/static /project/media
 
 EXPOSE 8000
 
