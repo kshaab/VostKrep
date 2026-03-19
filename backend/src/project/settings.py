@@ -9,6 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 os.makedirs("logs", exist_ok=True)
 
+def parse_origins(value: str) -> list[str]:
+    return [v.strip() for v in value.split(",") if v.strip()]
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
@@ -61,10 +64,9 @@ TEMPLATES = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "").split(",")
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-
+CORS_ALLOWED_ORIGINS = parse_origins(os.getenv("CORS_ALLOWED_ORIGINS", ""))
+CSRF_TRUSTED_ORIGINS = parse_origins(os.getenv("CSRF_TRUSTED_ORIGINS", ""))
 
 CORS_ALLOW_CREDENTIALS = True
 
