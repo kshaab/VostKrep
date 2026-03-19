@@ -55,24 +55,15 @@ services:
       - app_network
 
   celery:
-    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
+    build:
+      context: .
+    working_dir: /project
     restart: always
     command: celery -A project worker -l INFO
     env_file:
       - ./backend/.env
     depends_on:
       - db
-      - redis
-    networks:
-      - app_network
-
-  celery_beat:
-    image: "${DOCKER_HUB_USERNAME}/vostkrep:latest"
-    restart: always
-    command: celery -A project beat -l INFO
-    env_file:
-      - ./backend/.env
-    depends_on:
       - redis
     networks:
       - app_network

@@ -46,9 +46,13 @@ class Command(BaseCommand):
             )
 
             # -------- PRODUCT --------
+            base_slug = slugify(unidecode(product_name))[:140]
+            slug = f"{base_slug}-{sku}"[:150]
+
             product, created = Product.objects.update_or_create(
-                sku=sku,
+                slug=slug,
                 defaults={
+                    "sku": sku,
                     "name": product_name,
                     "category": category,
                     "description": safe_str(row.get("Описание")),
@@ -56,10 +60,6 @@ class Command(BaseCommand):
                 },
             )
 
-            # slug только при создании
-            if created and not product.slug:
-                product.slug = slugify(unidecode(product_name))[:150]
-                product.save()
 
             # -------- OPTIONS --------
             if size:

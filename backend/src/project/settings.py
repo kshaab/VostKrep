@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True if os.getenv("DEBUG") == "True" else False
 
-ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS")]
+ALLOWED_HOSTS = parse_origins(os.getenv("ALLOWED_HOSTS", ""))
 
 INSTALLED_APPS = [
     "jazzmin",
