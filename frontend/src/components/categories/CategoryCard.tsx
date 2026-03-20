@@ -14,7 +14,7 @@ export default function CategoryCard({ category }: Props) {
   const imageUrl = category.image
   ? category.image.startsWith("http")
     ? category.image
-    : `http://127.0.0.1:8000${category.image}`
+    : `${process.env.NEXT_PUBLIC_API_URL}${category.image}`
   : "/placeholder.png"
 
   return (
