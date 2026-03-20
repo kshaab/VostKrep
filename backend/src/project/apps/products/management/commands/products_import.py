@@ -40,12 +40,12 @@ class Command(BaseCommand):
             sku = safe_str(row.get("Артикул"))
             size = safe_str(row.get("Размер"))[:150]
 
-            # -------- CATEGORY --------
+
             category, created = Category.objects.get_or_create(
                 name=category_name, defaults={"slug": slugify(unidecode(category_name))[:150]}
             )
 
-            # -------- PRODUCT --------
+
             base_slug = slugify(unidecode(product_name))[:140]
             slug = f"{base_slug}-{sku}"[:150]
 
