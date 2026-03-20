@@ -40,30 +40,31 @@ class Command(BaseCommand):
             sku = safe_str(row.get("Артикул"))
             size = safe_str(row.get("Размер"))[:150]
 
-            category, created = Category.objects.get_or_create(
-                name=category_name, defaults={"slug": slugify(unidecode(category_name))[:150]}
+            category, _ = Category.objects.get_or_create(
+                name=category_name,
+                defaults={"slug": slugify(unidecode(category_name))[:150]},
             )
 
-            base_slug = slugify(unidecode(product_name))[:140]
-            slug = f"{base_slug}-{sku}"[:150]
-
-            product, created = Product.objects.update_or_create(
-                slug=slug,
+            # -------- создаём/получаем Product по SKU --------
+            product, created = Product.objects.get_or_create(
+                sku=sku,
                 defaults={
-                    "sku": sku,
                     "name": product_name,
                     "category": category,
                     "description": safe_str(row.get("Описание")),
                     "unit": safe_str(row.get("Единица измерения")),
+                    "slug": f"{slugify(unidecode(product_name))[:140]}-{sku}"[:150],
                 },
             )
 
             # -------- OPTIONS --------
             if size:
                 sku_option = f"{sku}-{size}"[:150]
-
-                ProductOption.objects.update_or_create(product=product, size=size, defaults={"sku": sku_option})
-
+                ProductOption.objects.update_or_create(
+                    product=product,
+                    size=size,
+                    defaults={"sku": sku_option},
+                )
                 product_sizes_map[sku].add(size)
 
         # -------- УДАЛЕНИЕ ЛИШНИХ РАЗМЕРОВ --------
@@ -72,7 +73,6 @@ class Command(BaseCommand):
                 product = Product.objects.get(sku=sku)
             except Product.DoesNotExist:
                 continue
-
             ProductOption.objects.filter(product=product).exclude(size__in=sizes).delete()
 
         self.stdout.write(self.style.SUCCESS("Импорт завершён"))
