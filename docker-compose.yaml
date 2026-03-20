@@ -8,7 +8,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - static_volume:/project/static
+      - static_volume:/project/src/project/static
       - media_volume:/project/src/project/media
       - ./backend/data:/data
     depends_on:
