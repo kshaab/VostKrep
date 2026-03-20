@@ -1,4 +1,7 @@
-export const API = process.env.NEXT_PUBLIC_API_URL
+export const API =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.API_URL ||
+  "http://89.169.160.28"
 
 export const endpoints = {
   categories: `${API}/api/products/categories/`,
@@ -9,7 +12,7 @@ export const endpoints = {
     `${API}/api/products/products/?category=${slug}`,
   productBySlug: (slug: string) =>
     `${API}/api/products/products/${slug}/`,
-  delivery: `${API}/api/delivery/`,
+  delivery: `${API}/api/pages/delivery/`,
   orders: `${API}/api/orders/`,
   static_pages: (slug: string) => `${API}/api/pages/${slug}/`,
 }

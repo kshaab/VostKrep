@@ -23,7 +23,7 @@ export default function CategoriesSection() {
           const res = await fetch(url)
           const data = await res.json()
           allCategories = allCategories.concat(data.results ?? [])
-          url = data.next // DRF пагинация
+          url = data.next
         }
 
         if (isMounted) {

@@ -23,6 +23,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile_frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://89.169.160.28
+        NEXT_PUBLIC_BACKEND_URL: http://89.169.160.28
+        NEXT_PUBLIC_SITE_URL: http://89.169.160.28
     restart: always
     command: npm run start
     env_file:
