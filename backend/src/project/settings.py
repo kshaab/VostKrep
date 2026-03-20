@@ -110,11 +110,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "src/project/static"
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / "src/project/media"
 
 REST_FRAMEWORK = {"DEFAULT_THROTTLE_RATES": {"anon": "10/min", "orders": "5/min"}}
 
