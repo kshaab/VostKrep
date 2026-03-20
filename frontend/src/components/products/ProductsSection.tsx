@@ -19,12 +19,12 @@ export default function ProductsSection({ categorySlug }: Props) {
 
   const fetchAllProducts = async () => {
     try {
-      // Получаем "настоящий" URL продуктов
+
       const resInit = await fetch(endpoints.products)
       const initData = await resInit.json()
       let url = categorySlug
         ? endpoints.productsByCategory(categorySlug)
-        : initData.products
+        : endpoints.products
 
       let allProducts: Product[] = []
 
@@ -32,12 +32,12 @@ export default function ProductsSection({ categorySlug }: Props) {
         const res = await fetch(url)
         if (!res.ok) {
           console.error("Failed to fetch products:", res.status)
-          break  // прекращаем цикл
+          break
         }
         const data = await res.json()
         allProducts = allProducts.concat(data.results ?? [])
         url = data.next
-      }
+          }
 
       if (isMounted) setProducts(allProducts)
     } catch (error) {
