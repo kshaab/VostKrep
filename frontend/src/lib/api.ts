@@ -12,7 +12,7 @@ export const endpoints = {
     `${API}/api/products/products/?category=${slug}`,
   productBySlug: (slug: string) =>
     `${API}/api/products/products/${slug}/`,
-  delivery: `${API}/api/delivery/`,
+  delivery: `${API}/api/pages/delivery/`,
   orders: `${API}/api/orders/`,
   static_pages: (slug: string) => `${API}/api/pages/${slug}/`,
 }
