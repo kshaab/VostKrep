@@ -16,27 +16,36 @@ export default function ProductsSection({ categorySlug }: Props) {
 
  useEffect(() => {
   let isMounted = true
+
   const fetchAllProducts = async () => {
-    let url = categorySlug
-      ? endpoints.productsByCategory(categorySlug)
-      : endpoints.products
+    try {
+      // Получаем "настоящий" URL продуктов
+      const resInit = await fetch(endpoints.products)
+      const initData = await resInit.json()
+      let url = categorySlug
+        ? endpoints.productsByCategory(categorySlug)
+        : initData.products
 
-    let allProducts: Product[] = []
+      let allProducts: Product[] = []
 
-    while (url && isMounted) {
-      const res = await fetch(url)
-      const data = await res.json()
-      allProducts = allProducts.concat(data.results ?? [])
-      url = data.next
-    }
+      while (url && isMounted) {
+        const res = await fetch(url)
+        if (!res.ok) {
+          console.error("Failed to fetch products:", res.status)
+          break  // прекращаем цикл
+        }
+        const data = await res.json()
+        allProducts = allProducts.concat(data.results ?? [])
+        url = data.next
+      }
 
-    if (isMounted) {
-      setProducts(allProducts)
+      if (isMounted) setProducts(allProducts)
+    } catch (error) {
+      console.error("Failed to fetch products:", error)
     }
   }
 
   fetchAllProducts()
-
   return () => { isMounted = false }
 }, [categorySlug])
 
