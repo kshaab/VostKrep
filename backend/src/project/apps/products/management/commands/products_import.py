@@ -5,8 +5,10 @@ from django.utils.text import slugify
 from unidecode import unidecode
 from project.apps.products.models import Category, Product, ProductOption
 
+
 def safe_str(value):
     return str(value).strip() if value else ""
+
 
 class Command(BaseCommand):
     help = "Импорт товаров из Excel (с синхронизацией по SKU и размерам)"
@@ -27,8 +29,7 @@ class Command(BaseCommand):
 
             # --------- Категория ---------
             category, _ = Category.objects.get_or_create(
-                name=category_name,
-                defaults={"slug": slugify(unidecode(category_name))[:150]}
+                name=category_name, defaults={"slug": slugify(unidecode(category_name))[:150]}
             )
 
             # --------- Продукт по SKU ---------
@@ -40,17 +41,13 @@ class Command(BaseCommand):
                     "description": safe_str(row.get("Описание")),
                     "unit": safe_str(row.get("Единица измерения")),
                     "slug": slugify(unidecode(product_name))[:150],
-                }
+                },
             )
 
             # --------- Добавляем размеры как ProductOption ---------
             if size and size not in product_sizes_map[sku]:
                 option_sku = f"{sku}-{size}"[:150]
-                ProductOption.objects.update_or_create(
-                    product=product,
-                    size=size,
-                    defaults={"sku": option_sku}
-                )
+                ProductOption.objects.update_or_create(product=product, size=size, defaults={"sku": option_sku})
                 product_sizes_map[sku].add(size)
 
         self.stdout.write(self.style.SUCCESS("Импорт завершён"))
