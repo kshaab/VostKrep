@@ -68,6 +68,8 @@ services:
     entrypoint: ""
     env_file:
       - ./.env
+    volumes:
+      - media_volume:/project/src/media
     depends_on:
       - db
       - redis
