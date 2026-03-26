@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Bebas_Neue, League_Spartan } from "next/font/google"
-import PageTransition from "@/components/PageTransition";
+import PageTransition from "@/components/animation/PageTransition";
 import { CartProvider } from "@/context/CartContext";
 import CartForm from "@/components/order/CartForm";
 

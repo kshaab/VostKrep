@@ -1,0 +1,65 @@
+/* Overlay */
+.overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4;
+}
+
+/* Модальное окно */
+.modal {
+  @apply bg-[#F2F3F4] text-[#003399] w-full max-w-2xl p-8 rounded-2xl relative max-h-[90vh] overflow-y-auto;
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  @apply absolute top-4 right-4 text-2xl text-[#F0660A];
+}
+
+/* Заголовок */
+.title {
+  @apply font-heading text-4xl font-bold mb-6 tracking-[0.04em];
+}
+
+/* Форма */
+.form {
+  @apply space-y-4;
+}
+
+/* Поля ввода, textarea и маскированный input */
+.input,
+.textarea,
+.maskedInput {
+  @apply w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans;
+}
+
+/* Кнопка отправки */
+.submitButton {
+  @apply w-full bg-[#003399] text-[#F2F3F4] py-3 rounded-lg font-semibold hover:bg-[#F0660A] transition-colors font-heading tracking-[0.04em] text-2xl hover:text-[#003399] disabled:opacity-50;
+}
+
+/* Обёртка для выбора файла */
+.fileWrapper {
+  @apply flex items-center gap-3;
+}
+
+/* Скрытый input файла */
+.hiddenFileInput {
+  @apply hidden;
+}
+
+/* Кнопка выбора файла */
+.fileButton {
+  @apply bg-[#003399] text-[#F2F3F4] px-4 py-2 rounded-lg cursor-pointer hover:bg-[#F0660A] transition-colors whitespace-nowrap font-sans hover:text-[#003399];
+}
+
+/* Поле с названием файла */
+.fileNameContainer {
+  @apply flex-1 flex items-center justify-between bg-[#F2F3F4] px-3 py-2 rounded-lg text-sm font-sans;
+}
+
+.fileNameText {
+  @apply truncate;
+}
+
+/* Кнопка очистки файла */
+.clearFileButton {
+  @apply ml-2 text-[#F0660A] hover:scale-110 transition;
+}

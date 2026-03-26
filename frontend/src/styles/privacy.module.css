@@ -1,0 +1,132 @@
+.root {
+  min-height: 100vh;
+  background: #F2F3F4;
+  color: #003399;
+  padding: 2rem 1.5rem;
+  font-family: sans-serif;
+}
+
+
+/* Заголовок */
+.title {
+  font-weight: 700;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  font-family: "Bebas Neue", sans-serif;
+  padding: 25px 0;
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 60px;
+    padding: 25px 7px;
+  }
+}
+
+/* Секции */
+.section {
+  margin-top: 10px;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  font-family: "Legue_spartan", sans-serif;
+}
+
+@media (min-width: 768px) {
+  .section {
+    font-size: 1.25rem;
+    padding: 25px 7px;
+  }
+}
+
+/* Подзаголовок */
+.subtitle {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Заголовок пункта */
+.itemTitle {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  .itemTitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* Основной пункт */
+.mainPoint {
+  font-weight: 600;
+  margin-top: 1rem;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  .mainPoint {
+    font-size: 1.2rem;
+  }
+}
+
+/* Подпункт */
+.subPoint {
+  margin-left: 1rem;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  .subPoint {
+    margin-left: 1.5rem;
+    font-size: 20px;
+  }
+}
+
+/* Вложенный текст */
+.text {
+  margin-left: 1.5rem;
+  margin-top: 0.25rem;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  .text {
+    margin-left: 2rem;
+    font-size: 20px;
+  }
+}
+
+/* Загрузка */
+.loaderWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F2F3F4;
+}
+
+.loaderText {
+  color: #003399;
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+@media (min-width: 768px) {
+  .loaderText {
+    font-size: 2rem;
+
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}

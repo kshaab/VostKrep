@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Product } from "@/types/product"
 import ProductCard from "./ProductCard"
-import {endpoints} from "@/lib/api";
+import { endpoints } from "@/lib/api"
+import styles from "@/styles/products_section.module.css"
 
 type Props = {
   categorySlug?: string
@@ -14,82 +15,61 @@ export default function ProductsSection({ categorySlug }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
 
- useEffect(() => {
-  let isMounted = true
+  useEffect(() => {
+    let isMounted = true
 
-  const fetchAllProducts = async () => {
-    try {
+    const fetchAllProducts = async () => {
+      try {
+        let url = categorySlug
+          ? endpoints.productsByCategory(categorySlug)
+          : endpoints.products
 
-      const resInit = await fetch(endpoints.products)
-      const initData = await resInit.json()
-      let url = categorySlug
-        ? endpoints.productsByCategory(categorySlug)
-        : endpoints.products
+        let allProducts: Product[] = []
 
-      let allProducts: Product[] = []
-
-      while (url && isMounted) {
-        const res = await fetch(url)
-        if (!res.ok) {
-          console.error("Failed to fetch products:", res.status)
-          break
+        while (url && isMounted) {
+          const res = await fetch(url)
+          if (!res.ok) break
+          const data = await res.json()
+          allProducts = allProducts.concat(data.results ?? [])
+          url = data.next
         }
-        const data = await res.json()
-        allProducts = allProducts.concat(data.results ?? [])
-        url = data.next
-          }
 
-      if (isMounted) setProducts(allProducts)
-    } catch (error) {
-      console.error("Failed to fetch products:", error)
+        if (isMounted) setProducts(allProducts)
+      } catch (error) {
+        console.error("Failed to fetch products:", error)
+      }
     }
-  }
 
-  fetchAllProducts()
-  return () => { isMounted = false }
-}, [categorySlug])
+    fetchAllProducts()
+    return () => { isMounted = false }
+  }, [categorySlug])
 
   return (
     <motion.section
-      className="font-sans bg-[#F2F3F4] text-[#003399] py-12"
+      className={styles.section}
       initial={{ opacity: 0, y: 100, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.9 }}
     >
-      <div className="max-w-6xl mx-auto py-2">
+      <div className={styles.container}>
 
-        <div className="relative">
+        <div className={styles.wrapper}>
 
-          <div
-            className={`
-              overflow-hidden
-              transition-all
-              duration-700
-              ${expanded ? "max-h-[2000px]" : "max-h-[400px]"}
-            `}
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-9">
+          <div className={`${styles.content} ${expanded ? styles.expanded : styles.collapsed}`}>
+            <div className={styles.grid}>
               {products.map((item) => (
-                <ProductCard
-                  key={item.slug}
-                  product={item}
-                />
+                <ProductCard key={item.slug} product={item} />
               ))}
             </div>
           </div>
 
-          {!expanded && (
-            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#F2F3F4] via-[#F2F3F4]/80 to-transparent pointer-events-none" />
-          )}
+          {!expanded && <div className={styles.fade} />}
 
         </div>
 
-        <div className="font-heading max-w-4xl mx-auto py-14 px-6 tracking-[0.04em]">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="w-full bg-[#003399] text-[#F2F3F4] py-4 text-3xl font-semibold hover:bg-[#F0660A] hover:text-[#003399] transition-colors duration-300"
-          >
+        <div className={styles.buttonWrapper}>
+          <button onClick={() => setExpanded(!expanded)} className={styles.button}>
             {expanded ? "СВЕРНУТЬ" : "ПОКАЗАТЬ ЕЩЁ"}
           </button>
         </div>

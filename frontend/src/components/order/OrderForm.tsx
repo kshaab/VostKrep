@@ -1,14 +1,12 @@
 "use client";
 
 import { createPortal } from "react-dom";
-import { useState, useEffect } from "react";
-import {endpoints} from "@/lib/api";
+import { useState, useEffect, useRef } from "react";
+import { endpoints } from "@/lib/api";
 import { IMaskInput } from "react-imask";
-import { getCSRFToken } from "@/lib/csrf"
-import { useRef } from "react";
+import { getCSRFToken } from "@/lib/csrf";
+import styles from "@/styles/order.module.css";
 
-
-{/* Форма заявки */}
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -19,112 +17,77 @@ export default function OrderForm({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [form, setForm] = useState({
-  name: "",
-  phone: "",
-  email: "",
-  address: "",
-});
-  useEffect(() => {
-  if (typeof window === "undefined") return;
-
-  const saved = localStorage.getItem("orderForm");
-
-  if (saved) {
-    setForm(JSON.parse(saved));
-  }
-}, []);
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+  });
 
   useEffect(() => {
-  if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem("orderForm");
+    if (saved) setForm(JSON.parse(saved));
+  }, []);
 
-  localStorage.setItem("orderForm", JSON.stringify(form));
-}, [form]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("orderForm", JSON.stringify(form));
+  }, [form]);
 
   if (!isOpen || typeof window === "undefined") return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.append("items", "[]");
+    setLoading(true);
 
-  const formData = new FormData(e.currentTarget);
-  formData.append("items", "[]");
-
-  setLoading(true);
-
-  type ApiResponse = {
-    success?: boolean;
-    message?: string;
-  };
-
-  try {
-    const csrfToken = getCSRFToken();
-
-    const res = await fetch(endpoints.orders, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "X-CSRFToken": csrfToken || "",
-      },
-      credentials: "include",
-    });
-
-    let data: ApiResponse | null = null;
+    type ApiResponse = { success?: boolean; message?: string };
 
     try {
-      data = await res.json();
-    } catch {
-      data = null;
+      const csrfToken = getCSRFToken();
+      const res = await fetch(endpoints.orders, {
+        method: "POST",
+        body: formData,
+        headers: { "X-CSRFToken": csrfToken || "" },
+        credentials: "include",
+      });
+
+      let data: ApiResponse | null = null;
+
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (res.ok) {
+        alert(data?.message ?? "Заявка отправлена!");
+        setFileName("");
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        onClose();
+      } else {
+        if (data && typeof data === "object") {
+          const errors = Object.values(data).flat().join("\n");
+          alert(errors || "Ошибка отправки");
+        } else alert("Ошибка отправки");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Проблема с соединением");
+    } finally {
+      setLoading(false);
     }
-
-   if (res.ok) {
-  alert(data?.message ?? "Заявка отправлена!");
-  setFileName("");
-  if (fileInputRef.current) {
-    fileInputRef.current.value = "";
-  }
-  onClose();
-} else {
-
-  if (data && typeof data === "object") {
-    const errors = Object.values(data)
-      .flat()
-      .join("\n");
-
-    alert(errors || "Ошибка отправки");
-  } else {
-    alert("Ошибка отправки");
-  }
-}
-
-  } catch (error) {
-    console.error(error);
-    alert("Проблема с соединением");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="bg-[#F2F3F4] text-[#003399] w-full max-w-2xl p-8 rounded-2xl relative max-h-[90vh] overflow-y-auto">
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
+        <button onClick={onClose} className={styles.closeButton}>✕</button>
 
-        {/* Кнопка закрытия */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-2xl text-[#F0660A]"
-        >
-          ✕
-        </button>
+        <h2 className={styles.title}>Заявка</h2>
 
-        <h2 className="font-heading text-4xl font-bold mb-6 tracking-[0.04em]">
-          Заявка
-        </h2>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-          encType="multipart/form-data"
-        >
+        <form onSubmit={handleSubmit} className={styles.form} encType="multipart/form-data">
           <input
             name="name"
             type="text"
@@ -132,9 +95,8 @@ export default function OrderForm({ isOpen, onClose }: Props) {
             required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            className={styles.input}
           />
-
 
           <IMaskInput
             name="phone"
@@ -142,7 +104,7 @@ export default function OrderForm({ isOpen, onClose }: Props) {
             value={form.phone}
             onAccept={(value: string) => setForm({ ...form, phone: value })}
             overwrite
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] font-sans text-[#003399]"
+            className={styles.maskedInput}
             placeholder="+7 (999) 999-99-99"
           />
 
@@ -152,7 +114,7 @@ export default function OrderForm({ isOpen, onClose }: Props) {
             placeholder="Email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            className={styles.input}
           />
 
           <textarea
@@ -160,71 +122,46 @@ export default function OrderForm({ isOpen, onClose }: Props) {
             placeholder="Адрес доставки"
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            className={styles.textarea}
           />
 
           <textarea
             name="comment"
             placeholder="Комментарий"
-            className="w-full border p-3 rounded-lg bg-[#F2F3F4] placeholder:text-[#003399] font-sans"
+            className={styles.textarea}
           />
 
-          <div className="flex items-center gap-3">
-              {/* Скрытый input */}
-              <input
-                ref={fileInputRef}
-                id="file"
-                name="file"
-                type="file"
-                className="hidden"
-                onChange={(e) =>
-                  setFileName(e.target.files?.[0]?.name || "")
-                }
-              />
+          <div className={styles.fileWrapper}>
+            <input
+              ref={fileInputRef}
+              id="file"
+              name="file"
+              type="file"
+              className={styles.hiddenFileInput}
+              onChange={(e) => setFileName(e.target.files?.[0]?.name || "")}
+            />
 
-              {/* Кнопка */}
-              <label
-                htmlFor="file"
-                className="bg-[#003399] text-[#F2F3F4]
-                px-4 py-2 rounded-lg cursor-pointer
-                hover:bg-[#F0660A] transition-colors whitespace-nowrap font-sans
-                hover:text-[#003399]"
-              >
-                Выбрать
-              </label>
+            <label htmlFor="file" className={styles.fileButton}>Выбрать</label>
 
-              {/* Поле с названием */}
-              <div className="flex-1 flex items-center justify-between bg-[#F2F3F4] px-3 py-2 rounded-lg text-sm font-sans">
-                <span className="truncate">
-                  {fileName || "Файл не выбран"}
-                </span>
+            <div className={styles.fileNameContainer}>
+              <span className={styles.fileNameText}>{fileName || "Файл не выбран"}</span>
 
-                {fileName && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (fileInputRef.current) {
-                        fileInputRef.current.value = "";
-                      }
-                      setFileName("");
-                    }}
-                    className="ml-2 text-[#F0660A] hover:scale-110 transition"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
+              {fileName && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                    setFileName("");
+                  }}
+                  className={styles.clearFileButton}
+                >
+                  ✕
+                </button>
+              )}
             </div>
+          </div>
 
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#003399] text-[#F2F3F4]
-            py-3 rounded-lg font-semibold hover:bg-[#F0660A]
-            transition-colors font-heading tracking-[0.04em] text-2xl
-            hover:text-[#003399] disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className={styles.submitButton}>
             {loading ? "Отправка..." : "Отправить"}
           </button>
         </form>

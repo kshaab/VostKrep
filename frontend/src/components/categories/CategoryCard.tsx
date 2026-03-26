@@ -3,43 +3,37 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Category } from "@/types/category"
+import styles from "@/styles/category_card.module.css"
 
-{/* Карточка категорий */}
 type Props = {
   category: Category
 }
 
 export default function CategoryCard({ category }: Props) {
-
   const imageUrl = category.image
-  ? category.image.startsWith("http")
-    ? category.image
-    : `${process.env.NEXT_PUBLIC_API_URL}${category.image}`
-  : "/placeholder.png"
+    ? category.image.startsWith("http")
+      ? category.image
+      : `${process.env.NEXT_PUBLIC_API_URL}${category.image}`
+    : "/placeholder.png"
 
   return (
-    <Link
-      href={`/catalog/${category.slug}`}
-      className="
-        bg-white shadow-md cursor-pointer
-        hover:border-2 hover:border-[#F0660A]
-        transition-all block
-      "
-    >
-      <div className="px-4 py-3 font-semibold md:text-xl">
+    <Link href={`/catalog/${category.slug}`} className={styles.card}>
+
+      <div className={styles.cardTitle}>
         {category.name}
       </div>
 
-      <div className="relative h-[200px] w-full">
+      <div className={styles.imageWrapper}>
         <Image
           src={imageUrl}
           alt={category.name}
           width={500}
           height={500}
-          className="w-full h-[200px] object-contain"
-          unoptimized //УБРАТЬ ДЛЯ ПРОДА
+          className={styles.image}
+          unoptimized
         />
       </div>
+
     </Link>
   )
 }

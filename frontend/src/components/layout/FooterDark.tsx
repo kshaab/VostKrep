@@ -1,71 +1,74 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
-import { Mail, Phone, MessageCircle } from "lucide-react"
+import { MdPhone, MdEmail } from "react-icons/md";
+import { SiTelegram } from "react-icons/si";
+import styles from "@/styles/footer_dark.module.css";
 
-{/* Темный подвал */}
 export default function FooterDark() {
   return (
-    <footer className="w-full bg-[#123E9A] text-white">
-      <div className="max-w-[1200px] mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-16">
+    <footer className={styles.footer}>
+      <div className={styles.footerContainer}>
+        <div className={styles.footerGrid}>
 
-          <div className="flex items-start">
+          <div className={styles.logoContainer}>
             <Image
               src="/logo-light.png"
               alt="Восткреп"
               width={420}
               height={120}
-              className="w-[360px] md:w-[420px] h-auto translate-y-6 -translate-x-10"
+              className={styles.logoImage}
               priority
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-[120px_1fr_1fr] gap-16 text-3xl font-heading">
+          <div className={styles.linksGrid}>
 
             {/* Колонка 1 */}
-            <div className="space-y-6">
-              <Link href="/delivery" className="block hover:text-[#F0660A] transition-colors">
+            <div className={styles.column}>
+              <Link href="/delivery" className={styles.link}>
                 ДОСТАВКА
               </Link>
-              <Link href="/payment" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/payment" className={styles.link}>
                 ОПЛАТА
               </Link>
-              <Link href="#" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/about" className={styles.link}>
                 О НАС
               </Link>
             </div>
 
             {/* Колонка 2 */}
-            <div className="space-y-6">
-              <Link href="/privacy" className="block hover:text-[#F0660A] transition-colors">
+            <div className={styles.column}>
+              <Link href="/privacy" className={styles.link}>
                 ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
               </Link>
-              <Link href="/personal_data" className="block hover:text-[#F0660A] transition-colors">
+              <Link href="/personal_data" className={styles.link}>
                 СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ
               </Link>
             </div>
 
             {/* Колонка 3 */}
-            <div className="space-y-6">
 
-              <div className="flex items-center gap-4 hover:text-[#F0660A] transition-colors">
-                <MessageCircle size={26} />
-                <span>WhatsApp</span>
+            <div className={styles.column}>
+
+              <a
+                href="https://t.me/ooovostkrep"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.contactItem}
+              >
+                <SiTelegram className={styles.contactIcon} />
+                <span>Telegram</span>
+              </a>
+
+              <div className={styles.contactItem}>
+                <MdPhone className={styles.contactIcon} />
+                <a href="tel:+74957992359">+7 (495) 799-23-59</a>
               </div>
 
-              <div className="flex items-center gap-4 hover:text-[#F0660A] transition-colors">
-                <Phone size={26} />
-                <a href="tel:+74957992359">
-                  +7 (495) 799-23-59
-                </a>
-              </div>
-
-              <div className="flex items-center gap-4 hover:text-[#F0660A] transition-colors">
-                <Mail size={26} />
-                <a href="mailto:zakaz@vostkrep.ru">
-                  zakaz@vostkrep.ru
-                </a>
+              <div className={styles.contactItem}>
+                <MdEmail className={styles.contactIcon} />
+                <a href="mailto:zakaz@vostkrep.ru">zakaz@vostkrep.ru</a>
               </div>
 
             </div>

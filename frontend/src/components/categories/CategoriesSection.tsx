@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import CategoryCard from "./CategoryCard"
 import { Category } from "@/types/category"
 import { endpoints } from "@/lib/api"
+import styles from "@/styles/categories_section.module.css"
 
 export default function CategoriesSection() {
   const [loading, setLoading] = useState(true)
@@ -45,17 +46,16 @@ export default function CategoriesSection() {
   }, [])
 
   return (
-    <section className="font-sans bg-[#F2F3F4] text-[#003399] py-12">
-      <div className="max-w-6xl mx-auto py-6">
-        <div className="relative">
+    <section className={styles.section}>
+      <div className={styles.container}>
+        <div className={styles.wrapper}>
           <div
-            className={`
-              overflow-hidden transition-all duration-700 relative
-              ${expanded ? "max-h-[2000px]" : "max-h-[500px]"}
-            `}
+            className={`${styles.content} ${
+              expanded ? styles.expanded : styles.collapsed
+            }`}
           >
             <motion.div
-              className="grid grid-cols-2 md:grid-cols-4 gap-9"
+              className={styles.grid}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.2 }}
@@ -78,16 +78,14 @@ export default function CategoriesSection() {
               ))}
             </motion.div>
 
-            {!expanded && (
-              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#F2F3F4] via-[#F2F3F4]/80 to-transparent pointer-events-none" />
-            )}
+            {!expanded && <div className={styles.fade} />}
           </div>
         </div>
 
-        <div className="font-heading max-w-4xl mx-auto py-14 px-6 tracking-[0.04em]">
+        <div className={styles.buttonWrapper}>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="w-full bg-[#003399] text-[#F2F3F4] py-4 text-3xl font-semibold hover:bg-[#F0660A] hover:text-[#003399] transition-colors duration-300"
+            className={styles.button}
           >
             {expanded ? "СВЕРНУТЬ" : "ПОКАЗАТЬ ЕЩЁ"}
           </button>

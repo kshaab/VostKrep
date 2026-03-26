@@ -1,53 +1,113 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { ShoppingCart } from "lucide-react";
+import styles from "@/styles/header.module.css";
 
-{/* Стандартная шапка */}
 export default function Header() {
   const { openCart, items } = useCart();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="bg-[#003399] relative">
-      <div className="mx-auto max-w-6xl h-20">
-        <nav className="flex h-full font-heading font-semibold text-[#F2F3F4] text-3xl tracking-[0.04em]">
+    <header className={styles.header}>
 
-          <Link
-            href="/"
-            className="flex-1 flex items-center justify-center hover:bg-[#F0660A] hover:text-[#003399]"
-          >
-            КАТАЛОГ
-          </Link>
+      {/* === DESKTOP === */}
+      <div className={styles.desktopNavContainer}>
+        <div className={styles.desktopNavInner}>
+          <nav className={styles.desktopNav}>
 
-          <Link
-            href="/delivery"
-            className="flex-1 flex items-center justify-center hover:bg-[#F0660A] hover:text-[#003399]"
-          >
-            ДОСТАВКА
-          </Link>
+            <Link href="/" className={styles.desktopNavLink}>
+              КАТАЛОГ
+            </Link>
 
-          <button
-            className="flex-1 flex items-center justify-center hover:bg-[#F0660A] hover:text-[#003399]"
-          >
-            WHATSAPP
-          </button>
+            <Link href="/delivery" className={styles.desktopNavLink}>
+              ДОСТАВКА
+            </Link>
 
-          {/* КОРЗИНА */}
-          <button
-            onClick={openCart}
-            className="flex-1 flex items-center justify-center hover:bg-[#F0660A] hover:text-[#003399] relative"
-          >
-            КОРЗИНА
+            <a
+              href="https://t.me/ooovostkrep"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.desktopNavLink}
+            >
+              TELEGRAM
+            </a>
 
-            {items.length > 0 && (
-              <span className="absolute top-2 right-10 bg-[#F0660A] text-[#F2F3F4] text-sm rounded-full px-2">
-                {items.length}
-              </span>
-            )}
-          </button>
+            <button onClick={openCart} className={styles.cartButton}>
+              КОРЗИНА
+              {items.length > 0 && (
+                <span className={styles.cartBadge}>{items.length}</span>
+              )}
+            </button>
 
-        </nav>
+          </nav>
+        </div>
       </div>
+
+      {/* === MOBILE === */}
+      <div className={styles.mobileNavContainer}>
+
+        <div className={styles.mobileTopBar}>
+          <Link href="/" className={styles.logoLink}>
+            <Image src="/logo-light.png" alt="logo" width={120} height={40} />
+          </Link>
+
+          <div className={styles.burgerCartWrapper}>
+
+            <button onClick={openCart} className={styles.cartIconButton}>
+              <ShoppingCart size={28} />
+              {items.length > 0 && (
+                <span className={styles.cartIconBadge}>{items.length}</span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className={styles.burgerButton}
+            >
+              ☰
+            </button>
+
+          </div>
+        </div>
+
+        <div
+          className={`${styles.mobileMenuWrapper} ${isOpen ? "max-h-96" : "max-h-0"}`}
+        >
+          <div className={styles.mobileMenu}>
+
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className={styles.mobileMenuLink}
+            >
+              КАТАЛОГ
+            </Link>
+
+            <Link
+              href="/delivery"
+              onClick={() => setIsOpen(false)}
+              className={styles.mobileMenuLink}
+            >
+              ДОСТАВКА
+            </Link>
+
+            <a
+              href="https://t.me/ooovostkrep"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.mobileMenuLinkLast}
+            >
+              TELEGRAM
+            </a>
+
+          </div>
+        </div>
+      </div>
+
     </header>
   );
 }

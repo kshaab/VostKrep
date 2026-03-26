@@ -1,0 +1,150 @@
+.page {
+  background: #003399;
+  min-height: 100vh;
+  padding: 60px 20px;
+}
+
+.container {
+  @apply mx-auto max-w-6xl w-full;
+}
+
+.titleSection h1 {
+  @apply font-heading text-5xl md:text-7xl leading-none tracking-[0.04em] font-bold text-[#F2F3F4];
+}
+
+
+.whiteBlock {
+  background:  #F2F3F4;
+  padding: 40px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+  margin-top: 50px;
+}
+
+
+/* верхние пункты / контент страницы */
+.introList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  font-family: "Legue_spartan", sans-serif;
+  font-size: 22px;
+  padding-left: 0;
+}
+
+.introList li {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  color: #003399;
+  margin-top: 20px;
+}
+
+/* заголовки секций */
+.sectionTitle {
+  color: #ff6a00;
+  font-weight: 800;
+  font-size: 36px;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+
+/* сетка преимуществ */
+.columnsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+/* список преимуществ */
+.itemList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Legue_spartan", sans-serif;
+  margin-top: 20px;
+}
+
+.itemList li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #003399;
+}
+
+.itemList strong {
+  display: block;
+  font-weight: 700;
+  color: #003399;
+  font-size: 22px;
+}
+
+.itemList span {
+  display: block;
+  font-size: 18px;
+  color: #003399;
+}
+
+/* loader */
+.loaderWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F2F3F4;
+}
+
+.loaderText {
+  color: #003399;
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  font-family: "Bebas Neue", sans-serif;
+}
+
+@media (min-width: 768px) {
+  .loaderText {
+    font-size: 2rem;
+  }
+}
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+/* адаптив */
+@media (max-width: 768px) {
+  .columnsGrid {
+    grid-template-columns: 1fr;
+  }
+
+
+
+  .sectionTitle {
+    font-size: 25px;
+  }
+
+  .itemList{
+    font-size: 18px;
+  }
+
+  .introList {
+    font-size: 18px;
+  }
+
+  .itemList strong{
+    font-size: 20px;
+  }
+
+
+}

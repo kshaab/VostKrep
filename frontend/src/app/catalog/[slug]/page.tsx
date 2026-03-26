@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import ProductsSection from "@/components/products/ProductsSection"
 import { Category } from "@/types/category"
 import { endpoints } from "@/lib/api"
-import AnimatedTitle from "@/components/AnimatedTitle"
+import AnimatedTitle from "@/components/animation/AnimatedTitle"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -31,7 +31,7 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <div className="bg-[#F2F3F4] min-h-screen">
-      <div className="max-w-6xl mx-auto py-16 bg-[#F2F3F4]">
+      <div className="max-w-6xl mx-auto py-16 bg-[#F2F3F4] px-4 md:px-0">
 
         <AnimatedTitle>
           {category.name}

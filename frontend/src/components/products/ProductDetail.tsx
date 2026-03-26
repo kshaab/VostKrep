@@ -4,8 +4,8 @@ import { useState, useMemo, useEffect } from "react"
 import { useCart } from "@/context/CartContext"
 import { Product } from "@/types/product"
 import { endpoints } from "@/lib/api"
-import styles from "./product.module.css"
-import AnimatedTitle from "@/components/AnimatedTitle"
+import styles from "@/styles/product_detail.module.css"
+import AnimatedTitle from "@/components/animation/AnimatedTitle"
 
 type Option = {
   id: number
@@ -35,23 +35,18 @@ export default function ProductDetail({ slug }: Props) {
         setProduct(data)
 
         const parsedOptions = (data.options ?? []).map((opt: any) => {
-  const normalized = opt.size
-    .toLowerCase()
-    .replace("х", "x")
-
-  const parts = normalized.split("x")
-
-  const sizePart = parts[0].trim()
-  const lengthPart = (parts[1] ?? "0").replace(/\D/g, "")
-
-  return {
-    id: opt.id,
-    size: sizePart,
-    length: lengthPart,
-    sku: opt.sku,
-    unit: data.unit || "шт",
-  }
-})
+          const normalized = opt.size.toLowerCase().replace("х", "x")
+          const parts = normalized.split("x")
+          const sizePart = parts[0].trim()
+          const lengthPart = (parts[1] ?? "0").replace(/\D/g, "")
+          return {
+            id: opt.id,
+            size: sizePart,
+            length: lengthPart,
+            sku: opt.sku,
+            unit: data.unit || "шт",
+          }
+        })
 
         setOptions(parsedOptions)
       })
@@ -109,17 +104,19 @@ export default function ProductDetail({ slug }: Props) {
 
   return (
     <section className={styles.product}>
+      {/* Заголовок */}
       <div className={styles.title}>
-        <AnimatedTitle>
-          {product.name}
-        </AnimatedTitle>
+        <AnimatedTitle>{product.name}</AnimatedTitle>
       </div>
 
+      {/* Карточка продукта */}
       <div className={styles.card}>
+        {/* Картинка */}
         <div className={styles.imageBlock}>
-          <img src={imageUrl} alt={product.name} width={500} />
+          <img src={imageUrl} alt={product.name} className={styles.image} />
         </div>
 
+        {/* Блок информации */}
         <div className={styles.infoBlock}>
           {/* Селектор размера */}
           <div className={styles.selector}>

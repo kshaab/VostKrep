@@ -1,0 +1,48 @@
+.footer {
+  @apply w-full bg-[#F2F3F4] text-[#003399];
+}
+
+.footerContainer {
+  @apply max-w-[1200px] mx-auto px-6 py-16;
+}
+
+.footerGrid {
+  @apply grid grid-cols-1 md:grid-cols-[auto_1fr] gap-16;
+}
+
+.logoContainer {
+  @apply hidden md:flex items-start;
+}
+
+.logoImage {
+  @apply w-[420px] h-auto translate-y-5;
+}
+
+.linksGrid {
+  @apply grid grid-cols-[40px_1fr_1fr] md:grid-cols-[120px_1fr_1fr] gap-16 md:text-3xl font-heading;
+}
+
+.column {
+  @apply space-y-6;
+}
+
+.link {
+  @apply block hover:text-[#F0660A] transition-colors;
+}
+
+.contactItem {
+  @apply flex items-center gap-4 hover:text-[#F0660A] transition-colors;
+}
+
+/* Иконки */
+.contactIcon {
+  width: 26px;
+  height: 26px;
+}
+
+@media (max-width: 768px) {
+  .contactIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
