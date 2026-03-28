@@ -27,6 +27,8 @@ export default function ProductDetail({ slug }: Props) {
   const [sizeIndex, setSizeIndex] = useState(0)
   const [lengthIndex, setLengthIndex] = useState(0)
 
+
+
   // Загрузка продукта и опций
   useEffect(() => {
     fetch(endpoints.productBySlug(slug), { cache: "no-store" })
@@ -34,32 +36,41 @@ export default function ProductDetail({ slug }: Props) {
       .then(data => {
         setProduct(data)
 
-        const parsedOptions = (data.options ?? []).map((opt: any) => {
-          const normalized = opt.size.toLowerCase().replace("х", "x")
-          const parts = normalized.split("x")
-          const sizePart = parts[0].trim()
-          const lengthPart = (parts[1] ?? "0").replace(/\D/g, "")
-          return {
-            id: opt.id,
-            size: sizePart,
-            length: lengthPart,
-            sku: opt.sku,
-            unit: data.unit || "шт",
-          }
-        })
+       const parsedOptions = (data.options ?? []).map((opt: any) => {
+       const normalized = opt.size.toLowerCase().replace("х", "x")
+       const parts = normalized.split("x")
+       const sizePart = parts[0].trim()
+       const rawLength = (parts[1] ?? "").replace(/\D/g, "")
+
+       return {
+          id: opt.id,
+          size: sizePart,
+          length: rawLength === "0" ? "" : rawLength,
+          sku: opt.sku,
+          unit: data.unit || "шт",
+        }
+      })
 
         setOptions(parsedOptions)
       })
   }, [slug])
 
   // Уникальные размеры
-  const sizes = useMemo(() => [...new Set(options.map(o => o.size))], [options])
+  const sizes = useMemo(
+  () => [...new Set(options.map(o => o.size).filter(Boolean))],
+  [options]
+  )
   const size = sizes[sizeIndex] ?? ""
 
   // Уникальные длины для выбранного размера
   const lengths = useMemo(
-    () => [...new Set(options.filter(o => o.size === size).map(o => o.length))],
-    [options, size]
+  () =>
+    [...new Set(
+      options
+        .filter(o => o.size === size && o.length)
+        .map(o => o.length)
+    )],
+  [options, size]
   )
   const length = lengths[lengthIndex] ?? ""
 
@@ -104,9 +115,14 @@ export default function ProductDetail({ slug }: Props) {
 
   return (
     <section className={styles.product}>
+      <div className={styles.titleWrapper}>
+        <button className={styles.backButton} onClick={() => window.history.back()}>
+          ❮
+        </button>
       {/* Заголовок */}
       <div className={styles.title}>
         <AnimatedTitle>{product.name}</AnimatedTitle>
+      </div>
       </div>
 
       {/* Карточка продукта */}
@@ -119,24 +135,68 @@ export default function ProductDetail({ slug }: Props) {
         {/* Блок информации */}
         <div className={styles.infoBlock}>
           {/* Селектор размера */}
+          {sizes.length > 0 && (
           <div className={styles.selector}>
             <div className={styles.label}>РАЗМЕР</div>
             <div className={styles.control}>
-              <button onClick={() => changeValue("size", -1)}>❮</button>
-              <span>{size}</span>
-              <button onClick={() => changeValue("size", 1)}>❯</button>
+              {sizes.length > 1 && (
+                <button
+                onClick={() => {
+                  changeValue("size", -1)
+                }}
+                 className={styles.controlButton}
+              >
+                ❮
+              </button>
+              )}
+
+              <span>{size ? `${size} ` : ""}</span>
+
+              {sizes.length > 1 && (
+                <button
+                  onClick={() => {
+                    changeValue("size", 1)
+                  }}
+                   className={styles.controlButton}
+                >
+                  ❯
+                </button>
+              )}
             </div>
           </div>
+          )}
 
           {/* Селектор длины */}
+          {lengths.length > 0 && (
           <div className={styles.selector}>
             <div className={styles.label}>ДЛИНА</div>
             <div className={styles.control}>
-              <button onClick={() => changeValue("length", -1)}>❮</button>
-              <span>{length} мм</span>
-              <button onClick={() => changeValue("length", 1)}>❯</button>
+              {lengths.length > 1 && (
+                <button
+                onClick={() => {
+                  changeValue("length", -1)
+                }}
+                 className={styles.controlButton}
+              >
+                ❮
+              </button>
+              )}
+
+              <span> {length ? `${length} мм` : ""}</span>
+
+              {lengths.length > 1 && (
+                <button
+                onClick={() => {
+                  changeValue("length", 1)
+                }}
+                className={styles.controlButton}
+              >
+                ❯
+              </button>
+              )}
             </div>
           </div>
+          )}
 
           {/* Кнопка добавления в корзину */}
           <button

@@ -32,14 +32,30 @@
   .title {
     font-size: 60px;
     padding: 25px 0;
+    margin-left: 9rem;
   }
 }
 
 /* Секция */
-.section {
-  margin-bottom: 2rem;
-  font-family: "Legue_spartan", sans-serif;
-  font-size: 18px;
+ .section {
+    margin-top: 10px;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    font-family: "Legue_spartan", sans-serif;
+    margin-left: 2px;
+    text-align: justify;
+    margin-right: 6px;
+  }
+
+@media (min-width: 768px) {
+  .section {
+    margin-bottom: 2rem;
+    font-family: "Legue_spartan", sans-serif;
+    font-size: 18px;
+    margin-left: 9rem;
+    margin-right: 9rem;
+    text-align: justify;
+  }
 }
 
 /* Блок текста */

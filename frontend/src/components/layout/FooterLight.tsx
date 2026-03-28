@@ -14,7 +14,7 @@ export default function FooterLight() {
 
           <div className={styles.logoContainer}>
             <Image
-              src="/logo-dark1.png"
+              src="/logo-dark2.png"
               alt="Восткреп"
               width={420}
               height={120}

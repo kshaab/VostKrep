@@ -105,6 +105,52 @@
   font-family: "Bebas Neue", sans-serif;
 }
 
+.buttonSection {
+  padding: 0;
+}
+
+.buttonWrapper {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 4rem;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 0;
+  padding: 1rem 1.5rem;
+  font-size: 28px;
+  font-weight: 600;
+  font-family: "Bebas Neue", sans-serif;
+  border-radius: 0.5rem;
+  text-align: center;
+  background: #003399;
+  color: #F2F3F4;
+  transition: all 0.3s;
+}
+
+
+.button:hover {
+  background: #F0660A;
+  color: #003399;
+}
+
+@media (max-width: 768px) {
+  .button {
+    font-size: 22px;
+    padding: 1rem;
+    background: #003399;
+    color: #F2F3F4;
+
+  }
+   .buttonWrapper {
+    padding: 3rem 1rem;
+  }
+
+}
+
 @media (min-width: 768px) {
   .loaderText {
     font-size: 2rem;

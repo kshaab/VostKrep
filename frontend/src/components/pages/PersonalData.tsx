@@ -4,15 +4,27 @@ import { StaticPage } from "@/types/static_pages";
 import { endpoints } from "@/lib/api";
 import NutIcon from "@/components/icons/NutIcon";
 import styles from "@/styles/personal_data.module.css";
+import ScrollToTopButton from "@/components/icons/ScrollToTopButton";
 
 export default function PersonalData() {
   const [page, setPage] = useState<StaticPage | null>(null);
+  const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     fetch(endpoints.static_pages("personal-data"))
       .then((res) => res.json())
       .then((data) => setPage(data));
   }, []);
+
+   useEffect(() => {
+    const handleScroll = () => {
+      setShowTopBtn(window.scrollY > 200); // показываем после 200px скролла
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   if (!page) {
     return (

@@ -11,6 +11,15 @@ import {
 export default function AboutPage() {
   const [page, setPage] = useState<StaticPage | null>(null);
 
+  const openModal = () => {
+  const link = document.createElement("a");
+  link.href = "/files/vostkrep_requisities.pdf";
+  link.download = "vostkrep_requisities.pdf";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
   useEffect(() => {
     fetch(endpoints.static_pages("about"))
       .then((res) => res.json())
@@ -123,6 +132,13 @@ export default function AboutPage() {
                 </ul>
               )}
               </div>
+                <section className={styles.buttonSection}>
+                <div className={styles.buttonWrapper}>
+                  <button onClick={openModal} className={styles.button}>
+                    СКАЧАТЬ РЕКВИЗИТЫ
+                  </button>
+                </div>
+              </section>
             </section>
           );
         })}

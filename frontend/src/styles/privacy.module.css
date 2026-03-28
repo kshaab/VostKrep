@@ -2,10 +2,9 @@
   min-height: 100vh;
   background: #F2F3F4;
   color: #003399;
-  padding: 2rem 1.5rem;
+  padding: 2rem 0;
   font-family: sans-serif;
 }
-
 
 /* Заголовок */
 .title {
@@ -16,27 +15,32 @@
   margin-bottom: 1.5rem;
   font-family: "Bebas Neue", sans-serif;
   padding: 25px 0;
+  margin-left: 22px;
 }
 
 @media (min-width: 768px) {
   .title {
     font-size: 60px;
     padding: 25px 7px;
+    margin-left: 9.5rem;
   }
 }
 
 /* Секции */
 .section {
-  margin-top: 10px;
-  margin-bottom: 2rem;
   font-size: 1rem;
   font-family: "Legue_spartan", sans-serif;
+  text-align: justify;
+  margin: 10px 20px 2rem 8px;
 }
 
 @media (min-width: 768px) {
   .section {
     font-size: 1.25rem;
     padding: 25px 7px;
+    margin-left: 9.5rem;
+    margin-right: 9.5rem;
+    text-align: justify;
   }
 }
 

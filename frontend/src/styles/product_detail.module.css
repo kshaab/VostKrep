@@ -7,13 +7,34 @@
 }
 
 /* Заголовок */
+.titleWrapper {
+  display: flex;
+  align-items: center; /* вертикально по центру */
+  gap: 50px; /* минимальное расстояние между кнопкой и заголовком */
+  margin-left: 145px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  color: #003399;
+  font-size: 32px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.backButton:hover {
+  color: #F0660A;
+}
+
 .title {
   font-size: 65px;
   font-family: "Bebas Neue", sans-serif;
   color: #003399;
-  margin-left: 15px;
-  margin-top: 50px;
-  margin-bottom: 50px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -26,8 +47,8 @@
   display: flex;
   align-items: center;
   padding: 60px 100px 60px 140px;
-  margin-left: 350px;
-  margin-right: 20px;
+  margin-left: 370px;
+  margin-right: 145px;
   margin-bottom: 50px;
   overflow: visible;
   flex-direction: row;
@@ -75,17 +96,27 @@
   display: flex;
   font-family: "Bebas Neue", sans-serif;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   font-size: 30px;
   letter-spacing: 0.04em;
+  gap: 100px;
 }
 
-.control button {
+.controlButton {
   background: transparent;
   border: none;
   color: #f2f2f2;
   font-size: 28px;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.controlButton:active {
+  color: #F0660A;
+}
+
+.controlButton:hover {
+  color: #F0660A;
 }
 
 .control span {
@@ -102,7 +133,7 @@
   border: 2px solid #f2f2f2;
   background: transparent;
   color: #f2f2f2;
-  cursor: not-allowed;
+  cursor: pointer;
   transition: 0.3s ease;
   font-family: "Bebas Neue", sans-serif;
   margin-top: 10px;
@@ -117,19 +148,22 @@
 
 /* ================= Мобильная адаптация ================= */
 @media (max-width: 768px) {
+  .titleWrapper {
+    margin-left: 10px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+
+  .backButton {
+    font-size: 24px;
+  }
+
   .title {
-  font-size: 24px;
-  font-family: "Bebas Neue", sans-serif;
-  color: #003399;
-  margin-left: 10px;
-  margin-top: 15px;
-  margin-bottom: 20px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+    font-size: 24px;
   }
   .card {
     flex-direction: column;
-
     padding: 0 25px 25px;
     margin: 0;
     margin-top: 40px;

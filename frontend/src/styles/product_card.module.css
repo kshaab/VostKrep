@@ -1,10 +1,19 @@
 .card {
   background: #F2F3F4;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  display: block;
+  display: flex;
   border-radius: 0.5rem;
   overflow: hidden;
   transition: all 0.3s;
+  flex-direction: column;
+  height: 280px;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px){
+  .card {
+    height: 190px;
+  }
 }
 
 .card:hover {
@@ -16,6 +25,7 @@
   padding: 0.5rem 0.75rem;
   font-weight: 600;
   font-size: 0.875rem;
+  min-height: 3em;
 }
 
 @media (min-width: 640px) {
@@ -35,8 +45,10 @@
 /* Картинка */
 .imageWrapper {
   position: relative;
-  width: 100%;
+  width: 70%;
   height: 150px;
+  flex-shrink: 0;
+  margin-left: 35px;
 }
 
 @media (min-width: 640px) {

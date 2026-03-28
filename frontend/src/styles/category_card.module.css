@@ -6,6 +6,14 @@
   display: block;
   border-radius: 0.5rem;
   overflow: hidden;
+  height: 280px;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px){
+  .card {
+    height: 190px;
+  }
 }
 
 .card:hover {

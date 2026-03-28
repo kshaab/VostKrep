@@ -1,0 +1,20 @@
+.scrollButton {
+  position: sticky;
+  bottom: 10px;
+  left: 1380px;
+  width: auto;
+  height: auto;
+  color: #003399;
+  font-size: 65px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s, transform 0.2s;
+}
+
+.scrollButton:hover {
+  color: #F0660A;
+  transform: translateY(-2px);
+}

@@ -19,7 +19,7 @@
   overflow: hidden;
   transition: all 0.7s;
   position: relative;
-  padding: 0 1rem 4rem;
+  padding: 0 1rem 2rem;
 }
 
 .collapsed {
@@ -60,7 +60,7 @@
 }
 
 .buttonWrapper {
-  max-width: 64rem;
+  max-width: 56rem;
   margin: 0 auto;
   padding: 2.5rem 1rem;
   text-align: center;

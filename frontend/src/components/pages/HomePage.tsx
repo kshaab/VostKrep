@@ -30,7 +30,7 @@ export default function HomePage() {
           {/* Картинка */}
           <div className={styles.imageWrapper}>
             <Image
-              src="/logo-dark1.png"
+              src="/logo-dark2.png"
               alt="logo_home"
               width={600}
               height={600}

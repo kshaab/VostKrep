@@ -8,9 +8,9 @@
 
 /* Контейнер */
 .container {
-  max-width: 72rem;
+  max-width: 75rem;
   margin: 0 auto;
-  padding: 1.5rem 1rem;
+
 }
 
 /* Обёртка для продуктов */
@@ -22,7 +22,8 @@
 .content {
   overflow: hidden;
   transition: all 0.7s;
-  padding: 0 1rem;
+  position: relative;
+  padding: 0 0 2rem;
 }
 
 .collapsed {

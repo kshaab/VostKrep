@@ -3,6 +3,7 @@ import ProductsSection from "@/components/products/ProductsSection"
 import { Category } from "@/types/category"
 import { endpoints } from "@/lib/api"
 import AnimatedTitle from "@/components/animation/AnimatedTitle"
+import BackButton from "@/components/icons/BackButton";
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -33,9 +34,10 @@ export default async function CategoryPage({ params }: Props) {
     <div className="bg-[#F2F3F4] min-h-screen">
       <div className="max-w-6xl mx-auto py-16 bg-[#F2F3F4] px-4 md:px-0">
 
-        <AnimatedTitle>
-          {category.name}
-        </AnimatedTitle>
+      <div className="flex items-center gap-4 md:gap-14 mb-8">
+          <BackButton />
+          <AnimatedTitle>{category.name}</AnimatedTitle>
+        </div>
 
         <ProductsSection categorySlug={slug} />
       </div>

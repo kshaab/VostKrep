@@ -26,15 +26,16 @@ export default function FooterDark() {
 
             {/* Колонка 1 */}
             <div className={styles.column}>
-              <Link href="/delivery" className={styles.link}>
-                ДОСТАВКА
+              <Link href="/about" className={styles.link}>
+                О НАС
               </Link>
               <Link href="/payment" className={styles.link}>
                 ОПЛАТА
               </Link>
-              <Link href="/about" className={styles.link}>
-                О НАС
+              <Link href="/delivery" className={styles.link}>
+                ДОСТАВКА
               </Link>
+
             </div>
 
             {/* Колонка 2 */}
