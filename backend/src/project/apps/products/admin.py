@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 from .models import Category, Product, ProductOption
+from import_export.admin import ImportExportModelAdmin
+from .resources import ProductResource, CategoryResource
 
 
 class ProductOptionInline(admin.TabularInline):
@@ -12,7 +14,8 @@ class ProductOptionInline(admin.TabularInline):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
     list_display = ("id", "name", "parent", "is_active")
     list_filter = ("is_active", "parent")
     search_fields = ("name",)
@@ -21,7 +24,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ImportExportModelAdmin):
+    resource_class = ProductResource
     list_display = ("id", "name", "sku", "category", "is_active")
     list_filter = ("category", "is_active")
     search_fields = ("name", "sku")

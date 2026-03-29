@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "project.apps.products",
     "project.apps.pages",
     "axes",
+    "import_export",
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,7 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",  # замена на redis
+        "LOCATION": "redis://localhost:6379/1",  # замена на redis
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
