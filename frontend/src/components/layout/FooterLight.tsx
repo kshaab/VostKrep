@@ -26,20 +26,20 @@ export default function FooterLight() {
            <div className={styles.linksGrid}>
 
             {/* Колонка 1 */}
-            <div className="space-y-6">
+            <div className={styles.column}>
               <Link href="/delivery" className={styles.link}>
                 ДОСТАВКА
               </Link>
               <Link href="/payment" className={styles.link}>
                 ОПЛАТА
               </Link>
-              <Link href="#" className={styles.link}>
+              <Link href="/about" className={styles.link}>
                 О НАС
               </Link>
             </div>
 
             {/* Колонка 2 */}
-            <div className="space-y-6">
+            <div className={styles.column}>
               <Link href="/privacy" className={styles.link}>
                 ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
               </Link>

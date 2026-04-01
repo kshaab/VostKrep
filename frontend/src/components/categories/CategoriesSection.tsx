@@ -49,24 +49,21 @@ export default function CategoriesSection() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.wrapper}>
-          <div
-            className={`${styles.content} ${
-              expanded ? styles.expanded : styles.collapsed
-            }`}
-          >
+         <div  key={categories.length} className={`${styles.content} ${expanded ? styles.expanded : styles.collapsed}`}>
             <motion.div
               className={styles.grid}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: false, amount: 0.2 }}
               variants={{
                 hidden: {},
-                visible: { transition: { staggerChildren: 0.12 } }
+                visible: {
+                  transition: { staggerChildren: 0.12 }
+                },
               }}
             >
               {categories.map((item) => (
                 <motion.div
-                  key={item.id}
+                  key={item.slug}
                   variants={{
                     hidden: { opacity: 0, y: 40 },
                     visible: { opacity: 1, y: 0 }

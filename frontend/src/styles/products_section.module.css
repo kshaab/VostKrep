@@ -10,7 +10,7 @@
 .container {
   max-width: 75rem;
   margin: 0 auto;
-
+  padding: 1.5rem 1rem;
 }
 
 /* Обёртка для продуктов */
@@ -21,18 +21,11 @@
 /* Контент с анимацией разворачивания */
 .content {
   overflow: hidden;
-  transition: all 0.7s;
+  transition: max-height 0.7s ease;
   position: relative;
-  padding: 0 0 2rem;
+  padding: 0 0 6rem;
 }
 
-.collapsed {
-  max-height: 400px;
-}
-
-.expanded {
-  max-height: 2000px;
-}
 
 /* Сетка продуктов */
 .grid {
@@ -68,7 +61,7 @@
 /* Кнопка */
 .buttonWrapper {
   max-width: 56rem;
-  margin: 0 auto;
+  margin: 4rem auto 0;
   padding: 2.5rem 1rem;
   text-align: center;
 }

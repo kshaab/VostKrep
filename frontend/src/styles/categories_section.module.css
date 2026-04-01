@@ -17,7 +17,7 @@
 
 .content {
   overflow: hidden;
-  transition: all 0.7s;
+  transition: max-height 0.7s ease;
   position: relative;
   padding: 0 1rem 2rem;
 }

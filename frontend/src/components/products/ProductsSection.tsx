@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { Product } from "@/types/product"
 import ProductCard from "./ProductCard"
@@ -14,6 +14,9 @@ type Props = {
 export default function ProductsSection({ categorySlug }: Props) {
   const [expanded, setExpanded] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
+  const [height, setHeight] = useState(0)
+
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -44,6 +47,14 @@ export default function ProductsSection({ categorySlug }: Props) {
     return () => { isMounted = false }
   }, [categorySlug])
 
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const extraSpace = 60;
+       setHeight(contentRef.current.scrollHeight + extraSpace)
+    }
+  }, [products, expanded])
+
   return (
     <motion.section
       className={styles.section}
@@ -53,27 +64,30 @@ export default function ProductsSection({ categorySlug }: Props) {
       transition={{ duration: 0.9 }}
     >
       <div className={styles.container}>
-
         <div className={styles.wrapper}>
 
-          <div className={`${styles.content} ${expanded ? styles.expanded : styles.collapsed}`}>
-            <div className={styles.grid}>
-              {products.map((item) => (
-                <ProductCard key={item.slug} product={item} />
-              ))}
+          <div
+            className={styles.content}
+            style={{
+              maxHeight: expanded ? height : 500,
+            }}
+          >
+            <div ref={contentRef}>
+              <div className={styles.grid}>
+                {products.map((item) => (
+                  <ProductCard key={item.slug} product={item} />
+                ))}
+              </div>
             </div>
           </div>
 
           {!expanded && <div className={styles.fade} />}
-
         </div>
-
         <div className={styles.buttonWrapper}>
           <button onClick={() => setExpanded(!expanded)} className={styles.button}>
             {expanded ? "СВЕРНУТЬ" : "ПОКАЗАТЬ ЕЩЁ"}
           </button>
         </div>
-
       </div>
     </motion.section>
   )
