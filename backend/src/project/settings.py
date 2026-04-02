@@ -140,7 +140,7 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://localhost:6379/1",  # замена на redis
+        "LOCATION": "redis://redis:6379/1",  # замена на redis
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -169,8 +169,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = 0.01  # заменить на 1
-AXES_ENABLED = False  # замена на тру
+AXES_COOLOFF_TIME = 1  # заменить на 1
+AXES_ENABLED = True  # замена на тру
 
 LOGGING = {
     "version": 1,
