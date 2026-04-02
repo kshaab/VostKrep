@@ -25,7 +25,7 @@ export function Map() {
       <div className="mx-auto max-w-6xl w-full">
 
         {/* Карта */}
-        <div className="w-[388px] h-[500px] md:w-[1155px] md:h-[600px] overflow-hidden rounded-2xl mx-auto">
+        <div className="w-[360px] h-[500px] md:w-[1155px] md:h-[600px] overflow-hidden rounded-2xl mx-auto">
           <YandexMap />
         </div>
 
@@ -34,7 +34,7 @@ export function Map() {
           {zones?.map((zone, index) => (
             <div
               key={index}
-              className="w-[388px] md:w-[1155px] rounded-lg px-4 py-3 font-sans text-[#F2F3F4] text-sm md:text-xl font-bold text-center mx-auto"
+              className="w-[360px] md:w-[1155px] rounded-lg px-4 py-3 font-sans text-[#F2F3F4] text-sm md:text-xl font-bold text-center mx-auto"
               style={{ backgroundColor: zone.color }}
             >
               {zone.text}

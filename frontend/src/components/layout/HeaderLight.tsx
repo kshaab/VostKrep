@@ -71,7 +71,7 @@ export default function HeaderLight() {
 
         <div className={styles.mobileTopBar}>
           <Link href="/" className={styles.logoLink}>
-            <Image src="/logo-dark1.png" alt="logo" width={120} height={40} />
+            <Image src="/logo-dark2.png" alt="logo" width={120} height={40} />
           </Link>
 
           <div className={styles.burgerCartWrapper}>
