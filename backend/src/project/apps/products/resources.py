@@ -42,15 +42,18 @@ class ProductResource(resources.ModelResource):
     # Генерация уникального slug (ОДИН раз на продукт)
     def before_save_instance(self, instance, row, **kwargs):
         if not instance.pk:
-            base_slug = slugify(instance.name.strip())
-            slug = base_slug
-            i = 1
-
-            while Product.objects.filter(slug=slug).exists():
-                slug = f"{base_slug}-{i}"
-                i += 1
-
-            instance.slug = slug
+            # проверяем, есть ли уже продукт с таким SKU
+            existing = Product.objects.filter(sku=instance.sku).first()
+            if existing:
+                instance.slug = existing.slug  # берём уже существующий slug
+            else:
+                base_slug = slugify(instance.name.strip())
+                slug = base_slug
+                i = 1
+                while Product.objects.filter(slug=slug).exists():
+                    slug = f"{base_slug}-{i}"
+                    i += 1
+                instance.slug = slug
 
     # Работа с размерами (вариантами)
     def after_import_row(self, row, row_result, **kwargs):
