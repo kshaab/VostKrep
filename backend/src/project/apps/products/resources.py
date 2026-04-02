@@ -32,14 +32,17 @@ class ProductResource(resources.ModelResource):
 
     # Создаем категорию если её нет
     def before_import_row(self, row, **kwargs):
+        for key in row:
+            if isinstance(row[key], str):
+                row[key] = row[key].strip()
         category_name = row.get("Категория")
         if category_name:
             Category.objects.get_or_create(name=category_name)
 
     # Генерация уникального slug (ОДИН раз на продукт)
     def before_save_instance(self, instance, row, **kwargs):
-        if not instance.pk:  # только при создании
-            base_slug = slugify(instance.name)
+        if not instance.pk:
+            base_slug = slugify(instance.name.strip())
             slug = base_slug
             i = 1
 
