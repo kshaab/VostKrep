@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import DeliveryItem, DeliveryPage, StaticPage, StaticPageItem, StaticPageSection
+from .models import DeliveryItem, DeliveryPage, DeliveryZone, StaticPage, StaticPageItem, StaticPageSection
 from .validators import PageValidator
 
 
@@ -14,12 +14,19 @@ class DeliveryItemSerializer(serializers.ModelSerializer):
         return data
 
 
+class DeliveryZoneSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryZone
+        fields = ["color", "text"]
+
+
 class DeliveryPageSerializer(serializers.ModelSerializer):
     items = DeliveryItemSerializer(many=True, read_only=True)
+    zones = DeliveryZoneSerializer(many=True, read_only=True)
 
     class Meta:
         model = DeliveryPage
-        fields = ["title", "content", "seo_title", "seo_description", "items"]
+        fields = ["title", "content", "seo_title", "seo_description", "items", "zones"]
 
     def validate(self, data):
         PageValidator.validate_page(

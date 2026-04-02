@@ -169,7 +169,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AXES_FAILURE_LIMIT = 5
-AXES_COOLOFF_TIME = 1
+AXES_COOLOFF_TIME = 0.01  # заменить на 1
+AXES_ENABLED = False  # замена на тру
 
 LOGGING = {
     "version": 1,

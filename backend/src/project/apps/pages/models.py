@@ -69,3 +69,17 @@ class StaticPageItem(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# Модель зон доставки
+class DeliveryZone(models.Model):
+    page = models.ForeignKey(DeliveryPage, on_delete=models.CASCADE, related_name="zones")
+    color = models.CharField(max_length=7, default="#F2F3F4")
+    text = models.CharField(max_length=500)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.text

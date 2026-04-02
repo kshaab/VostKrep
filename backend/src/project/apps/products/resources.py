@@ -1,8 +1,7 @@
-from import_export import resources
+from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget
-from import_export import fields
-from .models import Product, Category
-from .models import ProductOption
+
+from .models import Category, Product, ProductOption
 
 
 class ProductResource(resources.ModelResource):

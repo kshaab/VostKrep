@@ -52,15 +52,47 @@ export default function FooterDark() {
 
             <div className={styles.column}>
 
-              <a
-                href="https://t.me/ooovostkrep"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.contactItem}
-              >
-                <SiTelegram className={styles.contactIcon} />
-                <span>Telegram</span>
-              </a>
+               <div className={styles.contactItem}>
+                  <SiTelegram className={styles.contactIcon} />
+
+                  <div className="telegram-container">
+                    <a
+                      href="https://t.me/ooovostkrep"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="telegram-word"
+                    >
+                      Telegram
+                    </a>
+                    <span> / </span>
+                    <a
+                      href="https://max.ru/u/f9LHodD0cOIcbY867yMVmxWUyr1KZH8Tr1Lo2n9OIN_uw9WsnmSgKXK7pFQ"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="telegram-word"
+                    >
+                      Max
+                    </a>
+                  </div>
+
+                  <style jsx>{`
+                    .telegram-container {
+                      display: flex;
+                      align-items: center;
+                      gap: 0.25rem; 
+                    }
+                    .telegram-word {
+                      color: #F2F3F4; 
+                      transition: color 0.2s;
+                    }
+                    .telegram-word:hover {
+                      color: #F0660A;
+                    }
+                    .telegram-container span {
+                      color: #F2F3F4; 
+                    }
+                  `}</style>
+                </div>
 
               <div className={styles.contactItem}>
                 <MdPhone className={styles.contactIcon} />

@@ -1,9 +1,10 @@
 from collections import defaultdict
+
 import pandas as pd
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
-from unidecode import unidecode
 from project.apps.products.models import Category, Product, ProductOption
+from unidecode import unidecode
 
 
 def safe_str(value):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import DeliveryItem, DeliveryPage, StaticPage, StaticPageItem, StaticPageSection
+from .models import DeliveryItem, DeliveryPage, DeliveryZone, StaticPage, StaticPageItem, StaticPageSection
 
 
 class DeliveryItemInline(admin.TabularInline):
@@ -10,10 +10,15 @@ class DeliveryItemInline(admin.TabularInline):
     sortable_field_name = "order"
 
 
+class DeliveryZoneInline(admin.TabularInline):
+    model = DeliveryZone
+    extra = 1
+
+
 @admin.register(DeliveryPage)
 class DeliveryPageAdmin(admin.ModelAdmin):
     list_display = ("title",)
-    inlines = [DeliveryItemInline]
+    inlines = [DeliveryItemInline, DeliveryZoneInline]
 
 
 class StaticPageItemInline(admin.TabularInline):

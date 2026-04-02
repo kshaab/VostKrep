@@ -1,8 +1,8 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from .models import Category, Product, ProductOption
-from import_export.admin import ImportExportModelAdmin
-from .resources import ProductResource, CategoryResource
+from .resources import CategoryResource, ProductResource
 
 
 class ProductOptionInline(admin.TabularInline):

@@ -27,14 +27,34 @@ export default function Header() {
               ДОСТАВКА
             </Link>
 
+            <div className={`${styles.desktopNavLink} relative group`}>
             <a
               href="https://t.me/ooovostkrep"
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.desktopNavLink}
+              className="telegram-word text-[#F2F3F4] transition-colors hover:text-[#F2F3F4]"
             >
               TELEGRAM
             </a>
+            <span className="text-[#F2F3F4]"> / </span>
+            <a
+              href="https://max.ru/u/f9LHodD0cOIcbY867yMVmxWUyr1KZH8Tr1Lo2n9OIN_uw9WsnmSgKXK7pFQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="telegram-word text-[#F2F3F4] transition-colors hover:text-[#F2F3F4]"
+            >
+              MAX
+            </a>
+
+            <style jsx>{`
+              .group:hover .telegram-word {
+                color: #003399; 
+              }
+              .telegram-word:hover {
+                color: #F2F3F4 !important; 
+              }
+            `}</style>
+          </div>
 
             <button onClick={openCart} className={styles.cartButton}>
               КОРЗИНА
@@ -99,9 +119,17 @@ export default function Header() {
               href="https://t.me/ooovostkrep"
               target="_blank"
               rel="noopener noreferrer"
-              className={styles.mobileMenuLinkLast}
+              className={styles.mobileMenuLink}
             >
               TELEGRAM
+            </a>
+            <a
+                href="https://max.ru/u/f9LHodD0cOIcbY867yMVmxWUyr1KZH8Tr1Lo2n9OIN_uw9WsnmSgKXK7pFQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.mobileMenuLinkLast}
+              >
+                MAX
             </a>
 
           </div>
