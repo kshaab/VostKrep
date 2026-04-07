@@ -35,57 +35,59 @@ export default function PersonalData() {
   }
 
   const renderTextWithSubpoints = (text: string) => {
-    return text.split("\n").map((line, idx) => {
-      line = line.trim();
-      if (!line) return null;
+  return text.split("\n").map((line, idx) => {
+    line = line.trim();
+    if (!line) return null;
 
-      if (line.startsWith("* ")) {
-        return (
-          <div key={idx} className={styles.bullet}>
-            <NutIcon />
-            <p className={styles.bulletText}>{line.slice(2)}</p>
-          </div>
-        );
-      }
+    if (line.startsWith("* ")) {
+      // подпункт со значком
+      return (
+        <div key={`bullet-${idx}`} className={styles.bullet}>
+          <NutIcon />
+          <p className={styles.bulletText}>{line.slice(2)}</p>
+        </div>
+      );
+    }
 
-      const isSubPoint = /^\d+\.\d+/.test(line);
-      const isMainPoint = /^\d+\./.test(line) && !isSubPoint;
+    const isSubPoint = /^\d+\.\d+/.test(line);
+    const isMainPoint = /^\d+\./.test(line) && !isSubPoint;
 
-      if (isMainPoint) {
-        return (
-          <p key={idx} className={styles.mainPoint}>
-            {line}
-          </p>
-        );
-      } else if (isSubPoint) {
-        return (
-          <p key={idx} className={styles.subPoint}>
-            {line}
-          </p>
-        );
-      } else {
-        return (
-          <p key={idx} className={styles.text}>
-            {line}
-          </p>
-        );
-      }
-    });
-  };
+    if (isMainPoint) {
+      return (
+        <p key={`main-${idx}`} className={styles.mainPoint}>
+          {line}
+        </p>
+      );
+    } else if (isSubPoint) {
+      return (
+        <p key={`sub-${idx}`} className={styles.subPoint}>
+          {line}
+        </p>
+      );
+    } else {
+      return (
+        <p key={`text-${idx}`} className={styles.text}>
+          {line}
+        </p>
+      );
+    }
+  });
+};
 
   return (
     <div className={styles.root}>
       <h1 className={styles.title}>{page.title}</h1>
 
-      {page.sections.map((section) => (
-        <div key={section.id} className={styles.section}>
-          {section.items?.map((item) => (
-            <div key={item.id} className={styles.item}>
+        {page.sections.map((section) => (
+          <div key={`section-${section.order}`} className={styles.section}>
+            {section.items?.map((item) => (
+            <div key={`item-${item.order}`} className={styles.item}>
               {renderTextWithSubpoints(item.text)}
             </div>
           ))}
         </div>
       ))}
+
     </div>
   );
 }

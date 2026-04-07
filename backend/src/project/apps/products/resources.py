@@ -1,6 +1,6 @@
+from django.utils.text import slugify
 from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget
-from django.utils.text import slugify
 
 from .models import Category, Product, ProductOption
 

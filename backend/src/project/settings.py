@@ -157,7 +157,7 @@ JAZZMIN_SETTINGS = {
         "auth.user": "fas fa-user",
     },
     "topmenu_links": [
-        {"name": "Каталог", "url": "http://89.169.160.28", "new_window": True},
+        {"name": "Каталог", "url": "http://159.194.223.52", "new_window": True},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,

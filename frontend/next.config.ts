@@ -13,7 +13,7 @@ const nextConfig = {
       },
       {
         protocol: "http",
-        hostname: "89.169.160.28",
+        hostname: "159.194.223.52",
         pathname: "/media/**",
       },
     ],

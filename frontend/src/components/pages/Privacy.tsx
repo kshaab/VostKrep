@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
     );
   }
 
-  const renderTextWithSubpoints = (text: string) => {
+  const renderTextWithSubpoints = (text: string, parentKey: string) => {
     return text.split("\n").map((line, idx) => {
       line = line.trim();
       if (!line) return null;
@@ -29,21 +29,23 @@ export default function PrivacyPolicy() {
       const isSubPoint = /^\d+\.\d+\./.test(line);
       const isMainPoint = /^\d+\./.test(line) && !isSubPoint;
 
+      const key = `${parentKey}-line-${idx}`;
+
       if (isMainPoint) {
         return (
-          <p key={idx} className={styles.mainPoint}>
+          <p key={key} className={styles.mainPoint}>
             {line}
           </p>
         );
       } else if (isSubPoint) {
         return (
-          <p key={idx} className={styles.subPoint}>
+          <p key={key} className={styles.subPoint}>
             {line}
           </p>
         );
       } else {
         return (
-          <p key={idx} className={styles.text}>
+          <p key={key} className={styles.text}>
             {line}
           </p>
         );
@@ -55,17 +57,16 @@ export default function PrivacyPolicy() {
     <div className={styles.root}>
       <h1 className={styles.title}>{page.title}</h1>
 
-      {page.sections.map(section => (
-        <div key={section.id} className={styles.section}>
-
+      {page.sections.map((section, sIdx) => (
+        <div key={`section-${section.id ?? sIdx}`} className={styles.section}>
           {section.subtitle && (
             <p className={styles.subtitle}>{section.subtitle}</p>
           )}
 
-          {section.items?.map(item => (
-            <div key={item.id}>
+          {section.items?.map((item, iIdx) => (
+            <div key={`item-${item.id ?? iIdx}-${sIdx}`}>
               <h3 className={styles.itemTitle}>{item.title}</h3>
-              {renderTextWithSubpoints(item.text)}
+              {renderTextWithSubpoints(item.text, `section-${sIdx}-item-${iIdx}`)}
             </div>
           ))}
         </div>

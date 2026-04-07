@@ -1,14 +1,14 @@
-import HomePage from "@/components/pages/HomePage";
-import CategoriesSection from "@/components/categories/CategoriesSection";
+import HomePage from "@/components/pages/HomePage"
+import CategoriesSectionClient from "@/components/categories/CategoriesSectionClient"
+import CategoriesSectionSSR from "@/components/categories/CategoriesSectionSSR"
 
+export default async function Home() {
+  const categories = await CategoriesSectionSSR() // SSR fetch
 
-export default function Home() {
   return (
-    <>
     <main>
       <HomePage />
-      <CategoriesSection />
+      <CategoriesSectionClient categories={categories} /> {/* Клиент для анимации */}
     </main>
-    </>
-  );
+  )
 }
