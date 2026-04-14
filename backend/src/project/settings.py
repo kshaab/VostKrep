@@ -61,6 +61,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.csrf",
             ],
         },
     },
@@ -71,6 +72,12 @@ CORS_ALLOWED_ORIGINS = parse_origins(os.getenv("CORS_ALLOWED_ORIGINS", ""))
 CSRF_TRUSTED_ORIGINS = parse_origins(os.getenv("CSRF_TRUSTED_ORIGINS", ""))
 
 CORS_ALLOW_CREDENTIALS = True
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 WSGI_APPLICATION = "project.wsgi.application"
 
@@ -157,7 +164,7 @@ JAZZMIN_SETTINGS = {
         "auth.user": "fas fa-user",
     },
     "topmenu_links": [
-        {"name": "Каталог", "url": "http://159.194.223.52", "new_window": True},
+        {"name": "Каталог", "url": "https://vostkrep.ru", "new_window": True},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,

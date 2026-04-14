@@ -6,7 +6,7 @@ services:
    restart: always
    entrypoint: [ "/project/entrypoint.sh" ]
    command: gunicorn project.wsgi:application --bind 0.0.0.0:8000
-   working_dir: /project/backend/src
+   working_dir: /project/backend
    environment:
      - PYTHONPATH=/project/backend/src
    env_file:
