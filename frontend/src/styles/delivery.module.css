@@ -107,12 +107,12 @@
 
 .image1 {
   @apply h-auto rounded-lg w-60;
-  transform: translateY(-14px) translateX(70px);
+  transform: translateY(-25px) translateX(70px);
 }
 
 .image2 {
   @apply h-auto rounded-lg w-60;
-  transform: translateY(-14px) translateX(40px);
+  transform: translateY(-25px) translateX(40px);
 }
 
 .image3 {

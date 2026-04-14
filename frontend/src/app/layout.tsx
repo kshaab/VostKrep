@@ -24,7 +24,14 @@ export const metadata: Metadata = {
   },
   description: "Крепеж, болты, гайки, анкеры оптом",
   icons: {
-    icon: "/logo-dark2.png", // 👈 favicon
+    icon: "/favicon.ico",
+  },
+  openGraph: {
+    title: "Восточный Крепёж",
+    description: "Крепёж оптом по Москве и РФ",
+    url: "https://vostkrep.ru",
+    siteName: "Восточный Крепёж",
+    type: "website",
   },
 };
 
