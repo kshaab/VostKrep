@@ -20,7 +20,7 @@ const spartan = League_Spartan({
 export const metadata: Metadata = {
   title: {
     default: "Восточный Крепёж",
-    template: "%s | Восточный Крепёж",
+    template: "%s Восточный Крепёж",
   },
   description: "Крепеж, болты, гайки, анкеры оптом",
   icons: {
