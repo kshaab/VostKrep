@@ -2,29 +2,37 @@ FROM python:3.12-slim
 
 WORKDIR /project
 
+# Системные зависимости
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# Poetry
 RUN pip install --upgrade pip poetry
 RUN poetry config virtualenvs.create false
 
-COPY pyproject.toml poetry.lock ./
+# Копируем pyproject.toml и poetry.lock
+COPY pyproject.toml poetry.lock /project/
+
+# Устанавливаем зависимости
 RUN poetry install --no-interaction --no-ansi --no-root
 
-COPY backend/ .
+# Копируем весь backend, включая manage.py
+COPY backend /project/backend
 
-ENV PYTHONPATH=/project/src
+# Копируем entrypoint и делаем исполняемым
+COPY entrypoint.sh /project/entrypoint.sh
+RUN chmod +x /project/entrypoint.sh
 
+# PYTHONPATH
+ENV PYTHONPATH=/project/backend/src
+
+# Статика и медиа
 RUN mkdir -p /project/static /project/media
 
 EXPOSE 8000
 
-CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000"]
-
-COPY backend/entrypoint.sh /project/entrypoint.sh
-RUN chmod +x /project/entrypoint.sh
-
+# Entry point
 ENTRYPOINT ["/project/entrypoint.sh"]

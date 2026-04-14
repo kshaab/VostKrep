@@ -115,7 +115,7 @@ STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = "/project/backend/src/media"
 
 REST_FRAMEWORK = {"DEFAULT_THROTTLE_RATES": {"anon": "10/min", "orders": "5/min"}}
 

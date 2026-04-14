@@ -117,12 +117,12 @@
 
 .image3 {
   @apply h-auto rounded-lg w-60;
-  transform: translateY(-60px) translateX(-40px);
+  transform: translateY(-50px) translateX(-40px);
 }
 
 .image4 {
   @apply h-auto rounded-lg w-60;
-  transform: translateY(-60px) translateX(-70px);
+  transform: translateY(-50px) translateX(-70px);
 }
 
 @media (max-width: 768px) {

@@ -3,6 +3,7 @@ import { Bebas_Neue, League_Spartan } from "next/font/google"
 import PageTransition from "@/components/animation/PageTransition";
 import { CartProvider } from "@/context/CartContext";
 import CartForm from "@/components/order/CartForm";
+import { Metadata } from "next";
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -16,6 +17,16 @@ const spartan = League_Spartan({
   variable: '--font-spartan',
 })
 
+export const metadata: Metadata = {
+  title: {
+    default: "Восточный Крепёж",
+    template: "%s | Восточный Крепёж",
+  },
+  description: "Крепеж, болты, гайки, анкеры оптом",
+  icons: {
+    icon: "/logo-dark2.png", // 👈 favicon
+  },
+};
 
 export default function RootLayout({
   children,

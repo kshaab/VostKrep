@@ -1,7 +1,7 @@
 export const API =
   process.env.NEXT_PUBLIC_API_URL ||
   process.env.API_URL ||
-  "http://89.169.160.28"
+  "https://vostkrep.ru"
 
 export const endpoints = {
   categories: `${API}/api/products/categories/`,
