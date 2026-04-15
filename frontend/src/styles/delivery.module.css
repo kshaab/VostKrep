@@ -78,7 +78,7 @@
 /* ========================= */
 
 .imageGrid {
-  @apply grid grid-cols-2 gap-6 items-start;
+  @apply flex gap-6 items-center justify-between flex-wrap;
 }
 
 /* базовый стиль всех изображений */
@@ -86,8 +86,9 @@
 .image2,
 .image3,
 .image4 {
-  @apply h-auto rounded-lg w-60;
-  transform: none; /* ❗ УБРАЛИ КРИВОЙ СДВИГ */
+  @apply h-auto rounded-lg w-60 object-cover;
+  flex: 1;
+  max-width: 240px;
 }
 
 /* аккуратное смещение через grid */
@@ -110,15 +111,14 @@
 /* мобильная версия */
 @media (max-width: 768px) {
   .imageGrid {
-    @apply grid grid-cols-2 gap-4 mt-4;
+    @apply flex flex-col gap-4;
   }
 
   .image1,
   .image2,
   .image3,
   .image4 {
-    @apply w-full h-auto rounded-lg;
-    justify-self: stretch;
+    @apply w-full max-w-full;
     transform: none;
   }
 }
