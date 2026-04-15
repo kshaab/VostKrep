@@ -22,19 +22,36 @@ async function getHomePage() {
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getHomePage();
 
-  if (!page) {
-    return {
-      title: "ВостКреп",
-      description: "Крепеж, болты, гайки, анкеры",
-    };
-  }
+  const title = page?.title || "Крепёж оптом — Восточный Крепёж";
 
   return {
-    title: page.title,
-    description: page.seo_description,
+    title: {
+      default: "Крепёж оптом — Восточный Крепёж",
+      template: "%s | Восточный Крепёж",
+    },
+
+    description:
+      page?.seo_description ||
+      "Крепёж: болты, гайки, анкеры. Оптовые поставки по России.",
+
+    alternates: {
+      canonical: "https://vostkrep.ru",
+    },
+
     openGraph: {
-      title: page.title,
-      description: page.seo_description,
+      title,
+      description:
+        "Крепёж: болты, гайки, анкеры. Оптовые поставки по России.",
+      url: "https://vostkrep.ru",
+      siteName: "Восточный Крепёж",
+      type: "website",
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description:
+        "Крепёж: болты, гайки, анкеры. Оптовые поставки по России.",
     },
   };
 }

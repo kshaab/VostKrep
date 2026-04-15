@@ -54,7 +54,9 @@ export default function RootLayout({
             {children}
           </PageTransition>
         </div>
-         <CartForm />
+         <div data-nosnippet="">
+          <CartForm />
+        </div>
       </CartProvider>
       </body>
     </html>

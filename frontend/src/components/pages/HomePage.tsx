@@ -7,6 +7,7 @@ export default function HomePage() {
   return (
     <div className={styles.root}>
 
+      {/* UI HEADER */}
       <section className={styles.header}>
         <div className="px-6">
           <h1 className={styles.title}>
@@ -15,6 +16,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* MAIN VISUAL SECTION */}
       <section
         className={styles.whiteSection}
         style={{
@@ -32,6 +34,7 @@ export default function HomePage() {
               width={600}
               height={600}
               className={styles.image}
+              priority
             />
           </div>
 
@@ -46,7 +49,7 @@ export default function HomePage() {
             <li className={styles.listItem}>
               <NutIcon />
               <span>
-                Ключевые ценности — надёжность поставок, качество продукции и индивидуальный подход к каждому клиенту
+                Надёжные поставки, стабильное качество и индивидуальный подход к каждому клиенту
               </span>
             </li>
           </ul>
@@ -57,10 +60,20 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* CTA SECTION */}
       <section className={styles.buttonSection}>
         <div className={styles.buttonWrapper}>
           <OpenModalButton />
         </div>
+      </section>
+
+      {/* SEO BLOCK (HIDDEN FROM USER, VISIBLE TO GOOGLE) */}
+      <section className="sr-only" aria-hidden="true">
+        <h2>Крепёжные изделия оптом по России</h2>
+        <p>
+          Интернет-магазин крепежа: болты, гайки, шайбы, анкеры и метизы.
+          Оптовые поставки по Москве и всей России с доставкой.
+        </p>
       </section>
 
     </div>
