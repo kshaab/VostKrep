@@ -48,10 +48,10 @@ export default function Delivery({ delivery }: Props) {
           </div>
 
           <div className={styles.imagesWrapper}>
-            <Image src="/delivery_icons/ya-del.png" alt="ya" width={160} height={160} />
-            <Image src="/delivery_icons/del-lin.png" alt="dl" width={160} height={160} />
-            <Image src="/delivery_icons/zing-log.png" alt="zl" width={160} height={160} />
-            <Image src="/delivery_icons/baikal-serv.png" alt="bs" width={160} height={160} />
+            <Image src="/delivery_icons/ya-del.png" alt="ya" width={190} height={190} />
+            <Image src="/delivery_icons/del-lin.png" alt="dl" width={190} height={190} />
+            <Image src="/delivery_icons/zing-log.png" alt="zl" width={190} height={190} />
+            <Image src="/delivery_icons/baikal-serv.png" alt="bs" width={190} height={190} />
           </div>
         </section>
       </div>
