@@ -22,7 +22,8 @@ export default function Delivery({ delivery }: Props) {
 
         <section className={styles.whiteBlock}>
           <div className={styles.columnsGrid}>
-            <div className="flex flex-col gap-5">
+            {/* ЛЕВАЯ КОЛОНКА */}
+            <div>
               <ul className={styles.itemList}>
                 {leftItems.map((item) => (
                   <li key={item.id}>
@@ -31,13 +32,10 @@ export default function Delivery({ delivery }: Props) {
                   </li>
                 ))}
               </ul>
-              <div className={styles.imageGrid}>
-                <Image src="/delivery_icons/ya-del.png" alt="delovie-linii" width={300} height={200} />
-                <Image src="/delivery_icons/del-lin.png" alt="baikal" width={300} height={200} />
-              </div>
             </div>
 
-            <div className="flex flex-col gap-8">
+            {/* ПРАВАЯ КОЛОНКА */}
+            <div>
               <ul className={styles.itemList}>
                 {rightItems.map((item) => (
                   <li key={item.id}>
@@ -46,11 +44,14 @@ export default function Delivery({ delivery }: Props) {
                   </li>
                 ))}
               </ul>
-              <div className={styles.imageGrid}>
-                <Image src="/delivery_icons/zing-log.png" alt="zinger" width={300} height={150} />
-                <Image src="/delivery_icons/baikal-serv.png" alt="yandex-delivery" width={300} height={150} />
-              </div>
             </div>
+          </div>
+
+          <div className={styles.imagesWrapper}>
+            <Image src="/delivery_icons/ya-del.png" alt="ya" width={100} height={100} />
+            <Image src="/delivery_icons/del-lin.png" alt="dl" width={100} height={100} />
+            <Image src="/delivery_icons/zing-log.png" alt="zl" width={100} height={100} />
+            <Image src="/delivery_icons/baikal-serv.png" alt="bs" width={100} height={100} />
           </div>
         </section>
       </div>

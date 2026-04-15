@@ -35,15 +35,15 @@
   background-image: url('/road.png');
   background-size: cover;
   background-position: center;
+  overflow: hidden; /* 🔥 важно */
 }
 
+/* мобильная версия */
 @media (max-width: 768px) {
   .whiteBlock {
     @apply h-auto py-8 px-4 mx-auto w-full max-w-[90%] flex flex-col gap-6;
     margin-bottom: 2rem;
     background-image: url('/road_mobile.png');
-    background-size: cover;
-    background-position: center;
   }
 }
 
@@ -74,52 +74,47 @@
 }
 
 /* ========================= */
-/* 🔥 ИСПРАВЛЕННЫЕ КАРТИНКИ */
+/* 🔥 КАРТИНКИ (НОРМАЛЬНО) */
 /* ========================= */
 
-.imageGrid {
-  @apply flex gap-6 items-center justify-between flex-wrap;
+/* контейнер для иконок */
+.imagesWrapper {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 40px;
 }
 
-/* базовый стиль всех изображений */
+/* сами иконки */
 .image1,
 .image2,
 .image3,
 .image4 {
-  @apply h-auto rounded-lg w-60 object-cover;
-  flex: 1;
-  max-width: 240px;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
 
-/* аккуратное смещение через grid */
-.image1 {
-  justify-self: end;
-}
-
-.image2 {
-  justify-self: start;
-}
-
-.image3 {
-  justify-self: end;
-}
-
-.image4 {
-  justify-self: start;
-}
-
-/* мобильная версия */
+/* мобилка */
 @media (max-width: 768px) {
-  .imageGrid {
-    @apply flex flex-col gap-4;
+  .imagesWrapper {
+    position: static;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
   }
 
   .image1,
   .image2,
   .image3,
   .image4 {
-    @apply w-full max-w-full;
-    transform: none;
+    width: 70px;
+    height: 70px;
   }
 }
 
