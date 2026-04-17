@@ -7,7 +7,7 @@ export default function OpenModalButton() {
   const { openModal } = useModal();
 
   return (
-    <button onClick={openModal} className={styles.button}>
+    <button onClick={openModal} className={styles.button} data-nosnippet="">
       ОСТАВИТЬ ЗАЯВКУ
     </button>
   );

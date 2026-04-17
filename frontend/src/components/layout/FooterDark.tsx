@@ -7,7 +7,7 @@ import styles from "@/styles/footer_dark.module.css";
 
 export default function FooterDark() {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-nosnippet="">
       <div className={styles.footerContainer}>
         <div className={styles.footerGrid}>
 

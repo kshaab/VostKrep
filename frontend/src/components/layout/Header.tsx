@@ -12,7 +12,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-nosnippet="">
 
       {/* === DESKTOP === */}
       <div className={styles.desktopNavContainer}>

@@ -32,16 +32,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
     description:
       page?.seo_description ||
-      "Крепёж: болты, гайки, анкеры. Оптовые поставки по России.",
+      "Восточный Крепёж — поставщик крепежа оптом: болты, гайки, анкеры, шайбы. Наличие на складе, выгодные цены, доставка по всей России.",
 
     alternates: {
       canonical: "https://vostkrep.ru",
     },
 
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title,
       description:
-        "Крепёж: болты, гайки, анкеры. Оптовые поставки по России.",
+        "Оптовые поставки крепежа: болты, гайки, анкеры и метизы. Восточный Крепёж — надёжный поставщик с доставкой по России.",
       url: "https://vostkrep.ru",
       siteName: "Восточный Крепёж",
       type: "website",

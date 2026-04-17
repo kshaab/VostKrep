@@ -8,7 +8,7 @@ import styles from "@/styles/footer_light.module.css";
 {/* Светлый подвал */}
 export default function FooterLight() {
   return (
-    <footer className={styles.footer}>
+    <footer className={styles.footer} data-nosnippet="">
       <div className={styles.footerContainer}>
         <div className={styles.footerGrid}>
 
@@ -27,14 +27,14 @@ export default function FooterLight() {
 
             {/* Колонка 1 */}
             <div className={styles.column}>
-              <Link href="/delivery" className={styles.link}>
-                ДОСТАВКА
+              <Link href="/about" className={styles.link}>
+                О НАС
               </Link>
               <Link href="/payment" className={styles.link}>
                 ОПЛАТА
               </Link>
-              <Link href="/about" className={styles.link}>
-                О НАС
+              <Link href="/delivery" className={styles.link}>
+                ДОСТАВКА
               </Link>
             </div>
 

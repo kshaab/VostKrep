@@ -50,6 +50,7 @@ export default function ProductsSectionClient({ products }: Props) {
             <button
               onClick={() => setExpanded(!expanded)}
               className={styles.button}
+              data-nosnippet=""
             >
               {expanded ? "СВЕРНУТЬ" : "ПОКАЗАТЬ ЕЩЁ"}
             </button>
