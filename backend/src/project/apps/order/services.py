@@ -4,6 +4,7 @@ from project.apps.order.models import Order
 
 
 def send_telegram_order(order: Order) -> None:
+    """Формирует заявку для отправки в ТГ-бот"""
     message = (
         f"Новая заявка #{order.id}\n\n"
         f"Имя: {order.name}\n"

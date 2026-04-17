@@ -4,104 +4,116 @@
 
 ### Проект в разработке.
 
+### Проект включает:
+- backend API (Django + DRF)
+- frontend (Next.js)
+- фоновые задачи (Celery + Redis)
+- PostgreSQL
+
 ## Содержание 
 
+- [Технологии](#технологии)
 - [Использование](#использование)
 - [Структура проекта](#структура-проекта)
 - [Зависимости](#зависимости)
 - [Celery](#celery-)
-- [Технологии](#технологии)
 - [Тестирование](#тестирование)
 - [Deployment & CI/CD](#deployment--cicd)
 - [GitHub Actions CI/CD](#github-actions-cicd)
 - [Автор](#автор)
 
+## Технологии
+### Backend
+- Python 3.13
+- Django 5.x
+- Django REST Framework
+- Celery 5.x
+- PostgreSQL
+- Redis
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+
+### Инфраструктура
+- Docker / Docker Compose
+- Nginx
+- CI/CD (GitHub Actions)
 
 ## Использование
-**Бэкенд**
 
-Перейдите в папку бэкенда:
-```bash
-cd backend
-```
-
-Клонируйте репозиторий: 
+**Клонирование репозитория**
 ```bash
 git clone https://github.com/kshaab/VostKrep
 cd VostKrep
 ```
-Установите зависимости и активируйте виртуальное окружение: 
+
+**Бэкенд**
+
+```bash
+cd backend
+```
+
+Установка зависимостей: 
+```bash
 poetry install
 poetry shell
+````
 
-Примените миграции: 
+Миграции: 
+```bash
 python manage.py migrate
+````
 
-Запустите сервер разработки: 
+Запуск сервера: 
+```bash
 python manage.py runserver
+```
 
 **Фронтенд**
 
-Перейдите в папку фронтенда:
 ```bash
 cd frontend
 ```
 
-Установите зависимости:
+Установка зависимостей:
+```bash
 npm install
+```
 
-Запустите фронтенд:
+Запуск dev-сервера: 
+```bash
 npm run dev
+```
 
 ## Структура проекта
 
 ### backend/src/project/
 Основной пакет проекта с конфигурацией Django.
 
-#### settings.py
-Настройки проекта.
+- settings.py — настройки проекта
+- urls.py — маршрутизация
+- celery.py — конфигурация Celery
+- asgi.py / wsgi.py — точки входа
 
-#### urls.py
-Маршрутизация URL.
+Приложения
 
-#### asgi.py / wsgi.py
-Точки входа для ASGI/WSGI серверов.
+- apps/order — заявки и заказы
+- apps/products — товары и категории
+- apps/pages — статические страницы
 
-#### celery.py
-Конфигурация Celery.
-
----
-
-### backend/src/project/apps/order/
-Приложение для работы с заявками: модели, сериализаторы, вьюсеты, задачи Celery.
-
----
-
-### backend/src/project/apps/pages/
-Приложение для работы со статическими страницами.
-
-### backend/src/project/apps/products/
-Приложение для работы с товарами и категориями: модели, сериализаторы, вьюсеты.
-
----
 
 ### frontend/
 Фронтенд-приложение на Next.js.
 
-#### src/
-Исходный код приложения (компоненты, страницы, логика).
-
-#### public/
-Статические файлы.
-
-#### package.json
-Зависимости и скрипты.
-
-#### next.config.ts
-Конфигурация Next.js.
+- src/ — исходный код приложения
+- public/ — статические файлы
+- next.config.ts — конфигурация Next.js
 
 ## Зависимости
 Управление зависимостями осуществляется через Poetry (pyproject.toml).
+
 Основные зависимости:
 - Django 5.x
 - Celery 5.x
@@ -110,8 +122,7 @@ npm run dev
 
 ## Celery 
 Проект использует Celery для фоновых задач:
-- Отправка заявок в телеграм-бот. 
-
+- отправка заявок в Telegram-бот
 
 ## Тестирование
 Запуск тестов:
@@ -124,10 +135,10 @@ poetry run python manage.py test project.apps
 poetry run python manage.py test project.apps.order
 ```
 
-## Deployment & CI/CD
-1. Подключение к серверу по SSH
+## Deployment
+1. Подключение к серверу 
 ```bash
-ssh user@SERVER_IP
+ssh user@your-server-ip
 ```
 2. Установка Docker и Docker Compose
 ```bash
@@ -149,7 +160,7 @@ cd VostKrep
 DEBUG=True
 ALLOWED_HOSTS=*
 
-POSTGRES_DB=habits_tracker
+POSTGRES_DB=db_name
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_password
 POSTGRES_HOST=db
@@ -166,41 +177,31 @@ docker compose up -d --build
 docker compose ps
 ```
 
-Проверка приложения по адресу:
+Сайт:
 ```cpp
-http://89.169.160.28:8000
+https://vostkrep.ru
 ```
+
+Админ-панель:
+```cpp
+https://vostkrep.ru/admin
+```
+
 ## GitHub Actions CI/CD
 Workflow:
 ```bash
 .github/workflows/
 ```
 
-Workflow запускается автоматически при каждом push в репозиторий.
+Pipeline автоматически выполняется при push:
 
-Этапы workflow:
-1. Клонирование репозитория
+1. Checkout репозитория
 2. Установка зависимостей
-3. Запуск тестов (деплой выполняется только при успешном прохождении тестов.)
+3. Запуск тестов
 4. Подключение к серверу по SSH
-5. Pull последних изменений
+5. Pull изменений
 6. Пересборка контейнеров
-7. Перезапуск приложения
-
-## Технологии
-- Python 3.13
-
-- Django 5.x
-
-- Django REST Framework 4.x
-
-- PostgreSQL
-
-- Redis 
-
-- Celery 5.x
-
-- Next.js
+7. Перезапуск сервиса
 
 ## Автор
 [Ксения](https://github.com/kshaab)

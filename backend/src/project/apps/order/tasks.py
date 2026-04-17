@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def send_order_to_telegram(order_id: int) -> None:
+    """Отправляет заявку в ТГ-бот"""
     try:
         order = Order.objects.get(id=order_id)
         send_telegram_order(order)
