@@ -22,12 +22,12 @@ async function getHomePage() {
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getHomePage();
 
-  const title = page?.title || "Крепёж оптом — Восточный Крепёж";
+  const title = page?.title || "Восточный Крепёж — крепёж оптом";
 
   return {
     title: {
-      default: "Крепёж оптом — Восточный Крепёж",
-      template: "%s | Восточный Крепёж",
+      default: title,
+      template: "Восточный Крепёж — %s",
     },
 
     description:
@@ -45,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description:
-        "Оптовые поставки крепежа: болты, гайки, анкеры и метизы. Восточный Крепёж — надёжный поставщик с доставкой по России.",
+        "Поставщик крепежа оптом: болты, гайки, анкеры, шайбы. Наличие на складе, выгодные цены, доставка по всей России.",
       url: "https://vostkrep.ru",
       siteName: "Восточный Крепёж",
       type: "website",
