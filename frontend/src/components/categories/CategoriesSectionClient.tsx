@@ -11,7 +11,7 @@ type Props = {
 
 export default function CategoriesSectionClient({ categories }: Props) {
   return (
-    <section className={styles.section}>
+    <section id="catalog" className={styles.section}>
       <div className={styles.container}>
         <div className={styles.wrapper}>
           <div className={styles.content}>

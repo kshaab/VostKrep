@@ -39,3 +39,7 @@ body {
   height: 100vh;
   scroll-snap-align: start;
 }
+
+html {
+  scroll-behavior: smooth;
+}

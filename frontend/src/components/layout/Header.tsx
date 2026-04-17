@@ -19,7 +19,7 @@ export default function Header() {
         <div className={styles.desktopNavInner}>
           <nav className={styles.desktopNav}>
 
-            <Link href="/" className={styles.desktopNavLink}>
+            <Link href="/#catalog" className={styles.desktopNavLink}>
               КАТАЛОГ
             </Link>
 
@@ -100,7 +100,7 @@ export default function Header() {
           <div className={styles.mobileMenu}>
 
             <Link
-              href="/"
+              href="/#catalog"
               onClick={() => setIsOpen(false)}
               className={styles.mobileMenuLink}
             >
