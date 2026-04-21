@@ -55,6 +55,9 @@ class Product(models.Model):
 class ProductOption(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="options")
     size = models.CharField(max_length=150, verbose_name="Размер")
+    color = models.CharField(max_length=20, blank=True, null=True)
+    color_name = models.CharField(max_length=50, blank=True, null=True)
+    image = models.ImageField(upload_to="images/products/options/", null=True, blank=True)
     sku = models.CharField(unique=True, max_length=150, verbose_name="Артикул")
     unit = models.CharField(max_length=150, verbose_name="Единица измерения", default="шт")
     is_active = models.BooleanField(default=True)

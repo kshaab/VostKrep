@@ -8,7 +8,7 @@ from .resources import ProductResource
 class ProductOptionInline(admin.TabularInline):
     model = ProductOption
     extra = 1
-    fields = ("size", "sku", "is_active")
+    fields = ("size", "sku", "color", "color_name", "image", "is_active")
     readonly_fields = ()
     show_change_link = True
 

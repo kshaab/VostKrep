@@ -96,7 +96,7 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > key
           chmod 600 key
           
-          ssh -i key -o StrictHostKeyChecking=no kshaab@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -i key -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
             cd ${{ secrets.DEPLOY_DIR }}
             docker compose pull
             docker compose up -d --build

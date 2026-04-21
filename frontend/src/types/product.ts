@@ -1,6 +1,7 @@
 export type ProductOption = {
   id: number
   size: string
+  color: string
   sku: string
   unit: string
 }
