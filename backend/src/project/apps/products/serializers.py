@@ -8,7 +8,7 @@ from .validators import ProductValidator
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOption
-        fields = ["id", "size", "sku", "unit"]
+        fields = ["id", "size", "sku", "unit", "color", "color_name", "image"]
 
     def validate(self, data):
         """Валидирует sku"""

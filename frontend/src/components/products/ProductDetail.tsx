@@ -82,7 +82,7 @@ export default function ProductDetail({ slug }: Props) {
 
   const length = lengths[lengthIndex] ?? ""
 
-  // ===== COLOR (НЕ зависит от size/length) =====
+  // ===== COLOR =====
   const colors = useMemo(
     () => [
       ...new Set(
