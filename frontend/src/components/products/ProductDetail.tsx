@@ -32,7 +32,22 @@ export default function ProductDetail({ slug }: Props) {
   const [lengthIndex, setLengthIndex] = useState(0)
   const [colorIndex, setColorIndex] = useState(0)
 
+
+  const specialSlugs = [
+    "samorez-s-psh-ostryj",
+    "samorez-s-psh-sverlo",
+  ]
+
+  const isColorImageEnabled = specialSlugs.includes(slug)
+  const isSpecialCard = isColorImageEnabled
+
   useEffect(() => {
+    setProduct(null)
+    setOptions([])
+    setSizeIndex(0)
+    setLengthIndex(0)
+    setColorIndex(0)
+
     fetch(endpoints.productBySlug(slug), { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
@@ -42,13 +57,10 @@ export default function ProductDetail({ slug }: Props) {
           const normalized = (opt.size || "").toLowerCase().replace("х", "x")
           const parts = normalized.split("x")
 
-          const sizePart = parts[0]?.trim() || ""
-          const rawLength = (parts[1] ?? "").replace(/\D/g, "")
-
           return {
             id: opt.id,
-            size: sizePart,
-            length: rawLength === "0" ? "" : rawLength,
+            size: parts[0]?.trim() || "",
+            length: (parts[1] ?? "").replace(/\D/g, ""),
             color: opt.color || "",
             color_name: opt.color_name || "",
             image: opt.image || "",
@@ -96,18 +108,23 @@ export default function ProductDetail({ slug }: Props) {
 
   const color = colors[colorIndex] ?? ""
 
-  // ===== CURRENT OPTION (SKU без цвета) =====
+  // ===== OPTION =====
   const currentOption = options.find(
     o => o.size === size && o.length === length
   )
 
-  // ===== IMAGE BY COLOR =====
-  const colorOption = options.find(
-    o => (o.color_name || o.color) === color && o.image
-  )
+  // ===== IMAGE ONLY FOR SPECIAL PRODUCTS =====
+  const colorOption =
+    isColorImageEnabled
+      ? options.find(
+          o =>
+            (o.color_name || o.color) === color &&
+            o.image
+        )
+      : null
 
   const imageUrl =
-    colorOption?.image
+    isColorImageEnabled && colorOption?.image
       ? colorOption.image.startsWith("http")
         ? colorOption.image
         : `${process.env.NEXT_PUBLIC_API_URL}${colorOption.image}`
@@ -117,29 +134,22 @@ export default function ProductDetail({ slug }: Props) {
         : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
       : "/placeholder.png"
 
-  // ===== CHANGE HANDLERS =====
-  const changeValue = (type: "size" | "length", direction: number) => {
-    if (type === "size" && sizes.length > 0) {
-      const newIndex = (sizeIndex + direction + sizes.length) % sizes.length
-      setSizeIndex(newIndex)
+  // ===== CHANGE =====
+  const changeValue = (type: "size" | "length", dir: number) => {
+    if (type === "size") {
+      setSizeIndex((sizeIndex + dir + sizes.length) % sizes.length)
       setLengthIndex(0)
       setColorIndex(0)
     }
 
-    if (type === "length" && lengths.length > 0) {
-      const newIndex = (lengthIndex + direction + lengths.length) % lengths.length
-      setLengthIndex(newIndex)
+    if (type === "length") {
+      setLengthIndex((lengthIndex + dir + lengths.length) % lengths.length)
       setColorIndex(0)
     }
   }
 
-  const changeColor = (direction: number) => {
-    if (colors.length === 0) return
-
-    const newIndex =
-      (colorIndex + direction + colors.length) % colors.length
-
-    setColorIndex(newIndex)
+  const changeColor = (dir: number) => {
+    setColorIndex((colorIndex + dir + colors.length) % colors.length)
   }
 
   // ===== CART =====
@@ -161,11 +171,11 @@ export default function ProductDetail({ slug }: Props) {
   return (
     <section className={styles.product}>
       <div className={styles.titleWrapper}>
-        <button onClick={() => window.history.back()}>❮</button>
+        <button className={styles.backButton} onClick={() => window.history.back()}>❮</button>
         <AnimatedTitle>{product.name}</AnimatedTitle>
       </div>
 
-      <div className={styles.card}>
+      <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""}`}>
         <div className={styles.imageBlock}>
           <img src={imageUrl} alt={product.name} />
         </div>
@@ -173,59 +183,38 @@ export default function ProductDetail({ slug }: Props) {
         <div className={styles.infoBlock}>
 
           {/* SIZE */}
-          {sizes.length > 0 && (
-            <div className={styles.selector}>
-              <div className={styles.label}>РАЗМЕР</div>
-              <div className={styles.control}>
-                {sizes.length > 1 && (
-                  <button onClick={() => changeValue("size", -1)}>❮</button>
-                )}
-                <span>{size}</span>
-                {sizes.length > 1 && (
-                  <button onClick={() => changeValue("size", 1)}>❯</button>
-                )}
-              </div>
+          <div className={styles.selector}>
+            <div className={styles.label}>РАЗМЕР</div>
+            <div className={styles.control}>
+              <button onClick={() => changeValue("size", -1)}>❮</button>
+              <span>{size}</span>
+              <button onClick={() => changeValue("size", 1)}>❯</button>
             </div>
-          )}
+          </div>
 
           {/* LENGTH */}
-          {lengths.length > 0 && (
-            <div className={styles.selector}>
-              <div className={styles.label}>ДЛИНА</div>
-              <div className={styles.control}>
-                {lengths.length > 1 && (
-                  <button onClick={() => changeValue("length", -1)}>❮</button>
-                )}
-                <span>{length} мм</span>
-                {lengths.length > 1 && (
-                  <button onClick={() => changeValue("length", 1)}>❯</button>
-                )}
-              </div>
+          <div className={styles.selector}>
+            <div className={styles.label}>ДЛИНА</div>
+            <div className={styles.control}>
+              <button onClick={() => changeValue("length", -1)}>❮</button>
+              <span>{length}</span>
+              <button onClick={() => changeValue("length", 1)}>❯</button>
             </div>
-          )}
+          </div>
 
           {/* COLOR */}
-          {colors.length > 0 && (
+          {isColorImageEnabled && (
             <div className={styles.selector}>
               <div className={styles.label}>ЦВЕТ</div>
               <div className={styles.control}>
-                {colors.length > 1 && (
-                  <button onClick={() => changeColor(-1)}>❮</button>
-                )}
+                <button onClick={() => changeColor(-1)}>❮</button>
                 <span>{color}</span>
-                {colors.length > 1 && (
-                  <button onClick={() => changeColor(1)}>❯</button>
-                )}
+                <button onClick={() => changeColor(1)}>❯</button>
               </div>
             </div>
           )}
 
-          {/* CART */}
-          <button
-            onClick={handleAddToCart}
-            disabled={!currentOption}
-            className={styles.addBtn}
-          >
+          <button onClick={handleAddToCart} className={styles.addBtn}>
             В КОРЗИНУ
           </button>
         </div>

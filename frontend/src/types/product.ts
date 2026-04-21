@@ -15,4 +15,9 @@ export type Product = {
   image: string | null
   unit: string
   options: ProductOption[]
+  category?: {
+    id: number
+    name: string
+    slug: string
+  }
 }

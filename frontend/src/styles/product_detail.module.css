@@ -55,6 +55,10 @@
   border-radius: 8px;
 }
 
+.screwsCard {
+  align-items: center;
+}
+
 /* Картинка */
 .imageBlock {
   position: absolute;
@@ -62,6 +66,22 @@
   bottom: 5px;
   z-index: 2;
   width: 500px;
+}
+
+.screwsCard .imageBlock {
+  position: absolute;
+  left: -290px;
+  bottom: 0;
+  width: 650px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screwsCard .image {
+  width: 100%;
+  max-height: 600px;
+  object-fit: contain;
 }
 
 .image {
