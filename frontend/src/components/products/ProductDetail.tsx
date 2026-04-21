@@ -38,14 +38,17 @@ export default function ProductDetail({ slug }: Props) {
       .then(data => {
         setProduct(data)
 
-        const parsed = (data.options ?? []).map((opt: any) => {
+        const parsedOptions = (data.options ?? []).map((opt: any) => {
           const normalized = (opt.size || "").toLowerCase().replace("х", "x")
           const parts = normalized.split("x")
 
+          const sizePart = parts[0]?.trim() || ""
+          const rawLength = (parts[1] ?? "").replace(/\D/g, "")
+
           return {
             id: opt.id,
-            size: parts[0]?.trim() || "",
-            length: (parts[1] ?? "").replace(/\D/g, ""),
+            size: sizePart,
+            length: rawLength === "0" ? "" : rawLength,
             color: opt.color || "",
             color_name: opt.color_name || "",
             image: opt.image || "",
@@ -54,86 +57,92 @@ export default function ProductDetail({ slug }: Props) {
           }
         })
 
-        setOptions(parsed)
+        setOptions(parsedOptions)
       })
   }, [slug])
 
-  // размеры
+  // ===== SIZE =====
   const sizes = useMemo(
     () => [...new Set(options.map(o => o.size).filter(Boolean))],
     [options]
   )
+
   const size = sizes[sizeIndex] ?? ""
 
-  // длины
+  // ===== LENGTH =====
   const lengths = useMemo(
     () =>
       [...new Set(
         options
-          .filter(o => o.size === size)
+          .filter(o => o.size === size && o.length)
           .map(o => o.length)
-          .filter(Boolean)
       )],
     [options, size]
   )
+
   const length = lengths[lengthIndex] ?? ""
 
-  // ЦВЕТА — НЕ ЗАВИСЯТ ОТ РАЗМЕРА
-  const colors = useMemo(() => {
-    return [
+  // ===== COLOR (НЕ зависит от size/length) =====
+  const colors = useMemo(
+    () => [
       ...new Set(
         options
           .map(o => o.color_name || o.color)
           .filter(Boolean)
       )
-    ]
-  }, [options])
+    ],
+    [options]
+  )
 
   const color = colors[colorIndex] ?? ""
 
-  // SKU (БЕЗ цвета)
+  // ===== CURRENT OPTION (SKU без цвета) =====
   const currentOption = options.find(
     o => o.size === size && o.length === length
   )
 
-  // картинка по цвету
+  // ===== IMAGE BY COLOR =====
   const colorOption = options.find(
-  o => (o.color_name || o.color) === color && o.image
-)
+    o => (o.color_name || o.color) === color && o.image
+  )
 
-  const optionImage =
+  const imageUrl =
     colorOption?.image
       ? colorOption.image.startsWith("http")
         ? colorOption.image
         : `${process.env.NEXT_PUBLIC_API_URL}${colorOption.image}`
-      : null
-
-  const imageUrl =
-    optionImage ||
-    (product?.image
+      : product?.image
       ? product.image.startsWith("http")
         ? product.image
         : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-      : "/placeholder.png")
+      : "/placeholder.png"
 
-  const changeValue = (type: "size" | "length" | "color", dir: number) => {
-    if (type === "size") {
-      const i = (sizeIndex + dir + sizes.length) % sizes.length
-      setSizeIndex(i)
+  // ===== CHANGE HANDLERS =====
+  const changeValue = (type: "size" | "length", direction: number) => {
+    if (type === "size" && sizes.length > 0) {
+      const newIndex = (sizeIndex + direction + sizes.length) % sizes.length
+      setSizeIndex(newIndex)
       setLengthIndex(0)
+      setColorIndex(0)
     }
 
-    if (type === "length") {
-      const i = (lengthIndex + dir + lengths.length) % lengths.length
-      setLengthIndex(i)
-    }
-
-    if (type === "color") {
-      const i = (colorIndex + dir + colors.length) % colors.length
-      setColorIndex(i)
+    if (type === "length" && lengths.length > 0) {
+      const newIndex = (lengthIndex + direction + lengths.length) % lengths.length
+      setLengthIndex(newIndex)
+      setColorIndex(0)
     }
   }
 
+  const changeColor = (direction: number) => {
+    if (colors.length === 0) return
+
+    const newIndex =
+      (colorIndex + direction + colors.length) % colors.length
+
+    setColorIndex(newIndex)
+  }
+
+  // ===== CART =====
   const handleAddToCart = () => {
     if (!currentOption || !product) return
 
@@ -162,37 +171,61 @@ export default function ProductDetail({ slug }: Props) {
         </div>
 
         <div className={styles.infoBlock}>
-          {/* размер */}
+
+          {/* SIZE */}
           {sizes.length > 0 && (
-            <div>
-              <div>РАЗМЕР</div>
-              <button onClick={() => changeValue("size", -1)}>❮</button>
-              <span>{size}</span>
-              <button onClick={() => changeValue("size", 1)}>❯</button>
+            <div className={styles.selector}>
+              <div className={styles.label}>РАЗМЕР</div>
+              <div className={styles.control}>
+                {sizes.length > 1 && (
+                  <button onClick={() => changeValue("size", -1)}>❮</button>
+                )}
+                <span>{size}</span>
+                {sizes.length > 1 && (
+                  <button onClick={() => changeValue("size", 1)}>❯</button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* длина */}
+          {/* LENGTH */}
           {lengths.length > 0 && (
-            <div>
-              <div>ДЛИНА</div>
-              <button onClick={() => changeValue("length", -1)}>❮</button>
-              <span>{length} мм</span>
-              <button onClick={() => changeValue("length", 1)}>❯</button>
+            <div className={styles.selector}>
+              <div className={styles.label}>ДЛИНА</div>
+              <div className={styles.control}>
+                {lengths.length > 1 && (
+                  <button onClick={() => changeValue("length", -1)}>❮</button>
+                )}
+                <span>{length} мм</span>
+                {lengths.length > 1 && (
+                  <button onClick={() => changeValue("length", 1)}>❯</button>
+                )}
+              </div>
             </div>
           )}
 
-          {/* цвет */}
+          {/* COLOR */}
           {colors.length > 0 && (
-            <div>
-              <div>ЦВЕТ</div>
-              <button onClick={() => changeValue("color", -1)}>❮</button>
-              <span>{color}</span>
-              <button onClick={() => changeValue("color", 1)}>❯</button>
+            <div className={styles.selector}>
+              <div className={styles.label}>ЦВЕТ</div>
+              <div className={styles.control}>
+                {colors.length > 1 && (
+                  <button onClick={() => changeColor(-1)}>❮</button>
+                )}
+                <span>{color}</span>
+                {colors.length > 1 && (
+                  <button onClick={() => changeColor(1)}>❯</button>
+                )}
+              </div>
             </div>
           )}
 
-          <button onClick={handleAddToCart}>
+          {/* CART */}
+          <button
+            onClick={handleAddToCart}
+            disabled={!currentOption}
+            className={styles.addBtn}
+          >
             В КОРЗИНУ
           </button>
         </div>
