@@ -65,7 +65,6 @@ class ProductOption(models.Model):
     class Meta:
         verbose_name = "Размер товара"
         verbose_name_plural = "Размеры товара"
-        unique_together = ["product", "size"]
 
     def __str__(self) -> str:
         return f"{self.product.name} – {self.size}"
