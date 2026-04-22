@@ -159,7 +159,11 @@ export default function ProductDetail({ slug }: Props) {
     addToCart({
       id: currentOption.sku,
       option_id: currentOption.id,
-      name: `${product.name} – ${size}x${length}${color ? ` (${color})` : ""}`,
+      name: `${product.name}${
+      size || length
+        ? ` – ${size ? size : ""}${length ? `x${length}` : ""}`
+        : ""
+      }${color ? ` (${color})` : ""}`,
       quantity: 1,
       option: `${size}x${length}`,
       unit: currentOption.unit || product.unit || "шт",
@@ -177,30 +181,34 @@ export default function ProductDetail({ slug }: Props) {
 
       <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""}`}>
         <div className={styles.imageBlock}>
-          <img src={imageUrl} alt={product.name} />
+          <img src={imageUrl} alt={product.name} className={styles.image}/>
         </div>
 
         <div className={styles.infoBlock}>
 
           {/* SIZE */}
-          <div className={styles.selector}>
-            <div className={styles.label}>РАЗМЕР</div>
-            <div className={styles.control}>
-              <button className={styles.controlButton} onClick={() => changeValue("size", -1)}>❮</button>
-              <span>{size}</span>
-              <button className={styles.controlButton} onClick={() => changeValue("size", 1)}>❯</button>
+          {sizes.length > 0 && (
+            <div className={styles.selector}>
+              <div className={styles.label}>РАЗМЕР</div>
+              <div className={styles.control}>
+                <button className={styles.controlButton} onClick={() => changeValue("size", -1)}>❮</button>
+                <span>{size}</span>
+                <button className={styles.controlButton} onClick={() => changeValue("size", 1)}>❯</button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* LENGTH */}
-          <div className={styles.selector}>
-            <div className={styles.label}>ДЛИНА</div>
-            <div className={styles.control}>
-              <button className={styles.controlButton} onClick={() => changeValue("length", -1)}>❮</button>
-              <span>{length}</span>
-              <button className={styles.controlButton} onClick={() => changeValue("length", 1)}>❯</button>
+          {lengths.length > 0 && (
+            <div className={styles.selector}>
+              <div className={styles.label}>ДЛИНА</div>
+              <div className={styles.control}>
+                <button className={styles.controlButton} onClick={() => changeValue("length", -1)}>❮</button>
+                <span>{length}</span>
+                <button className={styles.controlButton} onClick={() => changeValue("length", 1)}>❯</button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* COLOR */}
           {isColorImageEnabled && (

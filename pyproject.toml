@@ -1,36 +1,37 @@
 [project]
 name = "vostkrep"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Ксения",email = "kssshaab@gmail.com"}
-]
+description = "VostKrep project"
+authors = [{ name = "Ксения", email = "kssshaab@gmail.com" }]
 readme = "README.md"
-requires-python = "^3.12"
-dependencies = [
-    "django (>=4.2,<6.0)",
-    "django-cors-headers (>=4.9.0,<5.0.0)",
-    "djangorestframework (>=3.16.1,<4.0.0)",
-    "poetry-core (>=2.0.0,<3.0.0)",
-    "dotenv (>=0.9.9,<0.10.0)",
-    "psycopg2-binary (>=2.9.11,<3.0.0)",
-    "pillow (>=12.1.0,<13.0.0)",
-    "unidecode (>=1.4.0,<2.0.0)",
-    "celery (>=5.6.2,<6.0.0)",
-    "pandas (>=3.0.1,<4.0.0)",
-    "redis (>=7.3.0,<8.0.0)",
-    "requests (>=2.32.5,<3.0.0)",
-    "django-redis (>=6.0.0,<7.0.0)",
-    "openpyxl (>=3.1.5,<4.0.0)",
-    "pytest (>=9.0.2,<10.0.0)",
-    "coverage (>=7.13.4,<8.0.0)",
-    "gunicorn (>=25.1.0,<26.0.0)",
-    "django-jazzmin (>=3.0.4,<4.0.0)",
-    "django-axes (>=8.3.1,<9.0.0)",
-    "django-simple-history (>=3.11.0,<4.0.0)",
-    "django-import-export (>=4.4.0,<5.0.0)"
-]
+requires-python = ">=3.12,<4.0"
 
+dependencies = [
+    "django>=4.2,<6.0",
+    "django-cors-headers>=4.9.0,<5.0.0",
+    "djangorestframework>=3.16.1,<4.0.0",
+
+    "celery>=5.6.2,<6.0.0",
+    "redis>=5.0.0,<6.0.0",
+    "django-redis>=6.0.0,<7.0.0",
+
+    "psycopg2-binary>=2.9.11,<3.0.0",
+    "pillow>=12.1.0,<13.0.0",
+    "unidecode>=1.4.0,<2.0.0",
+
+    "requests>=2.32.5,<3.0.0",
+    "python-dotenv>=1.0.0,<2.0.0",
+
+    "pandas>=2.2.0,<3.0.0",
+    "openpyxl>=3.1.5,<4.0.0",
+
+    "gunicorn>=25.1.0,<26.0.0",
+
+    "django-jazzmin>=3.0.4,<4.0.0",
+    "django-axes>=8.3.1,<9.0.0",
+    "django-simple-history>=3.11.0,<4.0.0",
+    "django-import-export>=4.4.0,<5.0.0",
+]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -65,4 +66,3 @@ no_implicit_optional = true
 warn_return_any = true
 exclude = 'venv|README\.md'
 ignore_missing_imports = true
-
