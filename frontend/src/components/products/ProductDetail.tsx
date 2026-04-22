@@ -135,16 +135,16 @@ export default function ProductDetail({ slug }: Props) {
       : "/placeholder.png"
 
   // ===== CHANGE =====
-  const changeValue = (type: "size" | "length", dir: number) => {
-    if (type === "size") {
-      setSizeIndex((sizeIndex + dir + sizes.length) % sizes.length)
-      setLengthIndex(0)
-      setColorIndex(0)
+  const changeValue = (type: "size" | "length", direction: number) => {
+    if (type === "size" && sizes.length > 0) {
+      const newSizeIndex = (sizeIndex + direction + sizes.length) % sizes.length
+      setSizeIndex(newSizeIndex)
+      setLengthIndex(0) // сброс длины при смене размера
     }
 
-    if (type === "length") {
-      setLengthIndex((lengthIndex + dir + lengths.length) % lengths.length)
-      setColorIndex(0)
+    if (type === "length" && lengths.length > 0) {
+      const newLengthIndex = (lengthIndex + direction + lengths.length) % lengths.length
+      setLengthIndex(newLengthIndex)
     }
   }
 
@@ -186,9 +186,9 @@ export default function ProductDetail({ slug }: Props) {
           <div className={styles.selector}>
             <div className={styles.label}>РАЗМЕР</div>
             <div className={styles.control}>
-              <button onClick={() => changeValue("size", -1)}>❮</button>
+              <button className={styles.controlButton} onClick={() => changeValue("size", -1)}>❮</button>
               <span>{size}</span>
-              <button onClick={() => changeValue("size", 1)}>❯</button>
+              <button className={styles.controlButton} onClick={() => changeValue("size", 1)}>❯</button>
             </div>
           </div>
 
@@ -196,9 +196,9 @@ export default function ProductDetail({ slug }: Props) {
           <div className={styles.selector}>
             <div className={styles.label}>ДЛИНА</div>
             <div className={styles.control}>
-              <button onClick={() => changeValue("length", -1)}>❮</button>
+              <button className={styles.controlButton} onClick={() => changeValue("length", -1)}>❮</button>
               <span>{length}</span>
-              <button onClick={() => changeValue("length", 1)}>❯</button>
+              <button className={styles.controlButton} onClick={() => changeValue("length", 1)}>❯</button>
             </div>
           </div>
 
@@ -207,14 +207,14 @@ export default function ProductDetail({ slug }: Props) {
             <div className={styles.selector}>
               <div className={styles.label}>ЦВЕТ</div>
               <div className={styles.control}>
-                <button onClick={() => changeColor(-1)}>❮</button>
+                <button className={styles.controlButton} onClick={() => changeColor(-1)}>❮</button>
                 <span>{color}</span>
-                <button onClick={() => changeColor(1)}>❯</button>
+                <button className={styles.controlButton} onClick={() => changeColor(1)}>❯</button>
               </div>
             </div>
           )}
 
-          <button onClick={handleAddToCart} className={styles.addBtn}>
+          <button onClick={handleAddToCart} disabled={!currentOption} className={styles.addBtn}>
             В КОРЗИНУ
           </button>
         </div>
