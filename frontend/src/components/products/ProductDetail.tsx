@@ -31,15 +31,16 @@ export default function ProductDetail({ slug }: Props) {
   const [sizeIndex, setSizeIndex] = useState(0)
   const [lengthIndex, setLengthIndex] = useState(0)
   const [colorIndex, setColorIndex] = useState(0)
+  const [colorsData, setColorsData] = useState<any[]>([])
 
 
   const specialSlugs = [
     "samorez-s-psh-ostryj",
     "samorez-s-psh-sverlo",
+    "samorez-krovelnyj"
   ]
 
-  const isColorImageEnabled = specialSlugs.includes(slug)
-  const isSpecialCard = isColorImageEnabled
+  const isSpecialCard = specialSlugs.includes(slug)
 
   useEffect(() => {
     setProduct(null)
@@ -52,6 +53,7 @@ export default function ProductDetail({ slug }: Props) {
       .then(res => res.json())
       .then(data => {
         setProduct(data)
+        setColorsData(data.colors || [])
 
         const parsedOptions = (data.options ?? []).map((opt: any) => {
           const normalized = (opt.size || "").toLowerCase().replace("х", "x")
@@ -96,43 +98,29 @@ export default function ProductDetail({ slug }: Props) {
 
   // ===== COLOR =====
   const colors = useMemo(
-    () => [
-      ...new Set(
-        options
-          .map(o => o.color_name || o.color)
-          .filter(Boolean)
-      )
-    ],
-    [options]
+    () =>
+      colorsData
+        .map(c => c.color_name)
+        .filter(Boolean),
+    [colorsData]
   )
 
   const color = colors[colorIndex] ?? ""
 
   // ===== OPTION =====
-  const currentOption = options.find(
-    o => o.size === size && o.length === length
-  )
-
-  // ===== IMAGE ONLY FOR SPECIAL PRODUCTS =====
-  const colorOption =
-    isColorImageEnabled
-      ? options.find(
-          o =>
-            (o.color_name || o.color) === color &&
-            o.image
-        )
-      : null
+  const currentOption =
+  options.find(
+    o =>
+      o.size === size &&
+      o.length === length
+  ) || options[0]
 
   const imageUrl =
-    isColorImageEnabled && colorOption?.image
-      ? colorOption.image.startsWith("http")
-        ? colorOption.image
-        : `${process.env.NEXT_PUBLIC_API_URL}${colorOption.image}`
-      : product?.image
-      ? product.image.startsWith("http")
-        ? product.image
-        : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
-      : "/placeholder.png"
+  product?.image
+    ? product.image.startsWith("http")
+      ? product.image
+      : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
+    : "/placeholder.png"
 
   // ===== CHANGE =====
   const changeValue = (type: "size" | "length", direction: number) => {
@@ -211,7 +199,7 @@ export default function ProductDetail({ slug }: Props) {
           )}
 
           {/* COLOR */}
-          {isColorImageEnabled && (
+          {colors.length > 0 && (
             <div className={styles.selector}>
               <div className={styles.label}>ЦВЕТ</div>
               <div className={styles.control}>

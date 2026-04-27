@@ -1,15 +1,22 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Category, Product, ProductOption
+from .models import Category, Product, ProductOption, ProductColor
 from .resources import ProductResource
 
 
 class ProductOptionInline(admin.TabularInline):
     model = ProductOption
     extra = 1
-    fields = ("size", "sku", "color", "color_name", "image", "is_active")
+    fields = ("size", "sku", "is_active")
     readonly_fields = ()
+    show_change_link = True
+
+
+class ProductColorInline(admin.TabularInline):
+    model = ProductColor
+    extra = 1
+    fields = ("color_name",)
     show_change_link = True
 
 
@@ -29,5 +36,5 @@ class ProductAdmin(ImportExportModelAdmin):
     list_filter = ("category", "is_active")
     search_fields = ("name", "sku")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [ProductOptionInline]
+    inlines = [ProductOptionInline, ProductColorInline]
     ordering = ("category", "name")

@@ -57,6 +57,7 @@
 
 .screwsCard {
   align-items: center;
+  position: relative;
 }
 
 /* Картинка */
@@ -70,9 +71,11 @@
 
 .screwsCard .imageBlock {
   position: absolute;
-  left: -290px;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
   width: 650px;
+
   display: flex;
   justify-content: center;
   align-items: center;
