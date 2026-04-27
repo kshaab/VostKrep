@@ -41,6 +41,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "created_at",
             "slug",
             "options",
+            "colors",
         ]
 
     def get_image(self, obj) -> None:
