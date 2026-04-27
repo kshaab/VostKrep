@@ -73,6 +73,8 @@ class ProductColor(models.Model):
 
     class Meta:
         unique_together = ("product", "color_name")
+        verbose_name = "Цвет товара"
+        verbose_name_plural = "Цвета товара"
 
     def __str__(self):
         return f"{self.product.name} – {self.color_name}"
