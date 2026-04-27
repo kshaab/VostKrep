@@ -16,11 +16,12 @@
 /* Обёртка для продуктов */
 .wrapper {
   position: relative;
+  overflow: hidden;
 }
 
 /* Контент с анимацией разворачивания */
 .content {
-  overflow: hidden;
+  overflow: visible;
   transition: max-height 0.7s ease;
   position: relative;
   padding: 0 0 6rem;

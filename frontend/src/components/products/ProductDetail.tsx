@@ -160,11 +160,13 @@ export default function ProductDetail({ slug }: Props) {
 
   if (!product) return <div>Loading...</div>
 
+  const normalizedName = product.name.normalize("NFC")
+
   return (
     <section className={styles.product}>
       <div className={styles.titleWrapper}>
         <button className={styles.backButton} onClick={() => window.history.back()}>❮</button>
-        <AnimatedTitle>{product.name}</AnimatedTitle>
+        <AnimatedTitle>{normalizedName}</AnimatedTitle>
       </div>
 
       <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""}`}>

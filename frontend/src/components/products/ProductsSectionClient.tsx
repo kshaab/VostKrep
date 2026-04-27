@@ -38,7 +38,14 @@ export default function ProductsSectionClient({ products }: Props) {
             <div ref={contentRef}>
               <div className={styles.grid}>
                 {products.map((item) => (
-                  <ProductCard key={item.slug} product={item} />
+                  <motion.div
+                    key={item.slug}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <ProductCard product={item} />
+                  </motion.div>
                 ))}
               </div>
             </div>
