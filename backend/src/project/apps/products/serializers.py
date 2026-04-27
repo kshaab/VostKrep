@@ -19,13 +19,14 @@ class ProductOptionSerializer(serializers.ModelSerializer):
 class ProductColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductColor
-        field = ["id", "color_name"]
+        fields = ["id", "color_name"]
 
 
 # Сериализатор продуктов
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
-    options = ProductOptionSerializer(many=True, read_only=True), ProductColorSerializer(many=True, read_only=True)
+    options = ProductOptionSerializer(many=True, read_only=True)
+    colors = ProductColorSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
