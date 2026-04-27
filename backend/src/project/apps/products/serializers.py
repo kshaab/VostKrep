@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, Product, ProductOption
+from .models import Category, Product, ProductOption, ProductColor
 from .validators import ProductValidator
 
 
@@ -8,7 +8,7 @@ from .validators import ProductValidator
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOption
-        fields = ["id", "size", "sku", "unit", "color", "color_name", "image"]
+        fields = ["id", "size", "sku", "unit",]
 
     def validate(self, data):
         """Валидирует sku"""
@@ -16,11 +16,16 @@ class ProductOptionSerializer(serializers.ModelSerializer):
         ProductValidator.validate_sku(data.get("sku"))
         return data
 
+class ProductColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductColor
+        field = ["id", "color_name"]
+
 
 # Сериализатор продуктов
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.StringRelatedField()
-    options = ProductOptionSerializer(many=True, read_only=True)
+    options = ProductOptionSerializer(many=True, read_only=True), ProductColorSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
