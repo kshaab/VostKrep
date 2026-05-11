@@ -91,19 +91,20 @@
 }
 
 .perforationImageBlock {
+  position: relative;
   background: #fff;
   padding: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 520px;
+  width: 50%;
 }
 
-.perforationImageBlock img {
-  width: 100%;
-  max-width: 420px;
-  object-fit: contain;
+.perforationImageBlock,
+.perforationInfoBlock {
+  height: 100%;
+  align-self: stretch;
 }
 
 
@@ -116,6 +117,16 @@
   flex-direction: column;
 }
 
+.perforationInfoBlock {
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:has(.perforationImageBlock) {
+  align-items: stretch;
+}
 
 /* Селекторы */
 .selector {
