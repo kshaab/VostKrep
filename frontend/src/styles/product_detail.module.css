@@ -302,8 +302,7 @@
     position: relative !important;
 
     width: 100%;
-
-    height: auto;
+    height: 180px;
 
     background: #f2f2f2;
 
@@ -311,16 +310,12 @@
     justify-content: center;
     align-items: center;
 
-    padding: 20px 20px 10px;
-
-    border-radius: 8px 8px 0 0;
+    overflow: hidden;
   }
 
-   .perforationImageBlock .image {
-    width: 100%;
-    max-width: 260px;
-
-    height: auto;
+  .perforationImageBlock .image {
+    width: auto;
+    height: 140px;
 
     object-fit: contain;
 
