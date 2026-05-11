@@ -4,6 +4,28 @@ from .models import Category, Product, ProductOption, ProductColor
 from .validators import ProductValidator
 
 
+# Сериализатор категорий
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["name", "parent", "image", "is_active", "slug"]
+
+    def get_image(self, obj) -> None:
+        """Превращает путь картики из базы в URL для загрузки фронтендом"""
+        request = self.context.get("request")
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
+    def validate(self, data):
+        """Валидирует sku"""
+        ProductValidator.validate_name(data.get("name"))
+        ProductValidator.validate_sku(data.get("sku"))
+        if data.get("slug"):
+            ProductValidator.validate_slug(data.get("slug"))
+        return data
+
+
 # Сериализатор выбора опций товара
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,7 +52,7 @@ class ProductColorSerializer(serializers.ModelSerializer):
 
 # Сериализатор продуктов
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField()
+    category = CategorySerializer(read_only=True)
     options = ProductOptionSerializer(many=True, read_only=True)
     colors = ProductColorSerializer(many=True, read_only=True)
 
@@ -61,26 +83,4 @@ class ProductSerializer(serializers.ModelSerializer):
         """Валидирует sku"""
         ProductValidator.validate_name(data.get("size"), "size")
         ProductValidator.validate_sku(data.get("sku"))
-        return data
-
-
-# Сериализатор категорий
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ["name", "parent", "image", "is_active", "slug"]
-
-    def get_image(self, obj) -> None:
-        """Превращает путь картики из базы в URL для загрузки фронтендом"""
-        request = self.context.get("request")
-        if obj.image:
-            return request.build_absolute_uri(obj.image.url)
-        return None
-
-    def validate(self, data):
-        """Валидирует sku"""
-        ProductValidator.validate_name(data.get("name"))
-        ProductValidator.validate_sku(data.get("sku"))
-        if data.get("slug"):
-            ProductValidator.validate_slug(data.get("slug"))
         return data

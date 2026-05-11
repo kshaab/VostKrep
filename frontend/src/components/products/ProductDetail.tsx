@@ -6,6 +6,7 @@ import { Product } from "@/types/product"
 import { endpoints } from "@/lib/api"
 import styles from "@/styles/product_detail.module.css"
 import AnimatedTitle from "@/components/animation/AnimatedTitle"
+import { usePathname } from "next/navigation"
 
 type Option = {
   id: number
@@ -32,6 +33,7 @@ export default function ProductDetail({ slug }: Props) {
   const [lengthIndex, setLengthIndex] = useState(0)
   const [colorIndex, setColorIndex] = useState(0)
   const [colorsData, setColorsData] = useState<any[]>([])
+  const pathname = usePathname()
 
 
   const specialSlugs = [
