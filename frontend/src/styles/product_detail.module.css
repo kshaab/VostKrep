@@ -97,7 +97,7 @@
   left: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
-  width: 48%;
+  width: 50%;
   background: #f2f2f2;
   border-radius: 8px 0 0 8px;
   overflow: hidden;
@@ -258,29 +258,6 @@
     height: auto;
   }
 
-  .perforationInfoBlock {
-    width: 100%;
-    max-width: 100%;
-
-    padding: 25px;
-    margin: 0;
-
-    box-sizing: border-box;
-  }
-
-  .card:has(.perforationImageBlock) {
-    padding: 0;
-    margin: 0;
-    margin-top: 40px;
-
-    flex-direction: column;
-
-    overflow: hidden;
-
-    min-height: unset;
-  }
-
-
   .image {
     width: 100%;
     height: auto;
@@ -289,28 +266,6 @@
   .infoBlock {
     width: 100%;
     margin-top: 10px;
-  }
-
-  .perforationImageBlock {
-    position: relative !important;
-
-    width: 100%;
-    height: 260px;
-
-    top: auto !important;
-    left: auto !important;
-    bottom: auto !important;
-
-    border-radius: 8px 8px 0 0;
-  }
-
-  .perforationImageBlock .image {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-
-    padding: 25px;
   }
 
   .label {
@@ -334,5 +289,54 @@
     height: 60px;
     font-size: 24px;
     padding: 12px;
+  }
+  .card:has(.perforationImageBlock) {
+    padding: 0;
+    margin: 40px 0 0;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .perforationImageBlock {
+    position: relative !important;
+
+    width: 100%;
+
+    height: auto;
+
+    background: #f2f2f2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px 20px 10px;
+
+    border-radius: 8px 8px 0 0;
+  }
+
+   .perforationImageBlock .image {
+    width: 100%;
+    max-width: 260px;
+
+    height: auto;
+
+    object-fit: contain;
+
+    padding: 0;
+
+    display: block;
+  }
+
+  .perforationInfoBlock {
+    width: 100%;
+    max-width: 100%;
+
+    padding: 30px 20px;
+
+    margin: 0;
+
+    box-sizing: border-box;
   }
 }
