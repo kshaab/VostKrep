@@ -8,13 +8,19 @@ from .validators import ProductValidator
 class ProductOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductOption
-        fields = ["id", "size", "sku", "unit",]
+        fields = [
+            "id",
+            "size",
+            "sku",
+            "unit",
+        ]
 
     def validate(self, data):
         """Валидирует sku"""
         ProductValidator.validate_name(data.get("size"), "size")
         ProductValidator.validate_sku(data.get("sku"))
         return data
+
 
 class ProductColorSerializer(serializers.ModelSerializer):
     class Meta:

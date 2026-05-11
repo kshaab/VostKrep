@@ -42,6 +42,9 @@ export default function ProductDetail({ slug }: Props) {
 
   const isSpecialCard = specialSlugs.includes(slug)
 
+  const isPerforationCategory =
+  product?.category?.slug === "perforatsiia"
+
   useEffect(() => {
     setProduct(null)
     setOptions([])
@@ -170,11 +173,17 @@ export default function ProductDetail({ slug }: Props) {
       </div>
 
       <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""}`}>
-        <div className={styles.imageBlock}>
+        <div className={`
+          ${styles.imageBlock}
+          ${isPerforationCategory ? styles.perforationImageBlock : ""}
+        `}>
           <img src={imageUrl} alt={product.name} className={styles.image}/>
         </div>
 
-        <div className={styles.infoBlock}>
+        <div className={`
+            ${styles.infoBlock}
+            ${isPerforationCategory ? styles.perforationInfoBlock : ""}
+          `}>
 
           {/* SIZE */}
           {sizes.length > 0 && (

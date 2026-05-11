@@ -59,6 +59,7 @@
   align-items: center;
 }
 
+
 /* Картинка */
 .imageBlock {
   position: absolute;
@@ -89,6 +90,22 @@
   height: auto;
 }
 
+.perforationImageBlock {
+  background: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 520px;
+}
+
+.perforationImageBlock img {
+  width: 100%;
+  max-width: 420px;
+  object-fit: contain;
+}
+
 
 /* Информационный блок */
 .infoBlock {
@@ -99,9 +116,15 @@
   flex-direction: column;
 }
 
+
 /* Селекторы */
 .selector {
   margin-bottom: 40px;
+}
+
+.perforationInfoBlock {
+  width: 50%;
+  max-width: 420px;
 }
 
 .label {
