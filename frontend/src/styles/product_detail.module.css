@@ -91,14 +91,18 @@
 }
 
 .perforationImageBlock {
-  position: relative;
-  background: #fff;
+  position: relative !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  background: #f2f2f2;
   padding: 40px;
   border-radius: 8px;
+  width: 50%;
+  max-width: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  flex-shrink: 0;
 }
 
 .perforationImageBlock,
@@ -118,14 +122,16 @@
 }
 
 .perforationInfoBlock {
-  width: 180px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  width: 50%;
+  max-width: 420px;
+  margin-left: 0;
 }
 
 .card:has(.perforationImageBlock) {
-  align-items: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
 }
 
 /* Селекторы */
