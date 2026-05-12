@@ -293,6 +293,21 @@
     padding: 12px;
   }
 
+  .perforationCard {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0;
+    margin: 40px 0 0 !important;
+    width: 100%;
+
+    min-height: auto;
+
+    overflow: hidden;
+
+    background: #003399;
+  }
+
   .perforationCard .perforationImageBlock {
     position: relative !important;
 
