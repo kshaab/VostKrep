@@ -174,7 +174,7 @@ export default function ProductDetail({ slug }: Props) {
         <AnimatedTitle>{normalizedName}</AnimatedTitle>
       </div>
 
-      <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""}`}>
+      <div className={`${styles.card} ${isSpecialCard ? styles.screwsCard : ""} ${isPerforationCategory ? styles.perforationCard : ""}`}>
         <div className={`
           ${styles.imageBlock}
           ${isPerforationCategory ? styles.perforationImageBlock : ""}
