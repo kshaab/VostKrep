@@ -95,8 +95,8 @@ export default function FooterLight() {
 
               <div className={styles.contactItem}>
                 <MdPhone size={26} />
-                <a href="tel:+74957992359">
-                  +7 (495) 799-23-59
+                <a href="tel:+79629707341">
+                  +7 (962) 970-73-41
                 </a>
               </div>
 

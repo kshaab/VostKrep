@@ -96,7 +96,7 @@ export default function FooterDark() {
 
               <div className={styles.contactItem}>
                 <MdPhone className={styles.contactIcon} />
-                <a href="tel:+74957992359">+7 (495) 799-23-59</a>
+                <a href="tel:+79629707341">+7 (962) 970-73-41</a>
               </div>
 
               <div className={styles.contactItem}>
