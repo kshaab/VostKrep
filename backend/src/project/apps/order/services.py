@@ -1,10 +1,10 @@
+import os
 import requests
 from django.conf import settings
 from project.apps.order.models import Order
 
 
 def send_telegram_order(order: Order) -> None:
-    """Формирует заявку для отправки в ТГ-бот"""
     message = (
         f"Новая заявка #{order.id}\n\n"
         f"Имя: {order.name}\n"
@@ -21,13 +21,15 @@ def send_telegram_order(order: Order) -> None:
             message += f"- {item.product_name} x {item.quantity} {item.unit}\n"
 
     try:
-        if order.file:
-            with open(order.file.path, "rb") as f:
+        file_path = getattr(order.file, "path", None)
+
+        if file_path and os.path.exists(file_path):
+            with open(file_path, "rb") as f:
                 response = requests.post(
                     f"{settings.TELEGRAM_URL}{settings.TELEGRAM_TOKEN}/sendDocument",
                     data={
                         "chat_id": settings.TELEGRAM_CHAT_ID,
-                        "caption": message,
+                        "caption": message[:1000],  # защита
                     },
                     files={"document": f},
                     timeout=10,
@@ -49,4 +51,3 @@ def send_telegram_order(order: Order) -> None:
 
     except Exception as e:
         print("TELEGRAM ERROR:", str(e))
-        raise e
